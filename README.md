@@ -32,7 +32,7 @@ Navigate to the [environment folder](./Samples/Environment) and run:
 $ docker-compose up
 ```
 
-Then, the the simplest way to work with the code is to run the [basic sample](./Samples/Basic).
+Then, the simplest way to work with the code is to run the [basic sample](./Samples/Basic).
 Navigate to the folder and run:
 
 ```shell

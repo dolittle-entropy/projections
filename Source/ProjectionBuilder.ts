@@ -46,7 +46,7 @@ export class ProjectionBuilder<TDocument extends object> {
         return this;
     }
 
-    usingKeyProperty(propertyPath: string): ProjectionBuilder<TDocument> {
+    usingPropertyAsKey(propertyPath: string): ProjectionBuilder<TDocument> {
         this._keyStrategy = new PropertyKeyStrategy(propertyPath);
         return this;
     }

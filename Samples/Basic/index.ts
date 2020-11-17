@@ -28,7 +28,7 @@ export class Rule {
             .register(RuleDefined))
         .withProjectionFor(Rule, p => p
             .withId('0ded8a37-5a69-41f3-b31e-c1f20867e1de')
-            .usingKeyProperty('ruleId')
+            .usingPropertyAsKey('ruleId')
             .from(RuleDefined, e => e
                 .set(r => r.type).to(ev => ev.type)
                 .set(r => r.priority).to(ev => ev.priority)

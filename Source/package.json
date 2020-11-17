@@ -2,10 +2,14 @@
     "name": "@dolittle/projections",
     "version": "1.0.0",
     "description": "",
-    "main": "dist/index.js",
+    "main": "Distribution/index.js",
+    "types": "Distribution/index.d.ts",
     "author": "Dolittle",
     "license": "MIT",
     "scripts": {
+        "test": "yarn build && yarn test:run",
+        "test:run": "gulp test-run --gulpfile ../node_modules/@dolittle/typescript.build/Gulpfile.js",
+        "test:clean": "gulp test-clean --gulpfile ../node_modules/@dolittle/typescript.build/Gulpfile.js",
         "build": "tsc -b"
     },
     "dependencies": {

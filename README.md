@@ -15,6 +15,7 @@ The goal of this project is to prove the concept of a declarative projection eng
 
 - NodeJS 14*
 - Yarn
+- Docker
 
 ## Getting started
 
@@ -24,8 +25,15 @@ First get all the dependencies resolved. Run the following from anywhere in the 
 $ yarn
 ```
 
+There is a runtime environment pre-configured as a Docker Compose setup.
+Navigate to the [environment folder](./Samples/Environment) and run:
+
+```shell
+$ docker-compose up
+```
+
 Then, the the simplest way to work with the code is to run the [basic sample](./Samples/Basic).
-Navigate to the folder and run: 
+Navigate to the folder and run:
 
 ```shell
 $ yarn dev

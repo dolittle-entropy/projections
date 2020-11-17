@@ -7,7 +7,26 @@
 ## Goal
 
 The goal of this project is to prove the concept of a declarative projection engine for [Dolittle](https://dolittle.io) based on event sourcing.
-
 ### Initial Design
 
 ![](./initial_design.png)
+
+## Pre-requisites
+
+- NodeJS 14*
+- Yarn
+
+## Getting started
+
+First get all the dependencies resolved. Run the following from anywhere in the repository:
+
+```shell
+$ yarn
+```
+
+Then, the the simplest way to work with the code is to run the [basic sample](./Samples/Basic).
+Navigate to the folder and run: 
+
+```shell
+$ yarn dev
+```

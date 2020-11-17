@@ -4,9 +4,9 @@
 import { IOperation } from './IOperation';
 import { Constructor, PropertyAccessorDescriptor } from '@dolittle/types';
 
-export class PropertyMapper<TDocument extends object = any> implements IOperation<TDocument> {
+export class PropertyMapper<TDocument extends object = any> implements IOperation {
     readonly eventTypes: Constructor[];
-    readonly subOperations: IOperation<TDocument>[] = [];
+    readonly subOperations: IOperation[] = [];
     readonly composite: boolean = false;
 
     constructor(eventType: Constructor,

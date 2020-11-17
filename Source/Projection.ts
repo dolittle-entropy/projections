@@ -14,7 +14,7 @@ export class Projection {
 
     constructor(readonly stream: Guid,
         private readonly _targetType: Constructor,
-        private readonly _operations: IOperation<any>[],
+        private readonly _operations: IOperation[],
         databaseModel?: ModelType<any>) {
         this._databaseModel = databaseModel || getModelForClass(_targetType);
     }

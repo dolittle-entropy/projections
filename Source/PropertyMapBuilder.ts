@@ -19,7 +19,7 @@ export class PropertyMapBuilder {
         this._eventType = eventType;
     }
 
-    build(): IOperation<any> {
+    build(): IOperation {
         return new PropertyMapper(this._eventType!, this._targetProperty, this._sourceProperty!);
     }
 }

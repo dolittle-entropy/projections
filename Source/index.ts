@@ -16,7 +16,7 @@ declare module '@dolittle/sdk' {
          * @param {Constructor} targetType Type of document to project to.
          * @param {ProjectionBuilderCallback} callback Callback for building the projection.
          */
-        withProjectionFor<TDocument extends object>(targetType: Constructor<TDocument>, callback: ProjectionBuilderCallback<TDocument>): void;
+        withProjectionFor<TDocument extends object>(targetType: Constructor<TDocument>, callback: ProjectionBuilderCallback<TDocument>): ClientBuilder;
     }
 }
 
@@ -24,4 +24,5 @@ ClientBuilder.prototype.withProjectionFor = function <TDocument extends object>(
     const projectionBuilder = new ProjectionBuilder<TDocument>(targetType, this);
     callback(projectionBuilder);
     projectionBuilder.build();
+    return this;
 };

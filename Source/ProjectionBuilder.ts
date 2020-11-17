@@ -9,25 +9,40 @@ import { PropertyMapBuilder, PropertyMapBuilderCallback } from './PropertyMapBui
 import { PropertyUtilities } from './PropertyUtilities';
 import { Projection } from './Projection';
 import { ModelType } from '@typegoose/typegoose/lib/types';
+import { FromEventBuilderCallback } from './FromEventBuilder';
+import { JoinEventBuilderCallback } from './JoinEventBuilder';
 
 export type ProjectionBuilderCallback<TDocument extends object> = (builder: ProjectionBuilder<TDocument>) => void;
 
+/**
+ * Represents the builder of a projection for a specific type.
+ */
 export class ProjectionBuilder<TDocument extends object> {
     private _id?: Guid;
     private _fromScope?: Guid;
     private _propertyMapBuilders: PropertyMapBuilder[] = [];
     private _model?: ModelType<any>;
 
+    /**
+     * Initializes a new instance of {@link ProjectionBuilder{TDocument}}
+     * @param {Constructor{TDocument}} _targetType Type of document to build.
+     * @param {ClientBuilder} _clientBuilder The Dolittle SDK {@link ClientBuilder}
+     */
     constructor(private readonly _targetType: Constructor<TDocument>, private readonly _clientBuilder: ClientBuilder) {
     }
 
+    /**
+     * Identifies the projections stream.
+     * @param id Unique identifier that identifies the projection stream.
+     * @returns {ProjectionBuilder{TDocument}} Continuation for building.
+     */
     withId(id: Guid | string): ProjectionBuilder<TDocument> {
         this._id = Guid.as(id);
 
         return this;
     }
 
-    fromScope(id: Guid | string): ProjectionBuilder<TDocument> {
+    inScope(id: Guid | string): ProjectionBuilder<TDocument> {
         this._fromScope = Guid.as(id);
 
         return this;
@@ -35,6 +50,16 @@ export class ProjectionBuilder<TDocument extends object> {
 
     useModel(model: ModelType<any>): ProjectionBuilder<TDocument> {
         this._model = model;
+
+        return this;
+    }
+
+    from<TEvent extends object>(eventType: Constructor<TEvent>, callback: FromEventBuilderCallback<TDocument, TEvent>): ProjectionBuilder<TDocument> {
+
+        return this;
+    }
+
+    join<TEvent extends object>(eventType: Constructor<TEvent>, callback: JoinEventBuilderCallback<TDocument, TEvent>): ProjectionBuilder<TDocument> {
 
         return this;
     }
@@ -74,3 +99,4 @@ export class ProjectionBuilder<TDocument extends object> {
         });
     }
 }
+

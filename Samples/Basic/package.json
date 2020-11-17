@@ -20,7 +20,7 @@
         },
         "watch": [
             "./",
-            "../Source"
+            "../../Source"
         ],
         "ext": "ts"
     },

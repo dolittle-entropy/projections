@@ -7,6 +7,18 @@ import express from 'express';
 import { TenantId } from '@dolittle/sdk.execution';
 import { ComponentAdded, FeatureAdded, RuleDefined } from './events';
 
+import { Guid } from '@dolittle/rudiments';
+import '@dolittle/projections';
+
+export class Rule {
+    type!: number;
+    priority!: number;
+    featureId!: Guid;
+    featureName!: string;
+    componentId!: Guid;
+    componentName!: string;
+}
+
 (async () => {
     const client = Client
         .forMicroservice('78cf6cf3-2ed1-4e8c-b456-f8f4365c31cd')
@@ -14,6 +26,21 @@ import { ComponentAdded, FeatureAdded, RuleDefined } from './events';
             .register(ComponentAdded)
             .register(FeatureAdded)
             .register(RuleDefined))
+        .withProjectionFor(Rule, p => p
+            .withId('0ded8a37-5a69-41f3-b31e-c1f20867e1de')
+            .from(RuleDefined, e => e
+                .set(r => r.type).to(ev => ev.type)
+                .set(r => r.priority).to(ev => ev.priority)
+                .set(r => r.featureId).to(ev => ev.featureId)
+                .set(r => r.componentId).to(ev => ev.componentId))
+            .join(FeatureAdded, e => e
+                .on(r => r.featureId)
+                .set(r => r.featureName).to(ev => ev.name))
+            .join(ComponentAdded, e => e
+                .on(r => r.componentId)
+                .set(r => r.componentName).to(ev => ev.name))
+        )
+
         .build();
 
     const app = express();
@@ -32,14 +59,14 @@ import { ComponentAdded, FeatureAdded, RuleDefined } from './events';
         const ruleId = 'afe8b77f-5430-4a98-8fa5-a7c6f63c2e1f';
 
         await eventStore.commit(new FeatureAdded('My Feature'), featureId);
-        await eventStore.commit(new RuleDefined(1,2, featureId, componentId), componentId);
+        await eventStore.commit(new RuleDefined(1, 2, featureId, componentId), componentId);
         await eventStore.commit(new ComponentAdded('My Component'), componentId);
 
         await res.send('Ok');
     });
 
     const expressPort = process.env.PORT || 3000;
-    app.listen({ port: expressPort, hostname: '0.0.0.0'}, () => {
+    app.listen({ port: expressPort, hostname: '0.0.0.0' }, () => {
         console.log(`Server is running on port ${expressPort}.`);
     });
 })();

@@ -5,5 +5,8 @@
         "outDir": "Distribution"
     },
     "references": [
+        {
+            "path": "../../Source"
+        }
     ]
 }

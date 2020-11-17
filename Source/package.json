@@ -1,0 +1,16 @@
+{
+    "name": "@dolittle/projections",
+    "version": "0.0.1",
+    "description": "",
+    "main": "dist/index.js",
+    "author": "Dolittle",
+    "license": "MIT",
+    "scripts": {
+        "build": "tsc -b"
+    },
+    "dependencies": {
+        "@dolittle/sdk": "14.1.0",
+        "@typegoose/typegoose": "7.4.2"
+    },
+    "peerDependencies": {}
+}

@@ -8,12 +8,14 @@ import { EventContext, EventTypeId } from '@dolittle/sdk.events';
 import { getModelForClass } from '@typegoose/typegoose';
 import { ModelType } from '@typegoose/typegoose/lib/types';
 import { IOperation } from './IOperation';
+import { IKeyStrategy } from './Keys/IKeyStrategy';
 
 export class Projection {
     private readonly _databaseModel: ModelType<any>;
 
     constructor(readonly stream: Guid,
         private readonly _targetType: Constructor,
+        private readonly _keyStrategy: IKeyStrategy,
         private readonly _operations: IOperation[],
         databaseModel?: ModelType<any>) {
         this._databaseModel = databaseModel || getModelForClass(_targetType);

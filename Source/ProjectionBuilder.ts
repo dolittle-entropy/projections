@@ -9,8 +9,11 @@ import { PropertyMapBuilder, PropertyMapBuilderCallback } from './PropertyMapBui
 import { PropertyUtilities } from './PropertyUtilities';
 import { Projection } from './Projection';
 import { ModelType } from '@typegoose/typegoose/lib/types';
-import { FromEventBuilderCallback } from './FromEventBuilder';
-import { JoinEventBuilderCallback } from './JoinEventBuilder';
+import { FromEventBuilderCallback } from './From/FromEventBuilder';
+import { JoinEventBuilderCallback } from './Join/JoinEventBuilder';
+import { IKeyStrategy } from './Keys/IKeyStrategy';
+import { EventSourceKeyStrategy } from './Keys/EventSourceKeyStrategy';
+import { PropertyKeyStrategy } from './Keys/PropertyKeyStrategy';
 
 export type ProjectionBuilderCallback<TDocument extends object> = (builder: ProjectionBuilder<TDocument>) => void;
 
@@ -22,6 +25,7 @@ export class ProjectionBuilder<TDocument extends object> {
     private _fromScope?: Guid;
     private _propertyMapBuilders: PropertyMapBuilder[] = [];
     private _model?: ModelType<any>;
+    private _keyStrategy?: IKeyStrategy;
 
     /**
      * Initializes a new instance of {@link ProjectionBuilder{TDocument}}
@@ -39,6 +43,11 @@ export class ProjectionBuilder<TDocument extends object> {
     withId(id: Guid | string): ProjectionBuilder<TDocument> {
         this._id = Guid.as(id);
 
+        return this;
+    }
+
+    usingKeyProperty(propertyPath: string): ProjectionBuilder<TDocument> {
+        this._keyStrategy = new PropertyKeyStrategy(propertyPath);
         return this;
     }
 
@@ -82,9 +91,11 @@ export class ProjectionBuilder<TDocument extends object> {
             return self.indexOf(value) === index;
         };
 
+        const keyStrategy = this._keyStrategy || new EventSourceKeyStrategy();
+
         const reducers = this._propertyMapBuilders.map(_ => _.build());
         const events = reducers.flatMap(_ => _.eventTypes).filter(distinct);
-        const projection = new Projection(this._id, this._targetType, reducers, this._model);
+        const projection = new Projection(this._id, this._targetType, keyStrategy, reducers, this._model);
 
         this._clientBuilder.withEventHandlers(eh => {
             eh.createEventHandler(this._id!, b => {

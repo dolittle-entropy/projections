@@ -5,5 +5,5 @@ import { eventType } from '@dolittle/sdk.events';
 
 @eventType('005a782f-bb11-4ee6-959c-e38191a66249')
 export class RuleDefined {
-    constructor(readonly type: number, readonly priority: number, readonly featureId: string, readonly componentId: string) {}
+    constructor(readonly ruleId: string, readonly type: number, readonly priority: number, readonly featureId: string, readonly componentId: string) {}
 }

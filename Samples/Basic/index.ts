@@ -28,6 +28,7 @@ export class Rule {
             .register(RuleDefined))
         .withProjectionFor(Rule, p => p
             .withId('0ded8a37-5a69-41f3-b31e-c1f20867e1de')
+            .usingKeyProperty('ruleId')
             .from(RuleDefined, e => e
                 .set(r => r.type).to(ev => ev.type)
                 .set(r => r.priority).to(ev => ev.priority)
@@ -59,7 +60,7 @@ export class Rule {
         const ruleId = 'afe8b77f-5430-4a98-8fa5-a7c6f63c2e1f';
 
         await eventStore.commit(new FeatureAdded('My Feature'), featureId);
-        await eventStore.commit(new RuleDefined(1, 2, featureId, componentId), componentId);
+        await eventStore.commit(new RuleDefined(ruleId, 1, 2, featureId, componentId), ruleId);
         await eventStore.commit(new ComponentAdded('My Component'), componentId);
 
         await res.send('Ok');

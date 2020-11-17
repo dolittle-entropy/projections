@@ -2,8 +2,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import { PropertyAccessor } from '@dolittle/types';
-import { IOperation } from './IOperation';
-import { IOperationBuilder } from './IOperationBuilder';
+import { IOperation } from '../IOperation';
+import { IOperationBuilder } from '../IOperationBuilder';
 
 export type JoinEventBuilderCallback<TDocument, TEvent> = (builder: JoinEventBuilder<TDocument, TEvent>) => void;
 

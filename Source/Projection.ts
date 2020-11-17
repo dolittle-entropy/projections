@@ -7,14 +7,14 @@ import { EventContext, EventTypeId } from '@dolittle/sdk.events';
 
 import { getModelForClass } from '@typegoose/typegoose';
 import { ModelType } from '@typegoose/typegoose/lib/types';
-import { IAction } from './IAction';
+import { IOperation } from './IOperation';
 
 export class Projection {
     private readonly _databaseModel: ModelType<any>;
 
     constructor(readonly stream: Guid,
         private readonly _targetType: Constructor,
-        private readonly _reducers: IAction<any>[],
+        private readonly _operations: IOperation<any>[],
         databaseModel?: ModelType<any>) {
         this._databaseModel = databaseModel || getModelForClass(_targetType);
     }
@@ -25,7 +25,7 @@ export class Projection {
 
             let currentState = currentProjectionState || {};
 
-            const reducers = this._reducers.filter(_ => _.eventTypes.some(et => et === event.constructor));
+            const reducers = this._operations.filter(_ => _.eventTypes.some(et => et === event.constructor));
             for (const reducer of reducers) {
                 currentState = reducer.perform(currentState, [event]);
             }

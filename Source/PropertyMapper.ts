@@ -1,11 +1,12 @@
 // Copyright (c) Dolittle. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import { IAction } from './IAction';
+import { IOperation } from './IOperation';
 import { Constructor, PropertyAccessorDescriptor } from '@dolittle/types';
 
-export class PropertyMapper<TDocument extends object = any> implements IAction<TDocument> {
+export class PropertyMapper<TDocument extends object = any> implements IOperation<TDocument> {
     readonly eventTypes: Constructor[];
+    readonly subOperations: IOperation<TDocument>[] = [];
     readonly composite: boolean = false;
 
     constructor(eventType: Constructor,

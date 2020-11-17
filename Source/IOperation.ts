@@ -3,8 +3,9 @@
 
 import { Constructor } from '@dolittle/types';
 
-export interface IAction<TDocument> {
+export interface IOperation<TDocument> {
     eventTypes: Constructor[];
+    subOperations: IOperation<TDocument>[];
     composite: boolean;
     perform(initial: any, events: any[]): any;
 }

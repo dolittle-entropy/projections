@@ -2,7 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import { Constructor, PropertyAccessor, PropertyAccessorDescriptor } from '@dolittle/types';
-import { IAction } from './IAction';
+import { IOperation } from './IOperation';
 import { PropertyMapper } from './PropertyMapper';
 import { PropertyUtilities } from './PropertyUtilities';
 
@@ -19,7 +19,7 @@ export class PropertyMapBuilder {
         this._eventType = eventType;
     }
 
-    build(): IAction<any> {
+    build(): IOperation<any> {
         return new PropertyMapper(this._eventType!, this._targetProperty, this._sourceProperty!);
     }
 }

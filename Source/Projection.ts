@@ -18,7 +18,7 @@ export class Projection {
         private readonly _keyStrategy: IKeyStrategy,
         private readonly _operations: IOperation[],
         databaseModel?: ModelType<any>) {
-        this._databaseModel = databaseModel || getModelForClass(_targetType);
+        this._databaseModel = databaseModel || getModelForClass(_targetType);
     }
 
     async handle(event: any, context: EventContext) {
@@ -39,3 +39,5 @@ export class Projection {
         }
     }
 }
+
+

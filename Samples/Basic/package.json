@@ -6,7 +6,23 @@
     "author": "Dolittle",
     "license": "MIT",
     "scripts": {
+        "dev": "nodemon ./index.ts",
         "build": "tsc -b"
+    },
+    "nodemonConfig": {
+        "restartable": "rs",
+        "ignore": [
+            "Distribution",
+            "*.d.ts"
+        ],
+        "execMap": {
+            "ts": "ts-node"
+        },
+        "watch": [
+            "./",
+            "../Source"
+        ],
+        "ext": "ts"
     },
 
     "dependencies": {

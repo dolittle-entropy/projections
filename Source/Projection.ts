@@ -7,14 +7,14 @@ import { EventContext, EventTypeId } from '@dolittle/sdk.events';
 
 import { getModelForClass } from '@typegoose/typegoose';
 import { ModelType } from '@typegoose/typegoose/lib/types';
-import { IReducer } from './IReducer';
+import { IAction } from './IAction';
 
 export class Projection {
     private readonly _databaseModel: ModelType<any>;
 
     constructor(readonly stream: Guid,
         private readonly _targetType: Constructor,
-        private readonly _reducers: IReducer<any>[],
+        private readonly _reducers: IAction<any>[],
         databaseModel?: ModelType<any>) {
         this._databaseModel = databaseModel || getModelForClass(_targetType);
     }

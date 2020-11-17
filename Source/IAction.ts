@@ -3,7 +3,7 @@
 
 import { Constructor } from '@dolittle/types';
 
-export interface IReducer<TDocument> {
+export interface IAction<TDocument> {
     eventTypes: Constructor[];
     composite: boolean;
     perform(initial: any, events: any[]): any;

@@ -1,7 +1,7 @@
 // Copyright (c) Dolittle. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-export * from './IReducer';
+export * from './IAction';
 export * from './Projection';
 
 import { Constructor } from '@dolittle/types';

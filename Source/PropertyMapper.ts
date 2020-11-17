@@ -1,10 +1,10 @@
 // Copyright (c) Dolittle. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import { IReducer } from './IReducer';
+import { IAction } from './IAction';
 import { Constructor, PropertyAccessorDescriptor } from '@dolittle/types';
 
-export class PropertyMapper<TDocument extends object = any> implements IReducer<TDocument> {
+export class PropertyMapper<TDocument extends object = any> implements IAction<TDocument> {
     readonly eventTypes: Constructor[];
     readonly composite: boolean = false;
 

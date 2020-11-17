@@ -1,5 +1,14 @@
 {
     "private": true,
+    "name": "basic",
+    "version": "1.0.0",
+    "main": "dist/index.js",
+    "author": "Dolittle",
+    "license": "MIT",
+    "scripts": {
+        "build": "tsc -b"
+    },
+
     "dependencies": {
         "@dolittle/projections": "1.0.0"
     }

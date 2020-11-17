@@ -39,6 +39,6 @@
      },
 
      "exclude": [
-         "**/dist"
+         "**/dist", "node_modules", "dist"
      ]
 }

@@ -3,4 +3,4 @@
 
 describe('when doing things', () => {
     it('should do stuff', () => true.should.be.true);
-})
+});

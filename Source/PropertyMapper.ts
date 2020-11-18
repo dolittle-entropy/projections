@@ -3,6 +3,7 @@
 
 import { IOperation } from './IOperation';
 import { Constructor, PropertyAccessorDescriptor } from '@dolittle/types';
+import { IOperationContext } from './IOperationContext';
 
 export class PropertyMapper<TDocument extends object = any> implements IOperation {
     readonly eventTypes: Constructor[];
@@ -15,11 +16,11 @@ export class PropertyMapper<TDocument extends object = any> implements IOperatio
         this.eventTypes = [eventType];
     }
 
-    perform(initial: any, events: any[]) {
-        for (const event of events) {
+    perform(context: IOperationContext) {
+        for (const event of context.events) {
             const value = this._sourceProperty.accessor(event);
 
-            let current = initial;
+            let current = context.model;
             this._targetProperty.segments.forEach((segment: string, index: number) => {
                 if (index !== this._sourceProperty.segments.length - 1) {
                     current[segment] = current[segment] || {};
@@ -30,7 +31,7 @@ export class PropertyMapper<TDocument extends object = any> implements IOperatio
                 current = current[segment];
             });
 
-            return initial;
+            return context.model;
         }
     }
 }

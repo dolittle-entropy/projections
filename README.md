@@ -7,6 +7,12 @@
 ## Goal
 
 The goal of this project is to prove the concept of a declarative projection engine for [Dolittle](https://dolittle.io) based on event sourcing.
+When working with event sourcing, the concept of idempotency can be hard. This is especially true when one is joining events from different sources
+to provide a composed view or read model. Doing this in an imperative manner means a lot of heavy lifting on an event processor to do this.
+The main purpose of this project is to deal with the heavy lifting and provide a lovable API surface for doing this.
+
+Main design goal is to capture the most common cases and provide a fallback method for the edge cases.
+
 ### Initial Design
 
 ![](./initial_design.png)

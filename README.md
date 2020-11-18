@@ -54,6 +54,9 @@ Main design goal is to capture the most common cases and provide a fallback meth
 
 ## Initial Design
 
+The idea is to formalize the abstraction around **Operations** and implement the different supported
+operations that is needed to cover the most common use cases.
+
 ![](./initial_design.png)
 
 ## Pre-requisites

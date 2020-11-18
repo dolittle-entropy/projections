@@ -51,6 +51,10 @@ an SDK API for this.
 ### Edge cases
 
 Main design goal is to capture the most common cases and provide a fallback method for the edge cases.
+Since the actual handling of projections might not run in the application process, but as part of a runtime service
+the most common cases will be limited. This is a design tradeoff. However, as a fallback we could have an operation type
+that calls back to the application. This does however introduce latency in the processing, but at least you get the
+benefit of being able to do what you want.
 
 ## Initial Design
 

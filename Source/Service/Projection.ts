@@ -11,6 +11,7 @@ import { IOperation } from './IOperation';
 import { IKeyStrategy } from './Keys/IKeyStrategy';
 import { OperationContext } from './OperationContext';
 
+
 export class Projection {
     private readonly _databaseModel: ModelType<any>;
     private readonly _operationsByEventType: Map<Constructor, IOperation[]> = new Map();
@@ -51,5 +52,3 @@ export class Projection {
         }
     }
 }
-
-

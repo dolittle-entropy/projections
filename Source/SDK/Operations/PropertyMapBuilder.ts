@@ -2,9 +2,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import { Constructor, PropertyAccessor, PropertyAccessorDescriptor } from '@dolittle/types';
-import { IOperation } from './IOperation';
-import { PropertyMapper } from './PropertyMapper';
-import { PropertyUtilities } from './PropertyUtilities';
+import { IOperation } from '../../Service/IOperation';
+import { PropertyMapper } from '../../Service/Operations/PropertyMapper';
+import { PropertyUtilities } from '../PropertyUtilities';
 
 export type PropertyMapBuilderCallback = (builder: PropertyMapBuilder) => void;
 

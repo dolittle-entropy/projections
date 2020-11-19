@@ -2,8 +2,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import { PropertyAccessor } from '@dolittle/types';
-import { IOperation } from '../IOperation';
+import { IOperation } from '../../Service/IOperation';
 import { IOperationBuilder } from '../IOperationBuilder';
+import { OperationDescriptor } from '../OperationDescriptor';
 
 export type JoinEventBuilderCallback<TDocument, TEvent> = (builder: JoinEventBuilder<TDocument, TEvent>) => void;
 
@@ -16,12 +17,12 @@ export class SetBuilder<TDocument, TEvent> implements IOperationBuilder {
         return this._parent;
     }
 
-    build(): IOperation {
+    build(): OperationDescriptor {
         throw new Error('Method not implemented.');
     }
 }
 
-export class JoinEventBuilder<TDocument, TEvent> {
+export class JoinEventBuilder<TDocument, TEvent> implements IOperationBuilder {
     private readonly _builders: IOperationBuilder[] = [];
 
     on(property: PropertyAccessor<TDocument>): JoinEventBuilder<TDocument, TEvent> {
@@ -34,8 +35,10 @@ export class JoinEventBuilder<TDocument, TEvent> {
         return builder;
     }
 
-    build(): IOperation[] {
-        return this._builders.map(_ => _.build());
+    build(): OperationDescriptor {
+        const children = this._builders.map(_ => _.build());
+
+        throw new Error('Method not implemented.');
     }
 }
 

@@ -7,13 +7,30 @@ import { ProjectionDescriptor } from '../SDK/ProjectionDescriptor';
 import { EventHandlersClient } from '@dolittle/runtime.contracts/Runtime/Events.Processing/EventHandlers_grpc_pb';
 import { Client } from '@dolittle/sdk';
 import { IContainer } from '@dolittle/sdk.common';
+import { ScopeId } from '@dolittle/sdk.events';
 import { EventHandlersBuilder } from '@dolittle/sdk.events.handling';
 import { Cancellation } from '@dolittle/sdk.resilience';
 import { MicroserviceId, Environment, ExecutionContext, TenantId, CorrelationId, Claims, Version } from '@dolittle/sdk.execution';
+import { EventSourceKeyStrategy } from './Keys/EventSourceKeyStrategy';
+import { PropertyKeyStrategy } from './Keys/PropertyKeyStrategy';
+import { UnknownKeyStrategy } from './UnknownKeyStrategy';
+import { FromEvent } from './Operations/FromEvent';
+
+import { OperationDescriptor } from '../SDK/OperationDescriptor';
+import { ChildOperationDescriptor } from '../SDK/ChildOperationDescriptor';
+import { JoinEvent } from './Operations/JoinEvent';
+import { UnknownOperation } from './UnknownOperation';
+import { UnknownChildOperation } from './UnknownChildOperation';
+import { PropertyMapper } from './Operations/PropertyMapper';
+import { IChildOperation } from './IChildOperation';
+
+import KeyStrategyTypes from '../KeyStrategyTypes';
+import OperationTypes from '../OperationTypes';
+import ChildOperationTypes from '../ChildOperationTypes';
 
 export class ProjectionService {
-    static register(client: Client, container: IContainer, connectionString: string, descriptor: ProjectionDescriptor): void {
-        // This is just a workaround since we're not part of the SDK
+    static register(client: Client, container: IContainer, connectionString: string, descriptor: ProjectionDescriptor): Projection {
+        // This is just a workaround since we're not part of the SDK - this would be in the ClientBuilder Build method
         const executionContext = new ExecutionContext(
             MicroserviceId.from('7c3d7387-6324-4309-980f-31b9c4b39046'),
             TenantId.system,
@@ -23,10 +40,34 @@ export class ProjectionService {
             Claims.empty);
 
         const credentials = grpc.credentials.createInsecure();
-        const eventHandlersBuilder = new EventHandlersBuilder();
+        const eventHandlers = new EventHandlersBuilder();
 
+        const distinct = (value: any, index: number, self: any[]) => {
+            return self.indexOf(value) === index;
+        };
+        const eventTypes = descriptor.operations.flatMap(_ => _.eventTypes); //.filter(distinct);
 
-        const eventHandlersForProjections = eventHandlersBuilder.buildAndRegister(
+        console.log(eventTypes);
+
+        const projection = new Projection(
+            descriptor.stream,
+            this.getKeyStrategyFor(descriptor),
+            descriptor.operations.map(_ => ProjectionService.buildOperationFrom(_))
+        );
+
+        eventHandlers.createEventHandler(descriptor.stream, b => {
+            const builder = b.partitioned();
+
+            if (descriptor.scope !== ScopeId.default) {
+                b.inScope(descriptor.scope);
+            }
+
+            for (const eventType of eventTypes) {
+                builder.handle(eventType, projection.handle.bind(projection));
+            }
+        });
+
+        const eventHandlersForProjections = eventHandlers.buildAndRegister(
             new EventHandlersClient(connectionString, credentials),
             container,
             executionContext,
@@ -34,34 +75,46 @@ export class ProjectionService {
             client.logger,
             Cancellation.default);
 
-
+        return projection;
     }
-}
 
-        /*
-        set(targetProperty: PropertyAccessor<TDocument>, propertyMapBuilderCallback: PropertyMapBuilderCallback): ProjectionBuilder<TDocument> {
-            const targetPropertyDescriptor = PropertyUtilities.getPropertyDescriptorFor(targetProperty);
-            const propertyMapBuilder = new PropertyMapBuilder(targetPropertyDescriptor);
-            propertyMapBuilderCallback(propertyMapBuilder);
-            this._propertyMapBuilders.push(propertyMapBuilder);
 
-            return this;
+    private static getKeyStrategyFor(descriptor: ProjectionDescriptor) {
+        switch (descriptor.keyStrategy.id) {
+            case KeyStrategyTypes.EventSourceIdentifier: {
+                return new EventSourceKeyStrategy();
+            };
+            case KeyStrategyTypes.Property: {
+                return new PropertyKeyStrategy(descriptor.keyStrategy.configuration);
+            }
         }
 
-        const distinct = (value: any, index: number, self: any[]) => {
-            return self.indexOf(value) === index;
-        };
-        const reducers = this._propertyMapBuilders.map(_ => _.build());
-        const events = reducers.flatMap(_ => _.eventTypes).filter(distinct);
-        const projection = new Projection(this._id, this._targetType, keyStrategy, reducers, this._model);
+        throw new UnknownKeyStrategy(descriptor.keyStrategy.id);
+    }
 
-        eventHandlers.createEventHandler(this._id!, b => {
-            const builder = b.partitioned();
-            if (this._fromScope) {
-                b.inScope(this._fromScope);
+    private static buildOperationFrom(descriptor: OperationDescriptor) {
+        switch (descriptor.id) {
+            case OperationTypes.FromEvent: {
+                return new FromEvent(descriptor.eventTypes, ProjectionService.buildChildOperations(descriptor.children));
+            };
+            case OperationTypes.JoinEvent: {
+                return new JoinEvent(descriptor.eventTypes, ProjectionService.buildChildOperations(descriptor.children));
+            };
+        }
+
+        throw new UnknownOperation(descriptor.id);
+    }
+
+
+    private static buildChildOperations(children: ChildOperationDescriptor[]): IChildOperation[] {
+        return children.map(_ => {
+            switch (_.id) {
+                case ChildOperationTypes.PropertyMap: {
+                    return new PropertyMapper(ProjectionService.buildChildOperations(_.children));
+                };
             }
-            for (const eventType of events) {
-                builder.handle(eventType, projection.handle.bind(projection));
-            }
+
+            throw new UnknownChildOperation(_.id);
         });
-        */
+    }
+}

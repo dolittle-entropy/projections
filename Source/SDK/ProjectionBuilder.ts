@@ -5,6 +5,7 @@ import { Guid } from '@dolittle/rudiments';
 import { ClientBuilder } from '@dolittle/sdk';
 import { Constructor } from '@dolittle/types';
 import { IEventTypes } from '@dolittle/sdk.artifacts';
+import { ScopeId } from '@dolittle/sdk.events';
 
 import { FromEventBuilder, FromEventBuilderCallback } from './Operations/FromEventBuilder';
 import { JoinEventBuilder, JoinEventBuilderCallback } from './Operations/JoinEventBuilder';
@@ -26,7 +27,7 @@ export type ProjectionBuilderCallback<TDocument extends object> = (builder: Proj
  */
 export class ProjectionBuilder<TDocument extends object> {
     private _id?: Guid;
-    private _fromScope?: Guid;
+    private _fromScope: ScopeId = ScopeId.default;
     private _model: ModelDescriptor;
     private _keyStrategy: KeyStrategyDescriptor = new KeyStrategyDescriptor(KeyStrategyTypes.EventSourceIdentifier);
     private _operationBuilders: IOperationBuilder[] = [];
@@ -56,8 +57,8 @@ export class ProjectionBuilder<TDocument extends object> {
         return this;
     }
 
-    inScope(id: Guid | string): ProjectionBuilder<TDocument> {
-        this._fromScope = Guid.as(id);
+    inScope(id: ScopeId | Guid | string): ProjectionBuilder<TDocument> {
+        this._fromScope = ScopeId.from(id);
         return this;
     }
 
@@ -74,7 +75,7 @@ export class ProjectionBuilder<TDocument extends object> {
     }
 
     join<TEvent extends object>(eventType: Constructor<TEvent>, callback: JoinEventBuilderCallback<TDocument, TEvent>): ProjectionBuilder<TDocument> {
-        const builder = new JoinEventBuilder<TDocument, TEvent>();
+        const builder = new JoinEventBuilder<TDocument, TEvent>(eventType);
         callback(builder);
         this._operationBuilders.push(builder);
         return this;
@@ -86,7 +87,7 @@ export class ProjectionBuilder<TDocument extends object> {
         const operationBuilderContext = new OperationBuilderContext(eventTypes);
 
         const operations = this._operationBuilders.map(_ => _.build(operationBuilderContext));
-        const projection = new ProjectionDescriptor(this._id!, this._model, this._keyStrategy, operations);
+        const projection = new ProjectionDescriptor(this._id!, this._model, this._keyStrategy, operations, this._fromScope);
 
         return projection;
     }

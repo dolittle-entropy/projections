@@ -3,8 +3,8 @@
 
 import { OperationTypeId } from '../OperationTypeId';
 
-export class ChildOperationDescriptor {
-    constructor(readonly id: OperationTypeId, data: any = {}, readonly children: ChildOperationDescriptor[] = []) {
+export class UnknownChildOperation extends Error {
+    constructor(operationTypeId: OperationTypeId) {
+        super(`Operation of type '${operationTypeId.toString()}' is unknown`);
     }
-
 }

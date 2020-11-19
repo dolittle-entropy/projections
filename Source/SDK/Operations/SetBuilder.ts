@@ -2,21 +2,35 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import { PropertyAccessor } from '@dolittle/types';
-import OperationTypes from '../../OperationTypes';
 import { ChildOperationDescriptor } from '../ChildOperationDescriptor';
 import { IChildOperationBuilder } from '../IChildOperationBuilder';
 import { OperationBuilderContext } from '../OperationBuilderContext';
+import { PropertyUtilities } from '../PropertyUtilities';
+import ChildOperationTypes from '../..//ChildOperationTypes';
 
-export class SetBuilder<TParent, TDocument, TEvent> implements IChildOperationBuilder {
-    constructor(private readonly _parent: TParent) {
+export type PropertyMapData = {
+    sourceProperty: string;
+    targetProperty: string;
+};
+
+export class SetBuilder<TParent, TDocument, TEvent extends object> implements IChildOperationBuilder {
+    private _sourceProperty: string = '';
+
+    constructor(private readonly targetPropertyPath: string, private readonly _parent: TParent) {
     }
 
-    to(property: PropertyAccessor<TEvent>): TParent {
+    to(sourceProperty: PropertyAccessor<TEvent>): TParent {
+        const propertyDescriptor = PropertyUtilities.getPropertyDescriptorFor(sourceProperty);
+        this._sourceProperty = propertyDescriptor.path;
 
         return this._parent;
     }
 
     build(buildContext: OperationBuilderContext): ChildOperationDescriptor {
-        return new ChildOperationDescriptor(OperationTypes.PropertyMap);
+        const data: PropertyMapData = {
+            sourceProperty: this._sourceProperty,
+            targetProperty: this.targetPropertyPath
+        };
+        return new ChildOperationDescriptor(ChildOperationTypes.PropertyMap, data);
     }
 }

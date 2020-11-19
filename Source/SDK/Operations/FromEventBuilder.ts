@@ -8,23 +8,26 @@ import { SetBuilder } from './SetBuilder';
 import { OperationBuilderContext } from '../OperationBuilderContext';
 import OperationTypes from '../../OperationTypes';
 import { IChildOperationBuilder } from '../IChildOperationBuilder';
+import { PropertyUtilities } from '../PropertyUtilities';
 
-export type FromEventBuilderCallback<TDocument, TEvent> = (builder: FromEventBuilder<TDocument, TEvent>) => void;
+export type FromEventBuilderCallback<TDocument extends object, TEvent extends object> = (builder: FromEventBuilder<TDocument, TEvent>) => void;
 
-export class FromEventBuilder<TDocument, TEvent> implements IOperationBuilder{
+
+export class FromEventBuilder<TDocument extends object, TEvent extends object> implements IOperationBuilder{
     private readonly _builders: IChildOperationBuilder[] = [];
 
     constructor(private readonly _eventType: Constructor<TEvent>) {}
 
-    set(property: PropertyAccessor<TDocument>): SetBuilder<FromEventBuilder<TDocument, TEvent>, TDocument, TEvent> {
-        const builder = new SetBuilder<FromEventBuilder<TDocument, TEvent>, TDocument, TEvent>(this);
+    set(targetProperty: PropertyAccessor<TDocument>): SetBuilder<FromEventBuilder<TDocument, TEvent>, TDocument, TEvent> {
+        const propertyDescriptor = PropertyUtilities.getPropertyDescriptorFor(targetProperty);
+        const builder = new SetBuilder<FromEventBuilder<TDocument, TEvent>, TDocument, TEvent>(propertyDescriptor.path, this);
         this._builders.push(builder);
         return builder;
     }
 
     build(buildContext: OperationBuilderContext): OperationDescriptor {
         const children = this._builders.map(_ => _.build(buildContext));
-        return new OperationDescriptor(OperationTypes.FromEvent, [], children);
+        const eventTypeId = buildContext.eventTypes.getFor(this._eventType).id;
+        return new OperationDescriptor(OperationTypes.FromEvent, [eventTypeId], {}, children);
     }
 }
-

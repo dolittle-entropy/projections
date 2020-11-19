@@ -3,16 +3,21 @@
 
 import { Guid } from '@dolittle/rudiments';
 import { ClientBuilder } from '@dolittle/sdk';
-import { ProjectionMustHaveAUniqueIdentifier } from './ProjectionMustHaveAUniqueIdentifier';
 import { Constructor } from '@dolittle/types';
-import { FromEventBuilderCallback } from './Operations/FromEventBuilder';
-import { EventHandlersBuilder } from '@dolittle/sdk.events.handling';
+import { IEventTypes } from '@dolittle/sdk.artifacts';
+
+import { FromEventBuilder, FromEventBuilderCallback } from './Operations/FromEventBuilder';
+import { JoinEventBuilder, JoinEventBuilderCallback } from './Operations/JoinEventBuilder';
+
 import { KeyStrategyDescriptor } from './KeyStrategyDescriptor';
 import { ModelDescriptor } from './ModelDescriptor';
-import KeyStrategyTypes from './KeyStrategyTypes';
+import KeyStrategyTypes from '../KeyStrategyTypes';
 import { ProjectionDescriptor } from './ProjectionDescriptor';
+
 import { IOperationBuilder } from './IOperationBuilder';
-import { JoinEventBuilderCallback } from './Operations/JoinEventBuilder';
+
+import { ProjectionMustHaveAUniqueIdentifier } from './ProjectionMustHaveAUniqueIdentifier';
+import { OperationBuilderContext } from './OperationBuilderContext';
 
 export type ProjectionBuilderCallback<TDocument extends object> = (builder: ProjectionBuilder<TDocument>) => void;
 
@@ -62,51 +67,33 @@ export class ProjectionBuilder<TDocument extends object> {
     }
 
     from<TEvent extends object>(eventType: Constructor<TEvent>, callback: FromEventBuilderCallback<TDocument, TEvent>): ProjectionBuilder<TDocument> {
+        const builder = new FromEventBuilder<TDocument, TEvent>(eventType);
+        callback(builder);
+        this._operationBuilders.push(builder);
         return this;
     }
 
     join<TEvent extends object>(eventType: Constructor<TEvent>, callback: JoinEventBuilderCallback<TDocument, TEvent>): ProjectionBuilder<TDocument> {
+        const builder = new JoinEventBuilder<TDocument, TEvent>();
+        callback(builder);
+        this._operationBuilders.push(builder);
         return this;
     }
 
-    build(eventHandlers: EventHandlersBuilder): ProjectionDescriptor {
-        if (!this._id) {
-            throw new ProjectionMustHaveAUniqueIdentifier();
-        }
+    build(eventTypes: IEventTypes): ProjectionDescriptor {
+        this.throwIfMissingUniqueIdentifier();
 
-        const operations = this._operationBuilders.map(_ => _.build());
-        const projection = new ProjectionDescriptor(this._id, this._model, this._keyStrategy, operations);
+        const operationBuilderContext = new OperationBuilderContext(eventTypes);
+
+        const operations = this._operationBuilders.map(_ => _.build(operationBuilderContext));
+        const projection = new ProjectionDescriptor(this._id!, this._model, this._keyStrategy, operations);
 
         return projection;
     }
-}
 
-
-        /*
-
-        set(targetProperty: PropertyAccessor<TDocument>, propertyMapBuilderCallback: PropertyMapBuilderCallback): ProjectionBuilder<TDocument> {
-            const targetPropertyDescriptor = PropertyUtilities.getPropertyDescriptorFor(targetProperty);
-            const propertyMapBuilder = new PropertyMapBuilder(targetPropertyDescriptor);
-            propertyMapBuilderCallback(propertyMapBuilder);
-            this._propertyMapBuilders.push(propertyMapBuilder);
-
-            return this;
+    private throwIfMissingUniqueIdentifier() {
+        if (!this._id) {
+            throw new ProjectionMustHaveAUniqueIdentifier();
         }
-
-        const distinct = (value: any, index: number, self: any[]) => {
-            return self.indexOf(value) === index;
-        };
-        const reducers = this._propertyMapBuilders.map(_ => _.build());
-        const events = reducers.flatMap(_ => _.eventTypes).filter(distinct);
-        const projection = new Projection(this._id, this._targetType, keyStrategy, reducers, this._model);
-
-        eventHandlers.createEventHandler(this._id!, b => {
-            const builder = b.partitioned();
-            if (this._fromScope) {
-                b.inScope(this._fromScope);
-            }
-            for (const eventType of events) {
-                builder.handle(eventType, projection.handle.bind(projection));
-            }
-        });
-        */
+    }
+}

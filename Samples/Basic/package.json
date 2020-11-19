@@ -15,6 +15,10 @@
             "Distribution",
             "*.d.ts"
         ],
+        "events": {
+            "restart": "(cd ../../Source;yarn build)"
+
+        },
         "execMap": {
             "ts": "ts-node"
         },

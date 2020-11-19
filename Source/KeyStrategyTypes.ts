@@ -1,7 +1,7 @@
 // Copyright (c) Dolittle. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import { KeyStrategyId } from '../KeyStrategyId';
+import { KeyStrategyId } from './KeyStrategyId';
 
 export default {
     EventSourceIdentifier: KeyStrategyId.from('01a2a722-48f6-4c57-8a3e-64e972b04da6'),

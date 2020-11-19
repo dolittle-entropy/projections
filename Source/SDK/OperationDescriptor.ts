@@ -4,8 +4,9 @@
 import { OperationTypeId } from '../OperationTypeId';
 
 import { EventTypeId } from '@dolittle/sdk.events';
+import { ChildOperationDescriptor } from './ChildOperationDescriptor';
 
 export class OperationDescriptor {
-    constructor(readonly id: OperationTypeId, readonly eventTypes: EventTypeId[], readonly children: OperationDescriptor[] = []) {
+    constructor(readonly id: OperationTypeId, readonly eventTypes: EventTypeId[], readonly children: ChildOperationDescriptor[] = []) {
     }
 }

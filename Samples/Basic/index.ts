@@ -62,8 +62,18 @@ export class Rule {
         await eventStore.commit(new FeatureAdded('My Feature'), featureId);
         await eventStore.commit(new RuleDefined(ruleId, 1, 2, featureId, componentId), ruleId);
         await eventStore.commit(new ComponentAdded('My Component'), componentId);
+        await eventStore.commit(new RuleDefined(ruleId, 1, 3, featureId, componentId), ruleId);
 
         await res.send('Ok');
+    });
+
+    app.get('/projections', async (req, res) => {
+        const projections = ((client as any).projections);
+        console.log(projections);
+
+        res.setHeader('Content-Type', 'application/json');
+        await res.send(projections);
+
     });
 
     const expressPort = process.env.PORT || 3000;

@@ -4,14 +4,20 @@
 import { Guid } from '@dolittle/rudiments';
 import { EventContext, EventTypeId } from '@dolittle/sdk.events';
 import { IOperation } from './IOperation';
+import { IProjectionRepository } from './IProjectionRepository';
 import { IKeyStrategy } from './Keys/IKeyStrategy';
+
+import { Logger } from 'winston';
+import { OperationContext } from './OperationContext';
 
 export class Projection {
     private readonly _operationsByEventType: Map<EventTypeId, IOperation[]> = new Map();
 
     constructor(readonly stream: Guid,
         private readonly _keyStrategy: IKeyStrategy,
-        private readonly _operations: IOperation[]) {
+        private readonly _operations: IOperation[],
+        private readonly _projectionRepository: IProjectionRepository,
+        private readonly _logger: Logger) {
 
         for (const operation of _operations) {
             for (const eventType of operation.eventTypes) {
@@ -22,28 +28,26 @@ export class Projection {
     }
 
     async handle(event: any, context: EventContext) {
+        this._logger.info('Handling');
 
-
-        console.log('Handling');
-        /*
         try {
-            const currentProjectionState = await this._databaseModel.findById(context.eventSourceId.value).exec();
+            const key = this._keyStrategy.get(event, context);
+            const currentProjectedState = await this._projectionRepository.getCurrentState(key);
 
-            const currentState = currentProjectionState || {};
+            let currentState = currentProjectedState || {};
 
             if (this._operationsByEventType.has(event.constructor)) {
-                const context = new OperationContext(this.stream, currentProjectionState, [event]);
+                const operationContext = new OperationContext(this.stream, currentState, [{event, context}]);
 
                 for (const operation of this._operationsByEventType.get(event.constructor)!) {
-                    operation.perform(context);
+                    currentState = operation.perform(operationContext);
                 }
             }
 
-            await this._databaseModel.updateOne({ _id: context.eventSourceId.value }, currentState, { upsert: true });
+            await this._projectionRepository.upsert(key, currentState);
 
         } catch (ex) {
-            console.log(ex);
+            this._logger.error(`Couldn't handle event in projection ${this.stream}`, ex);
         }
-        */
     }
 }

@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 import express from 'express';
 import { TenantId } from '@dolittle/sdk.execution';
 import { ComponentAdded, FeatureAdded, RuleDefined } from './events';
+import { createLogger, format, transports } from 'winston';
 
 import { Guid } from '@dolittle/rudiments';
 import '@dolittle/projections';
@@ -20,8 +21,23 @@ export class Rule {
 }
 
 (async () => {
+    const loggerOptions = {
+        level: 'info',
+        format: format.colorize(),
+        defaultMeta: {
+        },
+        transports: [
+            new transports.Console({
+                format: format.simple()
+            })
+        ]
+    };
+
+    const logger = createLogger(loggerOptions);
+
     const client = Client
         .forMicroservice('78cf6cf3-2ed1-4e8c-b456-f8f4365c31cd')
+        .withLogging(logger)
         .withEventTypes(_ => _
             .register(ComponentAdded)
             .register(FeatureAdded)

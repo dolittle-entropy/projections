@@ -15,8 +15,8 @@ For Dolittle, we have an event-log which is the main storage for events and any 
 filtered stream representation of the events. The events in the event-log and any sub streams are in order, typically
 partitioned by its event source identifier.
 
-When using the events to generate state, typically referred to as view cache or read models - the process involves
-typical [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operations towards a storage mechanism.
+When using the events to generate state; referred to as view cache or read models - the process involves
+performing [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operations towards a storage mechanism.
 Often this storage is a database.
 
 The imperative approach to this involves every processor that process an event to make decisions on which operation

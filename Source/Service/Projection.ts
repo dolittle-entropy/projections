@@ -6,6 +6,8 @@ import { IOperation } from './IOperation';
 import { IProjections } from './IProjections';
 import { IKeyStrategy } from './Keys/IKeyStrategy';
 
+import deepEqual from 'deep-equal';
+
 import { Logger } from 'winston';
 import { OperationContext } from './OperationContext';
 import { UnableToResolveKeyForEvent } from './UnableToResolveKeyForEvent';
@@ -27,27 +29,29 @@ export class Projection {
         }
     }
 
-    async handle(event: any, context: EventContext) {
-        this._logger.info('Handling');
-
+    async handle(eventType: EventTypeId, event: any, context: EventContext) {
         try {
             const keyStrategy = this.getKeyStrategyFor(event, context);
             const key = keyStrategy.get(event, context);
 
-            if (this._operationsByEventType.has(event.constructor)) {
-                const currentProjectedState = await this._projections.get(key);
+            if (this._operationsByEventType.has(eventType)) {
+                const initial = await this._projections.get(key) || {};
 
-                let currentState = currentProjectedState || {};
+                let currentState = { ...initial };
 
                 const operationContext = new OperationContext(this.stream, currentState, [{ event, context }]);
 
-                for (const operation of this._operationsByEventType.get(event.constructor)!) {
+                for (const operation of this._operationsByEventType.get(eventType)!) {
                     currentState = operation.perform(operationContext);
                 }
-                await this._projections.set(key, currentState);
+
+                if (!deepEqual(initial, currentState)) {
+                    await this._projections.set(key, currentState);
+                }
             }
         } catch (ex) {
             this._logger.error(`Couldn't handle event in projection ${this.stream}`, ex);
+            throw ex;
         }
     }
 
@@ -63,5 +67,3 @@ export class Projection {
         }
     }
 }
-
-

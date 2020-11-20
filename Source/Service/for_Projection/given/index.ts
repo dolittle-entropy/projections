@@ -3,3 +3,4 @@
 
 export * from './all_dependencies';
 export * from './a_projection_without_operations';
+export * from './a_projection_with_two_operations';

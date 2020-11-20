@@ -4,8 +4,8 @@
 import * as given from './given';
 import sinon from 'sinon';
 
-describe('when handling with no operations', async () => {
-    const context = new given.a_projection_without_operations();
+describe('when handling with two operations with no changes', async () => {
+    const context = new given.a_projection_with_two_operations();
     const key = '8ff8defe-e307-454d-bc48-6dde046d906e';
     context.keyStrategy.get = sinon.stub().returns(key);
 
@@ -13,6 +13,6 @@ describe('when handling with no operations', async () => {
         await context.projection.handle(context.eventType, context.event, context.eventContext);
     })();
 
-    it('should not get projection', () => context.projections.get.should.not.be.calledWith(key));
-    it('should not set projection', () => context.projections.set.should.not.be.called);
+    it('should get projection', () => context.projections.get.should.be.calledWith(key));
+    it('should set projection', () => context.projections.set.should.not.be.called);
 });

@@ -69,7 +69,7 @@ export class ProjectionService {
             }
 
             for (const eventType of eventTypes) {
-                builder.handle(eventType, projection.handle.bind(projection));
+                builder.handle(eventType, (event, context) => projection.handle.call(projection, eventType, event, context));
             }
         });
 

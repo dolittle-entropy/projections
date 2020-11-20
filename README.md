@@ -20,7 +20,10 @@ performing [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)
 Often this storage is a database.
 
 The imperative approach to this involves every processor that process an event to make decisions on which operation
-to perform. This is highly repetitive for developers. Another issue that arises in event sourced systems is that since
+to perform. This is highly repetitive for developers and is often seen upon as over-engineering something that should
+be very simple; "... I want me some data...".
+
+Another issue that arises in event sourced systems is that since
 the events are the source of truth, one can't simply rely on data produced by another event processor. These are typically
 decoupled and by its very nature ran asynchronously. State can therefor in a timeline not be guaranteed to be accurate.
 

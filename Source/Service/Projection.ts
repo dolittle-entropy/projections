@@ -43,7 +43,7 @@ export class Projection {
                 const operationContext = new OperationContext(this.stream, key, currentState, [{ event, context }]);
 
                 for (const operation of this._operationsByEventType.get(eventType)!) {
-                    currentState = await this.performOperation(operation, operationContext, currentState);
+                    currentState = await this.performOperationAndChildren(operation, operationContext, currentState);
                 }
 
                 if (!deepEqual(initial, currentState)) {
@@ -56,11 +56,11 @@ export class Projection {
         }
     }
 
-    private async performOperation(operation: IBaseOperation, operationContext: OperationContext, currentState: any): Promise<any> {
+    private async performOperationAndChildren(operation: IBaseOperation, operationContext: OperationContext, currentState: any): Promise<any> {
         currentState = await operation.perform(operationContext);
         for (const child of operation.children) {
             operationContext = new OperationContext(operationContext.stream, operationContext.key, currentState, operationContext.eventsWithContext);
-            currentState = await child.perform(operationContext);
+            currentState = this.performOperationAndChildren(child, operationContext, currentState);
         }
 
         return currentState;

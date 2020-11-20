@@ -50,7 +50,7 @@ export class Projection {
                 }
             }
         } catch (ex) {
-            this._logger.error(`Couldn't handle event in projection ${this.stream}`, ex);
+            this._logger.error(`Couldn't handle event of type '${eventType.toString()}' in projection '${this.stream.toString()}'`, ex);
             throw ex;
         }
     }

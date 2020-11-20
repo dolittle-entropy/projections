@@ -15,7 +15,7 @@ import {
     Version
 } from '@dolittle/sdk.execution';
 
-import { IProjections } from 'Source/Service/IProjections';
+import { IProjections } from '../../IProjections';
 import { Logger } from 'winston';
 import { LoggerInstance } from '../../SpecMocks/Logger';
 

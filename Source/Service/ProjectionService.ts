@@ -55,7 +55,7 @@ export class ProjectionService {
 
         const projection = new Projection(
             StreamId.from(descriptor.stream),
-            [this.getKeyStrategyFor(descriptor)],
+            this.getKeyStrategiesFor(descriptor),
             descriptor.operations.map(_ => ProjectionService.buildOperationFrom(_)),
             repository,
             client.logger
@@ -85,17 +85,20 @@ export class ProjectionService {
     }
 
 
-    private static getKeyStrategyFor(descriptor: ProjectionDescriptor) {
-        switch (descriptor.keyStrategy.id) {
-            case KeyStrategyTypes.EventSourceIdentifier: {
-                return new EventSourceKeyStrategy();
-            };
-            case KeyStrategyTypes.Property: {
-                return new PropertyKeyStrategy(descriptor.keyStrategy.configuration);
-            }
-        }
+    private static getKeyStrategiesFor(descriptor: ProjectionDescriptor) {
+        return descriptor.keyStrategies.map(_ => {
 
-        throw new UnknownKeyStrategy(descriptor.keyStrategy.id);
+            switch (_.id) {
+                case KeyStrategyTypes.EventSourceIdentifier: {
+                    return new EventSourceKeyStrategy();
+                };
+                case KeyStrategyTypes.Property: {
+                    return new PropertyKeyStrategy(_.configuration);
+                }
+            }
+
+            throw new UnknownKeyStrategy(_.id);
+        });
     }
 
     private static buildOperationFrom(descriptor: OperationDescriptor) {

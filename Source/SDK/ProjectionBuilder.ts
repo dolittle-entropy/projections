@@ -10,15 +10,14 @@ import { ScopeId } from '@dolittle/sdk.events';
 import { FromEventBuilder, FromEventBuilderCallback } from './Operations/FromEventBuilder';
 import { JoinEventBuilder, JoinEventBuilderCallback } from './Operations/JoinEventBuilder';
 
-import { KeyStrategyDescriptor } from './KeyStrategyDescriptor';
 import { ModelDescriptor } from './ModelDescriptor';
-import KeyStrategyTypes from '../KeyStrategyTypes';
 import { ProjectionDescriptor } from './ProjectionDescriptor';
 
 import { IOperationBuilder } from './IOperationBuilder';
 
 import { ProjectionMustHaveAUniqueIdentifier } from './ProjectionMustHaveAUniqueIdentifier';
 import { OperationBuilderContext } from './OperationBuilderContext';
+import { KeyStrategiesBuilder, KeyStrategiesBuilderCallback } from './KeyStrategiesBuilder';
 
 export type ProjectionBuilderCallback<TDocument extends object> = (builder: ProjectionBuilder<TDocument>) => void;
 
@@ -29,8 +28,8 @@ export class ProjectionBuilder<TDocument extends object> {
     private _id?: Guid;
     private _fromScope: ScopeId = ScopeId.default;
     private _model: ModelDescriptor;
-    private _keyStrategy: KeyStrategyDescriptor = new KeyStrategyDescriptor(KeyStrategyTypes.EventSourceIdentifier);
     private _operationBuilders: IOperationBuilder[] = [];
+    private _keyStrategiesBuilder: KeyStrategiesBuilder;
 
     /**
      * Initializes a new instance of {@link ProjectionBuilder{TDocument}}
@@ -39,6 +38,7 @@ export class ProjectionBuilder<TDocument extends object> {
      */
     constructor(private readonly _targetType: Constructor<TDocument>, private readonly _clientBuilder: ClientBuilder) {
         this._model = new ModelDescriptor(_targetType.name);
+        this._keyStrategiesBuilder = new KeyStrategiesBuilder();
     }
 
     /**
@@ -52,12 +52,12 @@ export class ProjectionBuilder<TDocument extends object> {
         return this;
     }
 
-    usingPropertyAsKey(propertyPath: string): ProjectionBuilder<TDocument> {
-        this._keyStrategy = new KeyStrategyDescriptor(KeyStrategyTypes.Property, propertyPath);
+    withKeys(callback: KeyStrategiesBuilderCallback): ProjectionBuilder<TDocument> {
+        callback(this._keyStrategiesBuilder);
         return this;
     }
 
-    inScope(id: ScopeId | Guid | string): ProjectionBuilder<TDocument> {
+    inScope(id: ScopeId | Guid | string): ProjectionBuilder<TDocument> {
         this._fromScope = ScopeId.from(id);
         return this;
     }
@@ -87,7 +87,12 @@ export class ProjectionBuilder<TDocument extends object> {
         const operationBuilderContext = new OperationBuilderContext(eventTypes);
 
         const operations = this._operationBuilders.map(_ => _.build(operationBuilderContext));
-        const projection = new ProjectionDescriptor(this._id!, this._model, this._keyStrategy, operations, this._fromScope);
+        const projection = new ProjectionDescriptor(
+                                this._id!,
+                                this._model,
+                                this._keyStrategiesBuilder.build(),
+                                operations,
+                                this._fromScope);
 
         return projection;
     }

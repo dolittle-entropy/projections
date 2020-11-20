@@ -3,7 +3,7 @@
 
 import sinon from 'sinon';
 import { StreamId } from '@dolittle/sdk.events';
-import { IKeyStrategy } from 'Source/Service/Keys/IKeyStrategy';
+import { IKeyStrategy } from '../../Keys/IKeyStrategy';
 import { Projection } from '../..//Projection';
 import { all_dependencies } from './all_dependencies';
 

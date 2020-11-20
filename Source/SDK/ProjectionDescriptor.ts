@@ -12,7 +12,7 @@ import { OperationDescriptor } from './OperationDescriptor';
 export class ProjectionDescriptor {
     constructor(readonly stream: Guid,
         readonly targetModel: ModelDescriptor,
-        readonly keyStrategy: KeyStrategyDescriptor,
+        readonly keyStrategies: KeyStrategyDescriptor[],
         readonly operations: OperationDescriptor[],
         readonly scope: ScopeId) {
     }

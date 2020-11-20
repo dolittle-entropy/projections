@@ -43,7 +43,7 @@ export class Rule {
             .register(ComponentAdded)
             .register(FeatureAdded)
             .register(RuleDefined))
-        .withProjections(_ => _.storeInMongo('mongodb://localhost:27017'))
+        .withProjections(_ => _.storeInMongo('mongodb://localhost:27017', 'Basic'))
         .withProjectionFor(Rule, p => p
             .withId('0ded8a37-5a69-41f3-b31e-c1f20867e1de')
             .useModelName('TheRules')

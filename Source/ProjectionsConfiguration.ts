@@ -2,6 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 export class ProjectionsConfiguration {
-    constructor(readonly connectionString: string) {
+    constructor(readonly connectionString: string, readonly databaseName: string) {
     }
 }

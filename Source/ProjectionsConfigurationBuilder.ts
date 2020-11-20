@@ -8,16 +8,18 @@ export type ProjectionsConfigurationBuilderCallback = (builder: ProjectionsConfi
 
 export class ProjectionsConfigurationBuilder {
     private _connectionString?: string;
+    private _databaseName?: string;
 
-    storeInMongo(connectionString: string) {
+    storeInMongo(connectionString: string, databaseName: string) {
         this._connectionString = connectionString;
+        this._databaseName = databaseName;
     }
 
     build(): ProjectionsConfiguration {
-        if(!this._connectionString) {
+        if (!this._connectionString || !this._databaseName) {
             throw new MissingPersistenceConfigurationForProjections();
         }
 
-        return new ProjectionsConfiguration(this._connectionString);
+        return new ProjectionsConfiguration(this._connectionString, this._databaseName);
     }
 }

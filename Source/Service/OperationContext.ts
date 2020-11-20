@@ -6,7 +6,7 @@ import { EventAndContext } from './EventAndContext';
 import { IOperationContext } from './IOperationContext';
 
 export class OperationContext implements IOperationContext {
-    constructor(readonly identifier: StreamId, readonly model: any, readonly eventsWithContext: EventAndContext[]) {
+    constructor(readonly identifier: StreamId, readonly key: any, readonly model: any, readonly eventsWithContext: EventAndContext[]) {
     }
 
     getState(key: string) {

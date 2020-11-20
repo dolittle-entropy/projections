@@ -6,6 +6,7 @@ import { EventAndContext } from './EventAndContext';
 
 export interface IOperationContext {
     identifier: StreamId;
+    key: any;
     model: any;
     eventsWithContext: EventAndContext[];
 

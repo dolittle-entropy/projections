@@ -39,7 +39,7 @@ export class Projection {
 
                 let currentState = { ...initial };
 
-                const operationContext = new OperationContext(this.stream, currentState, [{ event, context }]);
+                const operationContext = new OperationContext(this.stream, key, currentState, [{ event, context }]);
 
                 for (const operation of this._operationsByEventType.get(eventType)!) {
                     currentState = operation.perform(operationContext);

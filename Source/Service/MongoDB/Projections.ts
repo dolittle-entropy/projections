@@ -8,7 +8,7 @@ export class Projections implements IProjections {
         throw new Error('Method not implemented.');
     }
 
-    async upsert(id: any, content: any): Promise<void> {
+    async set(id: any, content: any): Promise<void> {
         throw new Error('Method not implemented.');
     }
 }

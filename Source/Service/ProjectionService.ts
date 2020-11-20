@@ -7,7 +7,7 @@ import { ProjectionDescriptor } from '../SDK/ProjectionDescriptor';
 import { EventHandlersClient } from '@dolittle/runtime.contracts/Runtime/Events.Processing/EventHandlers_grpc_pb';
 import { Client } from '@dolittle/sdk';
 import { IContainer } from '@dolittle/sdk.common';
-import { ScopeId } from '@dolittle/sdk.events';
+import { ScopeId, StreamId } from '@dolittle/sdk.events';
 import { EventHandlersBuilder } from '@dolittle/sdk.events.handling';
 import { Cancellation } from '@dolittle/sdk.resilience';
 import { MicroserviceId, Environment, ExecutionContext, TenantId, CorrelationId, Claims, Version } from '@dolittle/sdk.execution';
@@ -54,8 +54,8 @@ export class ProjectionService {
         const repository = await repositoryFactory.getFor(descriptor.targetModel.name);
 
         const projection = new Projection(
-            descriptor.stream,
-            this.getKeyStrategyFor(descriptor),
+            StreamId.from(descriptor.stream),
+            [this.getKeyStrategyFor(descriptor)],
             descriptor.operations.map(_ => ProjectionService.buildOperationFrom(_)),
             repository,
             client.logger

@@ -5,5 +5,6 @@ import { EventContext } from '@dolittle/sdk.events';
 import { Guid } from '@dolittle/rudiments';
 
 export interface IKeyStrategy {
-    get(event: any, eventContext: EventContext): Guid;
+    has(event: any, eventContext: EventContext): boolean;
+    get(event: any, eventContext: EventContext): any;
 }

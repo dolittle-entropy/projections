@@ -7,13 +7,24 @@ import { Client, ClientBuilder } from '@dolittle/sdk';
 import { ProjectionBuilder, ProjectionBuilderCallback } from './SDK/ProjectionBuilder';
 import { ProjectionService } from './Service/ProjectionService';
 import { ProjectionDescriptor } from './SDK/ProjectionDescriptor';
+import { ProjectionsConfigurationBuilder, ProjectionsConfigurationBuilderCallback } from './ProjectionsConfigurationBuilder';
+import { ProjectionsManager } from './Service/MongoDB/ProjectionsManager';
 
 let _host = 'localhost';
 let _port = 50053;
 let _container: IContainer = new Container();
 
+const configurationBuilder = new ProjectionsConfigurationBuilder();
+
 declare module '@dolittle/sdk' {
     interface ClientBuilder {
+
+        /**
+         * Configure the behavior of projections, system wide.
+         * @param {ProjectionsConfigurationBuilderCallback} callback Callback for building the projections configuration.
+         */
+        withProjections(callback: ProjectionsConfigurationBuilderCallback): ClientBuilder;
+
         /**
          * Build a projection from events to a document of a type.
          * @param {Constructor} targetType Type of document to project to.
@@ -28,6 +39,13 @@ declare module '@dolittle/sdk' {
 }
 
 const _projections: ProjectionBuilder<any>[] = [];
+
+
+ClientBuilder.prototype.withProjections = function (callback: ProjectionsConfigurationBuilderCallback) {
+    callback(configurationBuilder);
+    return this;
+};
+
 
 ClientBuilder.prototype.withProjectionFor = function <TDocument extends object>(targetType: Constructor<TDocument>, callback: ProjectionBuilderCallback<TDocument>) {
     const projectionBuilder = new ProjectionBuilder<TDocument>(targetType, this);
@@ -58,10 +76,13 @@ ClientBuilder.prototype.build = function (): Client {
     const connectionString = `${_host}:${_port}`;
     client.projections = [];
 
+    const configuration = configurationBuilder.build();
+    const projectionsManager = new ProjectionsManager(configuration);
+
     for (const projectionBuilder of _projections) {
         const projectionDescriptor = projectionBuilder.build(client.eventTypes);
         client.projections.push(projectionDescriptor);
-        ProjectionService.register(client, _container, connectionString, projectionDescriptor);
+        ProjectionService.register(client, projectionsManager, _container, connectionString, projectionDescriptor);
     }
 
     return client;

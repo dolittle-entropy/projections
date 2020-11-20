@@ -29,11 +29,9 @@ import OperationTypes from '../OperationTypes';
 import ChildOperationTypes from '../ChildOperationTypes';
 import { ProjectionsManager } from './MongoDB/ProjectionsManager';
 
-const repositoryFactory = new ProjectionsManager();
-
 
 export class ProjectionService {
-    static async register(client: Client, container: IContainer, connectionString: string, descriptor: ProjectionDescriptor): Promise<Projection> {
+    static async register(client: Client, projectionsManager: ProjectionsManager, container: IContainer, connectionString: string, descriptor: ProjectionDescriptor): Promise<Projection> {
         // This is just a workaround since we're not part of the SDK - this would be in the ClientBuilder Build method
         const executionContext = new ExecutionContext(
             MicroserviceId.from('7c3d7387-6324-4309-980f-31b9c4b39046'),
@@ -51,7 +49,7 @@ export class ProjectionService {
         };
         const eventTypes = descriptor.operations.flatMap(_ => _.eventTypes); //.filter(distinct);
 
-        const repository = await repositoryFactory.getFor(descriptor.targetModel.name);
+        const repository = await projectionsManager.getFor(descriptor.targetModel.name);
 
         const projection = new Projection(
             StreamId.from(descriptor.stream),

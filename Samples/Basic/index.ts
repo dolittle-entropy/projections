@@ -43,6 +43,7 @@ export class Rule {
             .register(ComponentAdded)
             .register(FeatureAdded)
             .register(RuleDefined))
+        .withProjections(_ => _.storeInMongo('mongodb://localhost:27017'))
         .withProjectionFor(Rule, p => p
             .withId('0ded8a37-5a69-41f3-b31e-c1f20867e1de')
             .useModelName('TheRules')
@@ -58,9 +59,7 @@ export class Rule {
                 .set(r => r.featureName).to(ev => ev.name))
             .join(ComponentAdded, e => e
                 .on(r => r.componentId)
-                .set(r => r.componentName).to(ev => ev.name))
-        )
-
+                .set(r => r.componentName).to(ev => ev.name)))
         .build();
 
     const app = express();
@@ -100,4 +99,3 @@ export class Rule {
         console.log(`Server is running on port ${expressPort}.`);
     });
 })();
-

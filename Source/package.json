@@ -14,9 +14,11 @@
     },
     "dependencies": {
         "@dolittle/sdk": "14.1.0",
-        "@typegoose/typegoose": "7.4.2",
         "deep-equal": "^2.0.4",
-        "mongoose": "5.10.15"
+        "mongodb": "3.6.2"
+    },
+    "devDependencies": {
+        "@types/mongodb": "3.5.34"
     },
     "peerDependencies": {}
 }

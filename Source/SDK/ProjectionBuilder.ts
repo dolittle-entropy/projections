@@ -7,28 +7,27 @@ import { Constructor } from '@dolittle/types';
 import { IEventTypes } from '@dolittle/sdk.artifacts';
 import { ScopeId } from '@dolittle/sdk.events';
 
-import { FromEventBuilder, FromEventBuilderCallback } from './Operations/FromEventBuilder';
-import { JoinEventBuilder, JoinEventBuilderCallback } from './Operations/JoinEventBuilder';
 
 import { ModelDescriptor } from './ModelDescriptor';
 import { ProjectionDescriptor } from './ProjectionDescriptor';
 
-import { IOperationBuilder } from './IOperationBuilder';
 
 import { ProjectionMustHaveAUniqueIdentifier } from './ProjectionMustHaveAUniqueIdentifier';
 import { OperationBuilderContext } from './OperationBuilderContext';
 import { KeyStrategiesBuilder, KeyStrategiesBuilderCallback } from './KeyStrategiesBuilder';
+import { ProjectionOperationBuilder } from './ProjectionOperationBuilder';
 
 export type ProjectionBuilderCallback<TDocument extends object> = (builder: ProjectionBuilder<TDocument>) => void;
+
 
 /**
  * Represents the builder of a projection for a specific type.
  */
-export class ProjectionBuilder<TDocument extends object> {
+export class ProjectionBuilder<TDocument extends object> extends ProjectionOperationBuilder<TDocument, ProjectionBuilder<TDocument>> {
     private _id?: Guid;
     private _fromScope: ScopeId = ScopeId.default;
     private _model: ModelDescriptor;
-    private _operationBuilders: IOperationBuilder[] = [];
+
     private _keyStrategiesBuilder: KeyStrategiesBuilder;
 
     /**
@@ -36,8 +35,9 @@ export class ProjectionBuilder<TDocument extends object> {
      * @param {Constructor{TDocument}} _targetType Type of document to build.
      * @param {ClientBuilder} _clientBuilder The Dolittle SDK {@link ClientBuilder}
      */
-    constructor(private readonly _targetType: Constructor<TDocument>, private readonly _clientBuilder: ClientBuilder) {
-        this._model = new ModelDescriptor(_targetType.name);
+    constructor(targetType: Constructor<TDocument>, private readonly _clientBuilder: ClientBuilder) {
+        super(targetType);
+        this._model = new ModelDescriptor(targetType.name);
         this._keyStrategiesBuilder = new KeyStrategiesBuilder();
     }
 
@@ -67,20 +67,6 @@ export class ProjectionBuilder<TDocument extends object> {
         return this;
     }
 
-    from<TEvent extends object>(eventType: Constructor<TEvent>, callback: FromEventBuilderCallback<TDocument, TEvent>): ProjectionBuilder<TDocument> {
-        const builder = new FromEventBuilder<TDocument, TEvent>(eventType);
-        callback(builder);
-        this._operationBuilders.push(builder);
-        return this;
-    }
-
-    join<TEvent extends object>(eventType: Constructor<TEvent>, callback: JoinEventBuilderCallback<TDocument, TEvent>): ProjectionBuilder<TDocument> {
-        const builder = new JoinEventBuilder<TDocument, TEvent>(eventType);
-        callback(builder);
-        this._operationBuilders.push(builder);
-        return this;
-    }
-
     build(eventTypes: IEventTypes): ProjectionDescriptor {
         this.throwIfMissingUniqueIdentifier();
 
@@ -88,11 +74,11 @@ export class ProjectionBuilder<TDocument extends object> {
 
         const operations = this._operationBuilders.map(_ => _.build(operationBuilderContext));
         const projection = new ProjectionDescriptor(
-                                this._id!,
-                                this._model,
-                                this._keyStrategiesBuilder.build(),
-                                operations,
-                                this._fromScope);
+            this._id!,
+            this._model,
+            this._keyStrategiesBuilder.build(),
+            operations,
+            this._fromScope);
 
         return projection;
     }

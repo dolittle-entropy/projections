@@ -18,6 +18,7 @@ export class Rule {
     featureName!: string;
     componentId!: Guid;
     componentName!: string;
+    lastUpdated!: Date;
 }
 
 (async () => {
@@ -44,12 +45,14 @@ export class Rule {
             .register(RuleDefined))
         .withProjectionFor(Rule, p => p
             .withId('0ded8a37-5a69-41f3-b31e-c1f20867e1de')
-            .withKeys(_ => _.usingProperty('ruleId'))
+            .useModelName('TheRules')
+            .withKeys(_ => _.usingProperty('ruleId').usingEventSourceId())
             .from(RuleDefined, e => e
                 .set(r => r.type).to(ev => ev.type)
                 .set(r => r.priority).to(ev => ev.priority)
                 .set(r => r.featureId).to(ev => ev.featureId)
-                .set(r => r.componentId).to(ev => ev.componentId))
+                .set(r => r.componentId).to(ev => ev.componentId)
+                .set(r => r.lastUpdated).toContext(ec => ec.occurred))
             .join(FeatureAdded, e => e
                 .on(r => r.featureId)
                 .set(r => r.featureName).to(ev => ev.name))

@@ -121,6 +121,9 @@ export class ProjectionService {
                 case ChildOperationTypes.PropertyMap: {
                     return new PropertyMapper(ProjectionService.buildChildOperations(_.children));
                 };
+                case ChildOperationTypes.PropertyMapFromContext: {
+                    return new PropertyMapper(ProjectionService.buildChildOperations(_.children));
+                };
             }
 
             throw new UnknownChildOperation(_.id);

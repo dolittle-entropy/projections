@@ -4,5 +4,6 @@
 import { OperationTypeId } from './OperationTypeId';
 
 export default {
-    PropertyMap: OperationTypeId.from('eb742254-6ecd-476f-bd55-42353e0e82e2')
+    PropertyMap: OperationTypeId.from('eb742254-6ecd-476f-bd55-42353e0e82e2'),
+    PropertyMapFromContext: OperationTypeId.from('eb742254-6ecd-476f-bd55-42353e0e82e2')
 };

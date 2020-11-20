@@ -27,9 +27,9 @@ import { IChildOperation } from './IChildOperation';
 import KeyStrategyTypes from '../KeyStrategyTypes';
 import OperationTypes from '../OperationTypes';
 import ChildOperationTypes from '../ChildOperationTypes';
-import { ProjectionRepositoryFactory } from './MongoDB/ProjectionRepositoryFactory';
+import { ProjectionsManager } from './MongoDB/ProjectionsManager';
 
-const repositoryFactory = new ProjectionRepositoryFactory();
+const repositoryFactory = new ProjectionsManager();
 
 
 export class ProjectionService {

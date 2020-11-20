@@ -4,7 +4,7 @@
 import { Guid } from '@dolittle/rudiments';
 import { EventContext, EventTypeId } from '@dolittle/sdk.events';
 import { IOperation } from './IOperation';
-import { IProjectionRepository } from './IProjectionRepository';
+import { IProjections } from './IProjections';
 import { IKeyStrategy } from './Keys/IKeyStrategy';
 
 import { Logger } from 'winston';
@@ -16,7 +16,7 @@ export class Projection {
     constructor(readonly stream: Guid,
         private readonly _keyStrategy: IKeyStrategy,
         private readonly _operations: IOperation[],
-        private readonly _projectionRepository: IProjectionRepository,
+        private readonly _projectionRepository: IProjections,
         private readonly _logger: Logger) {
 
         for (const operation of _operations) {
@@ -32,7 +32,7 @@ export class Projection {
 
         try {
             const key = this._keyStrategy.get(event, context);
-            const currentProjectedState = await this._projectionRepository.getCurrentState(key);
+            const currentProjectedState = await this._projectionRepository.get(key);
 
             let currentState = currentProjectedState || {};
 

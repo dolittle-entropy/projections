@@ -10,7 +10,7 @@ export class PropertyKeyStrategy implements IKeyStrategy {
     }
 
     has(event: any, eventContext: EventContext): boolean {
-        throw new Error('Method not implemented.');
+        return false;
     }
 
     get(event: any, eventContext: EventContext): any {

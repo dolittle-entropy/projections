@@ -6,7 +6,7 @@ import { IKeyStrategy } from './IKeyStrategy';
 
 export class EventSourceKeyStrategy implements IKeyStrategy {
     has(event: any, eventContext: EventContext): boolean {
-        throw new Error('Method not implemented.');
+        return true;
     }
 
     get(event: any, eventContext: EventContext): any {

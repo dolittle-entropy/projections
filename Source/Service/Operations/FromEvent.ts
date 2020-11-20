@@ -12,5 +12,6 @@ export class FromEvent implements IOperation {
     }
 
     perform(context: IOperationContext) {
+        return context.model;
     }
 }

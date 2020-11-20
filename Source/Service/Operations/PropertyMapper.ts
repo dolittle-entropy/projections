@@ -9,6 +9,7 @@ export class PropertyMapper implements IChildOperation {
     }
 
     perform(context: IOperationContext) {
+        return context.model;
 
 
         /*

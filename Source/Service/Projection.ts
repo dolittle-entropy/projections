@@ -11,6 +11,7 @@ import deepEqual from 'deep-equal';
 import { Logger } from 'winston';
 import { OperationContext } from './OperationContext';
 import { UnableToResolveKeyForEvent } from './UnableToResolveKeyForEvent';
+import { IBaseOperation } from './IBaseOperation';
 
 export class Projection {
     private readonly _operationsByEventType: Map<EventTypeId, IOperation[]> = new Map();
@@ -42,7 +43,7 @@ export class Projection {
                 const operationContext = new OperationContext(this.stream, key, currentState, [{ event, context }]);
 
                 for (const operation of this._operationsByEventType.get(eventType)!) {
-                    currentState = operation.perform(operationContext);
+                    currentState = await this.performOperation(operation, operationContext, currentState);
                 }
 
                 if (!deepEqual(initial, currentState)) {
@@ -54,6 +55,17 @@ export class Projection {
             throw ex;
         }
     }
+
+    private async performOperation(operation: IBaseOperation, operationContext: OperationContext, currentState: any): Promise<any> {
+        currentState = await operation.perform(operationContext);
+        for (const child of operation.children) {
+            operationContext = new OperationContext(operationContext.stream, operationContext.key, currentState, operationContext.eventsWithContext);
+            currentState = await child.perform(operationContext);
+        }
+
+        return currentState;
+    }
+
 
     private getKeyStrategyFor(event: any, context: EventContext): IKeyStrategy {
         const keyStrategy = this._keyStrategies.find(_ => _.has(event, context));

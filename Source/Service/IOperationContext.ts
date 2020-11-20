@@ -5,7 +5,7 @@ import { StreamId } from '@dolittle/sdk.events';
 import { EventAndContext } from './EventAndContext';
 
 export interface IOperationContext {
-    identifier: StreamId;
+    stream: StreamId;
     key: any;
     model: any;
     eventsWithContext: EventAndContext[];

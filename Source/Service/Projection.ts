@@ -1,14 +1,14 @@
 // Copyright (c) Dolittle. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+import deepEqual from 'deep-equal';
+import { Logger } from 'winston';
+
 import { EventContext, EventTypeId, StreamId } from '@dolittle/sdk.events';
+
 import { IOperation } from './IOperation';
 import { IProjections } from './IProjections';
 import { IKeyStrategy } from './Keys/IKeyStrategy';
-
-import deepEqual from 'deep-equal';
-
-import { Logger } from 'winston';
 import { OperationContext } from './OperationContext';
 import { UnableToResolveKeyForEvent } from './UnableToResolveKeyForEvent';
 import { IBaseOperation } from './IBaseOperation';
@@ -38,11 +38,10 @@ export class Projection {
             if (this._operationsByEventType.has(eventType)) {
                 const initial = await this._projections.get(key) || {};
 
-                let currentState = { ...initial };
-
-                const operationContext = new OperationContext(this.stream, key, currentState, [{ event, context }]);
+                let currentState: any = { ...initial };
 
                 for (const operation of this._operationsByEventType.get(eventType)!) {
+                    const operationContext = new OperationContext(this.stream, key, currentState, [{ event, context }]);
                     currentState = await this.performOperationAndChildren(operation, operationContext, currentState);
                 }
 
@@ -57,10 +56,13 @@ export class Projection {
     }
 
     private async performOperationAndChildren(operation: IBaseOperation, operationContext: OperationContext, currentState: any): Promise<any> {
-        currentState = await operation.perform(operationContext);
+        let stateAfterOperation = await operation.perform(operationContext);
+        currentState = { ...currentState, ...stateAfterOperation };
+
         for (const child of operation.children) {
             operationContext = new OperationContext(operationContext.stream, operationContext.key, currentState, operationContext.eventsWithContext);
-            currentState = this.performOperationAndChildren(child, operationContext, currentState);
+            stateAfterOperation = await this.performOperationAndChildren(child, operationContext, currentState);
+            currentState = { ...currentState, ...stateAfterOperation };
         }
 
         return currentState;

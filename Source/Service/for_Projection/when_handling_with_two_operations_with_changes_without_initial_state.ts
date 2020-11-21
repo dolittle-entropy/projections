@@ -4,18 +4,21 @@
 import * as given from './given';
 import sinon from 'sinon';
 
-describe('when handling with two operations with changes', async () => {
+describe('when handling with two operations with changes without initial state', async () => {
     const context = new given.a_projection_with_two_operations();
     const key = '8ff8defe-e307-454d-bc48-6dde046d906e';
     context.keyStrategy.get = sinon.stub().returns(key);
+    const firstChange = {something:'new'};
+    const secondChange = {aSecond:'change'};
+    const combinedChanges = {...firstChange, ...secondChange};
 
-    context.firstOperation.perform = sinon.stub().returns({something:'new'});
-    context.secondOperation.perform = sinon.stub().returns({aSecond:'change'});
+    context.firstOperation.perform = sinon.stub().returns(firstChange);
+    context.secondOperation.perform = sinon.stub().returns(secondChange);
 
     (async beforeEach => {
         await context.projection.handle(context.eventType, context.event, context.eventContext);
     })();
 
     it('should get projection', () => context.projections.get.should.be.calledWith(key));
-    it('should set projection', () => context.projections.set.should.be.called);
+    it('should set projection with the changes', () => context.projections.set.should.be.calledWith(key, combinedChanges));
 });

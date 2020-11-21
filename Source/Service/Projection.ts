@@ -46,7 +46,6 @@ export class Projection {
                 }
 
                 if (!deepEqual(initial, currentState)) {
-                    console.log(currentState);
                     await this._projections.set(key, currentState);
                 }
             }

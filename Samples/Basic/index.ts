@@ -53,8 +53,7 @@ export class Rule {
                 .set(r => r.priority).to(ev => ev.priority)
                 .set(r => r.featureId).to(ev => ev.featureId)
                 .set(r => r.componentId).to(ev => ev.componentId)
-                //.set(r => r.lastUpdated).toContext(ec => ec.occurred)
-                )
+                .set(r => r.lastUpdated).toContext(ec => ec.occurred))
             .join(FeatureAdded, e => e
                 .on(r => r.featureId)
                 .set(r => r.featureName).to(ev => ev.name))
@@ -62,6 +61,14 @@ export class Rule {
                 .on(r => r.componentId)
                 .set(r => r.componentName).to(ev => ev.name)))
         .build();
+
+        /*
+        Notes:
+
+        - IOperation should have a way to tell if projections should be persisted - the join operation don't persist directly to the projections
+        - The On() should resolve in Service to become a child operation for when the property it refers to is set, this should then resolve from intermediate state
+
+        */
 
     const app = express();
     app.use(

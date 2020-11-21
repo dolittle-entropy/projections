@@ -46,6 +46,10 @@ export class OperationGroup implements IOperationGroup {
                     currentState = await this.performOperationAndChildren(operation, operationContext, currentState);
                 }
 
+                for (const childGroup of this.children) {
+                    await childGroup.handle(eventType, event, context);
+                }
+
                 if (!deepEqual(initial, currentState)) {
                     await this._state.set(key, currentState);
                 }

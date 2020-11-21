@@ -67,19 +67,39 @@ export class ProjectionService {
         };
         const eventTypes = descriptor.operations.flatMap(_ => _.eventTypes).filter(distinct);
 
-        const repository = await projectionsManager.getFor(descriptor.targetModel.name);
-
         const stream = StreamId.from(descriptor.stream);
-        const operationGroup = new OperationGroup(
+
+        const fromOperations = descriptor.operations
+            .filter(_ => _.id === OperationTypes.FromEvent)
+            .map(_ => ProjectionService.buildOperationFrom(_));
+
+        const joinOperations = descriptor.operations
+            .filter(_ => _.id === OperationTypes.JoinEvent)
+            .map(_ => ProjectionService.buildOperationFrom(_));
+
+        const intermediateStateName = `intermediates-${stream.toString()}`;
+        const intermediateState = await intermediatesManager.getFor(intermediateStateName);
+
+        const joinsOperationGroup = new OperationGroup(
             stream,
-            this.getKeyStrategiesFor(descriptor),
-            descriptor.operations.map(_ => ProjectionService.buildOperationFrom(_)),
+            [new EventSourceKeyStrategy()],
+            joinOperations,
             [],
-            repository,
+            intermediateState,
             client.logger
         );
 
-        const projection = new Projection(stream, [operationGroup]);
+        const projectionState = await projectionsManager.getFor(descriptor.targetModel.name);
+        const topLevelOperationGroup = new OperationGroup(
+            stream,
+            this.getKeyStrategiesFor(descriptor),
+            fromOperations,
+            [joinsOperationGroup],
+            projectionState,
+            client.logger
+        );
+
+        const projection = new Projection(stream, [topLevelOperationGroup]);
 
         eventHandlers.createEventHandler(descriptor.stream, b => {
             const builder = b.partitioned();

@@ -2,9 +2,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import { Collection, FilterQuery } from 'mongodb';
-import { IProjections } from '../IProjections';
+import { IState } from '../IState';
 
-export class Projections implements IProjections {
+export class Projections implements IState {
 
     constructor(private readonly _collection: Collection) {
 

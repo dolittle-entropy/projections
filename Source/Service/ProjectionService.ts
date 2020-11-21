@@ -32,6 +32,7 @@ import { PropertyPath } from './PropertyPath';
 import { PropertyUtilities } from '../PropertyUtilities';
 import { IOperationContext } from './IOperationContext';
 import { PropertyAccessor } from './PropertyAccessor';
+import { OperationGroup } from './OperationGroup';
 
 
 export type PropertyMapConfiguration = {
@@ -61,13 +62,17 @@ export class ProjectionService {
 
         const repository = await projectionsManager.getFor(descriptor.targetModel.name);
 
-        const projection = new Projection(
-            StreamId.from(descriptor.stream),
+        const stream = StreamId.from(descriptor.stream);
+        const operationGroup = new OperationGroup(
+            stream,
             this.getKeyStrategiesFor(descriptor),
             descriptor.operations.map(_ => ProjectionService.buildOperationFrom(_)),
+            [],
             repository,
             client.logger
         );
+
+        const projection = new Projection(stream, [operationGroup]);
 
         eventHandlers.createEventHandler(descriptor.stream, b => {
             const builder = b.partitioned();

@@ -4,11 +4,11 @@
 import sinon from 'sinon';
 import { StreamId } from '@dolittle/sdk.events';
 import { IKeyStrategy } from '../../Keys/IKeyStrategy';
-import { Projection } from '../..//Projection';
 import { all_dependencies } from './all_dependencies';
+import { OperationGroup } from '../..//OperationGroup';
 
-export class a_projection_without_operations extends all_dependencies {
-    projection: Projection;
+export class an_operation_group_without_operations extends all_dependencies {
+    operationGroup: OperationGroup;
     keyStrategy: IKeyStrategy;
 
     constructor() {
@@ -19,11 +19,12 @@ export class a_projection_without_operations extends all_dependencies {
             get: sinon.stub()
         };
 
-        this.projection = new Projection(
+        this.operationGroup = new OperationGroup(
             StreamId.from('0d17c309-afed-46b6-912f-69f136f0264e'),
             [this.keyStrategy],
             [],
-            this.projections,
+            [],
+            this.state,
             this.logger
         );
     }

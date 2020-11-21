@@ -4,9 +4,9 @@
 import sinon from 'sinon';
 import { IOperation } from '../../IOperation';
 import { OperationContext } from '../../OperationContext';
-import { a_projection_with_two_operations } from './a_projection_with_two_operations';
+import { an_operation_group_with_two_operations } from './an_operation_group_with_two_operations';
 
-export class a_projection_with_two_operations_and_child_operations extends a_projection_with_two_operations {
+export class an_operation_group_with_two_operations_and_child_operations extends an_operation_group_with_two_operations {
     firstOperationFirstChild: IOperation;
     firstOperationFirstChildPerformStub: (operationContext: OperationContext) => any = sinon.stub().returns({});
     firstOperationSecondChild: IOperation;

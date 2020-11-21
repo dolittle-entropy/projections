@@ -2,12 +2,12 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import { ProjectionsConfiguration } from '../../ProjectionsConfiguration';
-import { IProjections } from '../IProjections';
-import { IProjectionsManager } from '../IProjectionsManager';
+import { IState } from '../IState';
+import { IStateManager } from '../IStateManager';
 import { Projections } from './Projections';
 import { MongoClient } from 'mongodb';
 
-export class ProjectionsManager implements IProjectionsManager {
+export class ProjectionsManager implements IStateManager {
     private _mongoClient?: MongoClient;
 
 
@@ -15,7 +15,7 @@ export class ProjectionsManager implements IProjectionsManager {
     }
 
 
-    async getFor(name: string): Promise<IProjections> {
+    async getFor(name: string): Promise<IState> {
         const mongoClient = await this.getMongoClient();
         const collection = mongoClient.db(this._configuration.databaseName).collection(name);
         return new Projections(collection);

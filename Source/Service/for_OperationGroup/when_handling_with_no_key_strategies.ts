@@ -6,12 +6,12 @@ import { UnableToResolveKeyForEvent } from '../UnableToResolveKeyForEvent';
 import sinon from 'sinon';
 
 describe('when handling with no key strategies', async () => {
-    const context = new given.a_projection_without_operations();
+    const context = new given.an_operation_group_with_two_operations();
     context.keyStrategy.has = sinon.stub().returns(false);
     let exception: Error;
 
     try {
-        await context.projection.handle(context.eventType, context.event, context.eventContext);
+        await context.operationGroup.handle(context.eventType, context.event, context.eventContext);
     } catch (ex) {
         exception = ex;
     }

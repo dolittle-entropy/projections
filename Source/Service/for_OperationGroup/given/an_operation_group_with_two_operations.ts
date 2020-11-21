@@ -4,15 +4,15 @@
 import sinon from 'sinon';
 
 import { StreamId } from '@dolittle/sdk.events';
-import { IKeyStrategy } from '../..//Keys/IKeyStrategy';
-import { Projection } from '../../Projection';
-import { IOperation } from '../..//IOperation';
+import { IKeyStrategy } from '../../Keys/IKeyStrategy';
+import { OperationGroup } from '../..//OperationGroup';
+import { IOperation } from '../../IOperation';
 import { OperationContext } from '../../OperationContext';
 
 import { all_dependencies } from './all_dependencies';
 
-export class a_projection_with_two_operations extends all_dependencies {
-    projection: Projection;
+export class an_operation_group_with_two_operations extends all_dependencies {
+    operationGroup: OperationGroup;
     keyStrategy: IKeyStrategy;
 
     firstOperation: IOperation;
@@ -42,11 +42,12 @@ export class a_projection_with_two_operations extends all_dependencies {
             perform: this.secondOperationPerformStub
         };
 
-        this.projection = new Projection(
+        this.operationGroup = new OperationGroup(
             StreamId.from('0d17c309-afed-46b6-912f-69f136f0264e'),
             [this.keyStrategy],
             [this.firstOperation, this.secondOperation],
-            this.projections,
+            [],
+            this.state,
             this.logger
         );
     }

@@ -5,14 +5,14 @@ import * as given from './given';
 import sinon from 'sinon';
 
 describe('when handling with no operations', async () => {
-    const context = new given.a_projection_without_operations();
+    const context = new given.an_operation_group_without_operations();
     const key = '8ff8defe-e307-454d-bc48-6dde046d906e';
     context.keyStrategy.get = sinon.stub().returns(key);
 
     (async beforeEach => {
-        await context.projection.handle(context.eventType, context.event, context.eventContext);
+        await context.operationGroup.handle(context.eventType, context.event, context.eventContext);
     })();
 
-    it('should not get projection', () => context.projections.get.should.not.be.calledWith(key));
-    it('should not set projection', () => context.projections.set.should.not.be.called);
+    it('should not get state', () => context.state.get.should.not.be.calledWith(key));
+    it('should not set state', () => context.state.set.should.not.be.called);
 });

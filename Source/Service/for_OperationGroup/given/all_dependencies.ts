@@ -15,12 +15,12 @@ import {
     Version
 } from '@dolittle/sdk.execution';
 
-import { IProjections } from '../../IProjections';
+import { IState } from '../../IState';
 import { Logger } from 'winston';
 import { LoggerInstance } from '../../SpecMocks/Logger';
 
 export class all_dependencies {
-    projections: IProjections;
+    state: IState;
     logger: Logger = LoggerInstance;
 
     eventType: EventTypeId = EventTypeId.from('83a1e4ce-b63d-45b3-9641-0c268b91a673');
@@ -44,7 +44,7 @@ export class all_dependencies {
 
             )
         );
-        this.projections = {
+        this.state = {
             get: sinon.stub().returns({}),
             set: sinon.stub()
         };

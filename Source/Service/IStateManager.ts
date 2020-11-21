@@ -1,8 +1,8 @@
 // Copyright (c) Dolittle. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import { IProjections } from './IProjections';
+import { IState } from './IState';
 
-export abstract class IProjectionsManager {
-    abstract getFor(name: string): Promise<IProjections>;
+export abstract class IStateManager {
+    abstract getFor(name: string): Promise<IState>;
 }

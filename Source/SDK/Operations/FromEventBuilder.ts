@@ -8,7 +8,7 @@ import { SetBuilder } from './SetBuilder';
 import { OperationBuilderContext } from '../OperationBuilderContext';
 import OperationTypes from '../../OperationTypes';
 import { IChildOperationBuilder } from '../IChildOperationBuilder';
-import { PropertyUtilities } from '../PropertyUtilities';
+import { PropertyUtilities } from '../../PropertyUtilities';
 
 export type FromEventBuilderCallback<TDocument extends object, TEvent extends object> = (builder: FromEventBuilder<TDocument, TEvent>) => void;
 

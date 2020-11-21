@@ -6,7 +6,7 @@ import { EventContext } from '@dolittle/sdk.events';
 import { ChildOperationDescriptor } from '../ChildOperationDescriptor';
 import { IChildOperationBuilder } from '../IChildOperationBuilder';
 import { OperationBuilderContext } from '../OperationBuilderContext';
-import { PropertyUtilities } from '../PropertyUtilities';
+import { PropertyUtilities } from '../../PropertyUtilities';
 import ChildOperationTypes from '../..//ChildOperationTypes';
 import { MissingOperationForSettingProperty } from './MissingOperationForSettingProperty';
 

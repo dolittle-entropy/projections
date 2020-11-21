@@ -1,7 +1,7 @@
 // Copyright (c) Dolittle. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import { ProjectionsConfiguration } from 'Source/ProjectionsConfiguration';
+import { ProjectionsConfiguration } from '../../ProjectionsConfiguration';
 import { IProjections } from '../IProjections';
 import { IProjectionsManager } from '../IProjectionsManager';
 import { Projections } from './Projections';

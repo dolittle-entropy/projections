@@ -4,7 +4,7 @@
 import { OperationTypeId } from '../OperationTypeId';
 
 export class ChildOperationDescriptor {
-    constructor(readonly id: OperationTypeId, data: any = {}, readonly children: ChildOperationDescriptor[] = []) {
+    constructor(readonly id: OperationTypeId, readonly configuration: any = {}, readonly children: ChildOperationDescriptor[] = []) {
     }
 
 }

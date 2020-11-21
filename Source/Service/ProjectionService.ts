@@ -28,6 +28,16 @@ import KeyStrategyTypes from '../KeyStrategyTypes';
 import OperationTypes from '../OperationTypes';
 import ChildOperationTypes from '../ChildOperationTypes';
 import { ProjectionsManager } from './MongoDB/ProjectionsManager';
+import { PropertyPath } from './PropertyPath';
+import { PropertyUtilities } from '../PropertyUtilities';
+import { IOperationContext } from './IOperationContext';
+import { PropertyAccessor } from './PropertyAccessor';
+
+
+export type PropertyMapConfiguration = {
+    sourceProperty: string;
+    targetProperty: string;
+};
 
 
 export class ProjectionService {
@@ -47,7 +57,7 @@ export class ProjectionService {
         const distinct = (value: any, index: number, self: any[]) => {
             return self.indexOf(value) === index;
         };
-        const eventTypes = descriptor.operations.flatMap(_ => _.eventTypes); //.filter(distinct);
+        const eventTypes = descriptor.operations.flatMap(_ => _.eventTypes).filter(distinct);
 
         const repository = await projectionsManager.getFor(descriptor.targetModel.name);
 
@@ -117,10 +127,20 @@ export class ProjectionService {
         return children.map(_ => {
             switch (_.id) {
                 case ChildOperationTypes.PropertyMap: {
-                    return new PropertyMapper(ProjectionService.buildChildOperations(_.children));
+                    const config = _.configuration as PropertyMapConfiguration;
+                    const eventProperty = PropertyUtilities.getPropertyDescriptorFor<IOperationContext>(_ => _.event);
+                    const modelProperty = PropertyUtilities.getPropertyDescriptorFor<IOperationContext>(_ => _.model);
+                    const sourceProperty = new PropertyAccessor(new PropertyPath(`${eventProperty.path}.${config.sourceProperty}`));
+                    const targetProperty = new PropertyAccessor(new PropertyPath(`${modelProperty.path}.${config.targetProperty}`));
+                    return new PropertyMapper(sourceProperty, targetProperty, ProjectionService.buildChildOperations(_.children));
                 };
                 case ChildOperationTypes.PropertyMapFromContext: {
-                    return new PropertyMapper(ProjectionService.buildChildOperations(_.children));
+                    const config = _.configuration as PropertyMapConfiguration;
+                    const eventContextProperty = PropertyUtilities.getPropertyDescriptorFor<IOperationContext>(_ => _.eventContext);
+                    const modelProperty = PropertyUtilities.getPropertyDescriptorFor<IOperationContext>(_ => _.model);
+                    const sourceProperty = new PropertyAccessor(new PropertyPath(`${eventContextProperty.path}.${config.sourceProperty}`));
+                    const targetProperty = new PropertyAccessor(new PropertyPath(`${modelProperty.path}.${config.targetProperty}`));
+                    return new PropertyMapper(sourceProperty, targetProperty, ProjectionService.buildChildOperations(_.children));
                 };
             }
 
@@ -128,3 +148,4 @@ export class ProjectionService {
         });
     }
 }
+

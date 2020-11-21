@@ -41,7 +41,7 @@ export class Projection {
                 let currentState: any = { ...initial };
 
                 for (const operation of this._operationsByEventType.get(eventType)!) {
-                    const operationContext = new OperationContext(this.stream, key, currentState, [{ event, context }]);
+                    const operationContext = new OperationContext(this.stream, key, currentState, event, context);
                     currentState = await this.performOperationAndChildren(operation, operationContext, currentState);
                 }
 
@@ -60,7 +60,7 @@ export class Projection {
         currentState = { ...currentState, ...stateAfterOperation };
 
         for (const child of operation.children) {
-            operationContext = new OperationContext(operationContext.stream, operationContext.key, currentState, operationContext.eventsWithContext);
+            operationContext = new OperationContext(operationContext.stream, operationContext.key, currentState, operationContext.event, operationContext.eventContext);
             stateAfterOperation = await this.performOperationAndChildren(child, operationContext, currentState);
             currentState = { ...currentState, ...stateAfterOperation };
         }

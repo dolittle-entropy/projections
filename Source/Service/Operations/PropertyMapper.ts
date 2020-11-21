@@ -3,14 +3,16 @@
 
 import { IChildOperation } from '../IChildOperation';
 import { IOperationContext } from '../IOperationContext';
+import { PropertyAccessor } from '../PropertyAccessor';
 
 export class PropertyMapper implements IChildOperation {
-    constructor(readonly children: IChildOperation[]) {
+    constructor(private readonly targetProperty: PropertyAccessor, private readonly sourceProperty: PropertyAccessor, readonly children: IChildOperation[]) {
     }
 
     perform(context: IOperationContext) {
-        return context.model;
+        const changes = {};
 
+        return context.model;
 
         /*
         for (const event of context.events) {

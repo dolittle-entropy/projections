@@ -8,7 +8,7 @@ import { SetBuilder } from './SetBuilder';
 import OperationTypes from '../../OperationTypes';
 import { OperationBuilderContext } from '../OperationBuilderContext';
 import { IChildOperationBuilder } from '../IChildOperationBuilder';
-import { PropertyUtilities } from '../PropertyUtilities';
+import { PropertyUtilities } from '../../PropertyUtilities';
 
 export type JoinEventBuilderCallback<TDocument extends object, TEvent extends object> = (builder: JoinEventBuilder<TDocument, TEvent>) => void;
 

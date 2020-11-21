@@ -46,12 +46,13 @@ export class Projection {
                 }
 
                 if (!deepEqual(initial, currentState)) {
+                    console.log(currentState);
                     await this._projections.set(key, currentState);
                 }
             }
         } catch (ex) {
             this._logger.error(`Couldn't handle event of type '${eventType.toString()}' in projection '${this.stream.toString()}'`, ex);
-            throw ex;
+            //throw ex;
         }
     }
 

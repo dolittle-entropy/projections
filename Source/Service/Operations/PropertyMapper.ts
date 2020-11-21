@@ -6,31 +6,13 @@ import { IOperationContext } from '../IOperationContext';
 import { PropertyAccessor } from '../PropertyAccessor';
 
 export class PropertyMapper implements IChildOperation {
-    constructor(private readonly targetProperty: PropertyAccessor, private readonly sourceProperty: PropertyAccessor, readonly children: IChildOperation[]) {
+    constructor(private readonly _sourceProperty: PropertyAccessor, private readonly _targetProperty: PropertyAccessor, readonly children: IChildOperation[]) {
     }
 
-    perform(context: IOperationContext) {
+    async perform(context: IOperationContext): Promise<any> {
         const changes = {};
-
-        return context.model;
-
-        /*
-        for (const event of context.events) {
-            const value = this._sourceProperty.accessor(event);
-
-            let current = context.model;
-            this._targetProperty.segments.forEach((segment: string, index: number) => {
-                if (index !== this._sourceProperty.segments.length - 1) {
-                    current[segment] = current[segment] || {};
-                } else {
-                    current[segment] = value;
-                }
-
-                current = current[segment];
-            });
-
-            return context.model;
-        }
-        */
+        const value = this._sourceProperty.get(context);
+        this._targetProperty.set(changes, value);
+        return changes;
     }
 }

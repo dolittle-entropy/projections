@@ -16,6 +16,6 @@ export class Projections implements IProjections {
     }
 
     async set(id: any, content: any): Promise<void> {
-        await this._collection.updateOne({ _id: id }, content, { upsert: true });
+        await this._collection.updateOne({ _id: id }, { $set: content }, { upsert: true });
     }
 }

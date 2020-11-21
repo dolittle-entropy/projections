@@ -53,7 +53,8 @@ export class Rule {
                 .set(r => r.priority).to(ev => ev.priority)
                 .set(r => r.featureId).to(ev => ev.featureId)
                 .set(r => r.componentId).to(ev => ev.componentId)
-                .set(r => r.lastUpdated).toContext(ec => ec.occurred))
+                //.set(r => r.lastUpdated).toContext(ec => ec.occurred)
+                )
             .join(FeatureAdded, e => e
                 .on(r => r.featureId)
                 .set(r => r.featureName).to(ev => ev.name))

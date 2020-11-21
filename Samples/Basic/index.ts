@@ -66,8 +66,12 @@ export class Rule {
         Notes:
 
         - IOperation should have a way to tell if projections should be persisted - the join operation don't persist directly to the projections
+        - Another approach; Projection engine could ask operation for how to persist and also provide a key strategy - benefit is that it is then recursively working on child operations
+        - In ProjectionService when setting things up, run through 'Joins' at the end
         - The On() should resolve in Service to become a child operation for when the property it refers to is set, this should then resolve from intermediate state
-
+           - The "ResolveJoin" that should occur when an event needs access to the projections repository to do updates with filter (update many)
+        - Intermediate state should include the event payload - so that we can run ResolveJoin using the operations on the original Join.
+           - Or... State that is stored is mapped to the target format and all we need to do is just Update with this - which effectively means for ResolveJoin to go get the state and update the projection with it
         */
 
     const app = express();

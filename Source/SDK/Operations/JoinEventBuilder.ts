@@ -9,15 +9,33 @@ import OperationTypes from '../../OperationTypes';
 import { OperationBuilderContext } from '../OperationBuilderContext';
 import { IChildOperationBuilder } from '../IChildOperationBuilder';
 import { PropertyUtilities } from '../../PropertyUtilities';
+import { MissingOnDefinitionForJoin } from './MissingOnDefinitionForJoin';
+import { KeyStrategyDescriptor } from '../KeyStrategyDescriptor';
+import KeyStrategyTypes from '../../KeyStrategyTypes';
 
 export type JoinEventBuilderCallback<TDocument extends object, TEvent extends object> = (builder: JoinEventBuilder<TDocument, TEvent>) => void;
 
+export type JoinEventConfiguration = {
+    onProperty: string;
+    keyStrategy: KeyStrategyDescriptor;
+};
+
 export class JoinEventBuilder<TDocument extends object, TEvent extends object> implements IOperationBuilder {
     private readonly _builders: IChildOperationBuilder[] = [];
+    private _onProperty?: string;
+    private _keyStrategy: KeyStrategyDescriptor = new KeyStrategyDescriptor(KeyStrategyTypes.EventSourceIdentifier);
 
-    constructor(private readonly _eventType: Constructor<TEvent>) {}
+    constructor(private readonly _eventType: Constructor<TEvent>) { }
 
     on(property: PropertyAccessor<TDocument>): JoinEventBuilder<TDocument, TEvent> {
+        const propertyDescriptor = PropertyUtilities.getPropertyDescriptorFor(property);
+        this._onProperty = propertyDescriptor.path;
+        return this;
+    }
+
+    usingKeyFrom(property: PropertyAccessor<TEvent>): JoinEventBuilder<TDocument, TEvent> {
+        const propertyDescriptor = PropertyUtilities.getPropertyDescriptorFor(property);
+        this._keyStrategy = new KeyStrategyDescriptor(KeyStrategyTypes.Property, propertyDescriptor.path);
         return this;
     }
 
@@ -29,9 +47,17 @@ export class JoinEventBuilder<TDocument extends object, TEvent extends object> i
     }
 
     build(buildContext: OperationBuilderContext): OperationDescriptor {
+        if (!this._onProperty) {
+            throw new MissingOnDefinitionForJoin();
+        }
+
         const children = this._builders.map(_ => _.build(buildContext));
         const eventTypeId = buildContext.eventTypes.getFor(this._eventType).id;
-        return new OperationDescriptor(OperationTypes.FromEvent, [eventTypeId], {}, children);
+        const configuration: JoinEventConfiguration = {
+            onProperty: this._onProperty,
+            keyStrategy: this._keyStrategy
+        };
+        return new OperationDescriptor(OperationTypes.FromEvent, [eventTypeId], configuration, children);
     }
 }
 

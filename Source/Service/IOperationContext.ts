@@ -9,8 +9,5 @@ export interface IOperationContext {
     model: any;
     event: any;
     eventContext: EventContext;
-
-    getState(key: string): any;
-    setState(key: string, state: any);
 }
 

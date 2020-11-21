@@ -32,10 +32,10 @@ export class Projection {
 
     async handle(eventType: EventTypeId, event: any, context: EventContext) {
         try {
-            const keyStrategy = this.getKeyStrategyFor(event, context);
-            const key = keyStrategy.get(event, context);
-
             if (this._operationsByEventType.has(eventType)) {
+                const keyStrategy = this.getKeyStrategyFor(event, context);
+                const key = keyStrategy.get(event, context);
+
                 const initial = await this._projections.get(key) || {};
 
                 let currentState: any = { ...initial };

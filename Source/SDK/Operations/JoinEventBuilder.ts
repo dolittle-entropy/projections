@@ -57,7 +57,7 @@ export class JoinEventBuilder<TDocument extends object, TEvent extends object> i
             onProperty: this._onProperty,
             keyStrategy: this._keyStrategy
         };
-        return new OperationDescriptor(OperationTypes.FromEvent, [eventTypeId], configuration, children);
+        return new OperationDescriptor(OperationTypes.JoinEvent, [eventTypeId], configuration, children);
     }
 }
 

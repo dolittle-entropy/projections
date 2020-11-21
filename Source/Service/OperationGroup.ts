@@ -23,6 +23,7 @@ export class OperationGroup implements IOperationGroup {
         readonly children: IOperationGroup[],
         private readonly _state: IState,
         private readonly _logger: Logger) {
+
         for (const operation of operations) {
             for (const eventType of operation.eventTypes) {
                 const operations = this._operationsByEventType.get(eventType) || [];
@@ -33,26 +34,31 @@ export class OperationGroup implements IOperationGroup {
 
     async handle(eventType: EventTypeId, event: any, context: EventContext): Promise<void> {
         try {
+            const keyStrategy = this.getKeyStrategyFor(event, context);
+            const key = keyStrategy.get(event, context);
+
+            let initial = {};
+            let currentState = {};
+
             if (this._operationsByEventType.has(eventType)) {
-                const keyStrategy = this.getKeyStrategyFor(event, context);
-                const key = keyStrategy.get(event, context);
 
-                const initial = await this._state.get(key) || {};
+                initial = await this._state.get(key) || {};
 
-                let currentState: any = { ...initial };
+                currentState = { ...initial };
 
                 for (const operation of this._operationsByEventType.get(eventType)!) {
                     const operationContext = new OperationContext(key, currentState, event, context);
                     currentState = await this.performOperationAndChildren(operation, operationContext, currentState);
+                    console.log(currentState);
                 }
+            }
 
-                for (const childGroup of this.children) {
-                    await childGroup.handle(eventType, event, context);
-                }
+            for (const childGroup of this.children) {
+                await childGroup.handle(eventType, event, context);
+            }
 
-                if (!deepEqual(initial, currentState)) {
-                    await this._state.set(key, currentState);
-                }
+            if (!deepEqual(initial, currentState)) {
+                await this._state.set(key, currentState);
             }
         } catch (ex) {
             this._logger.error(`Couldn't handle event of type '${eventType.toString()}' in projection '${this.stream.toString()}'`, ex);

@@ -27,7 +27,6 @@ import { IChildOperation } from './IChildOperation';
 import KeyStrategyTypes from '../KeyStrategyTypes';
 import OperationTypes from '../OperationTypes';
 import ChildOperationTypes from '../ChildOperationTypes';
-import { ProjectionsManager } from './MongoDB/ProjectionsManager';
 import { PropertyPath } from './PropertyPath';
 import { PropertyUtilities } from '../PropertyUtilities';
 import { IOperationContext } from './IOperationContext';
@@ -88,6 +87,7 @@ export class ProjectionService {
             intermediateState,
             client.logger
         );
+
 
         const projectionState = await projectionsManager.getFor(descriptor.targetModel.name);
         const topLevelOperationGroup = new OperationGroup(

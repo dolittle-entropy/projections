@@ -31,7 +31,6 @@ export class OperationGroup implements IOperationGroup {
         }
     }
 
-
     async handle(eventType: EventTypeId, event: any, context: EventContext): Promise<void> {
         try {
             if (this._operationsByEventType.has(eventType)) {

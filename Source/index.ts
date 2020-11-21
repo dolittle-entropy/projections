@@ -9,12 +9,15 @@ import { ProjectionService } from './Service/ProjectionService';
 import { ProjectionDescriptor } from './SDK/ProjectionDescriptor';
 import { ProjectionsConfigurationBuilder, ProjectionsConfigurationBuilderCallback } from './ProjectionsConfigurationBuilder';
 import { ProjectionsManager } from './Service/MongoDB/ProjectionsManager';
+import { IntermediatesConfigurationBuilder, IntermediatesConfigurationBuilderCallback } from './IntermediatesConfigurationBuilder';
+import { IntermediatesManager } from './Service/MongoDB/IntermediatesManager';
 
 let _host = 'localhost';
 let _port = 50053;
 let _container: IContainer = new Container();
 
-const configurationBuilder = new ProjectionsConfigurationBuilder();
+const projectionsConfigurationBuilder = new ProjectionsConfigurationBuilder();
+const intermediatesConfigurationBuilder = new IntermediatesConfigurationBuilder();
 
 declare module '@dolittle/sdk' {
     interface ClientBuilder {
@@ -24,6 +27,12 @@ declare module '@dolittle/sdk' {
          * @param {ProjectionsConfigurationBuilderCallback} callback Callback for building the projections configuration.
          */
         withProjections(callback: ProjectionsConfigurationBuilderCallback): ClientBuilder;
+
+        /**
+         * Configure the behavior of projections, system wide.
+         * @param {IntermediatesConfigurationBuilderCallback callback Callback for building the intermediates configuration.
+         */
+        withProjectionIntermediates(callback: IntermediatesConfigurationBuilderCallback): ClientBuilder;
 
         /**
          * Build a projection from events to a document of a type.
@@ -42,7 +51,12 @@ const _projections: ProjectionBuilder<any>[] = [];
 
 
 ClientBuilder.prototype.withProjections = function (callback: ProjectionsConfigurationBuilderCallback) {
-    callback(configurationBuilder);
+    callback(projectionsConfigurationBuilder);
+    return this;
+};
+
+ClientBuilder.prototype.withProjectionIntermediates = function (callback: IntermediatesConfigurationBuilderCallback) {
+    callback(intermediatesConfigurationBuilder);
     return this;
 };
 
@@ -76,13 +90,15 @@ ClientBuilder.prototype.build = function (): Client {
     const connectionString = `${_host}:${_port}`;
     client.projections = [];
 
-    const configuration = configurationBuilder.build();
-    const projectionsManager = new ProjectionsManager(configuration);
+    const projectionsConfiguration = projectionsConfigurationBuilder.build();
+    const projectionsManager = new ProjectionsManager(projectionsConfiguration);
+    const intermediatesConfiguration = intermediatesConfigurationBuilder.build();
+    const intermediatesManager = new IntermediatesManager(intermediatesConfiguration);
 
     for (const projectionBuilder of _projections) {
         const projectionDescriptor = projectionBuilder.build(client.eventTypes);
         client.projections.push(projectionDescriptor);
-        ProjectionService.register(client, projectionsManager, _container, connectionString, projectionDescriptor);
+        ProjectionService.register(client, projectionsManager, intermediatesManager, _container, connectionString, projectionDescriptor);
     }
 
     return client;

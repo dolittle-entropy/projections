@@ -4,7 +4,7 @@
 import { Collection, FilterQuery } from 'mongodb';
 import { IState } from '../IState';
 
-export class Projections implements IState {
+export class State implements IState {
 
     constructor(private readonly _collection: Collection) {
 

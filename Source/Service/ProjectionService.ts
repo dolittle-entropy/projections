@@ -33,6 +33,7 @@ import { PropertyUtilities } from '../PropertyUtilities';
 import { IOperationContext } from './IOperationContext';
 import { PropertyAccessor } from './PropertyAccessor';
 import { OperationGroup } from './OperationGroup';
+import { IStateManager } from './IStateManager';
 
 
 export type PropertyMapConfiguration = {
@@ -42,7 +43,13 @@ export type PropertyMapConfiguration = {
 
 
 export class ProjectionService {
-    static async register(client: Client, projectionsManager: ProjectionsManager, container: IContainer, connectionString: string, descriptor: ProjectionDescriptor): Promise<Projection> {
+    static async register(
+        client: Client,
+        projectionsManager: IStateManager,
+        intermediatesManager: IStateManager,
+        container: IContainer,
+        connectionString: string,
+        descriptor: ProjectionDescriptor): Promise<Projection> {
         // This is just a workaround since we're not part of the SDK - this would be in the ClientBuilder Build method
         const executionContext = new ExecutionContext(
             MicroserviceId.from('7c3d7387-6324-4309-980f-31b9c4b39046'),

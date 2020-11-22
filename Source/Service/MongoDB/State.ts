@@ -7,7 +7,6 @@ import { IState } from '../IState';
 export class State implements IState {
 
     constructor(private readonly _collection: Collection) {
-
     }
 
     async get(id: any): Promise<any> {
@@ -17,5 +16,11 @@ export class State implements IState {
 
     async set(id: any, content: any): Promise<void> {
         await this._collection.updateOne({ _id: id }, { $set: content }, { upsert: true });
+    }
+
+    async setMany(property: string, id: any, content: any): Promise<void> {
+        const filter: any = {};
+        filter[property] = id;
+        await this._collection.updateMany(filter, { $set: content });
     }
 }

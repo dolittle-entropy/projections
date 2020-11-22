@@ -4,4 +4,5 @@
 export abstract class IState {
     abstract get(id: any): Promise<any>;
     abstract set(id: any, content: any): Promise<void>;
+    abstract setMany(property: string, id: any, content: any): Promise<void>;
 }

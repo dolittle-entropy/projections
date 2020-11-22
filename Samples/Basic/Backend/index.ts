@@ -50,6 +50,7 @@ export class Rule {
             .useModelName('TheRules')
             .withKeys(_ => _.usingProperty('ruleId').usingEventSourceId())
             .from(RuleDefined, e => e
+                .usingKeyFrom(r => r.ruleId)
                 .set(r => r.type).to(ev => ev.type)
                 .set(r => r.priority).to(ev => ev.priority)
                 .set(r => r.featureId).to(ev => ev.featureId)
@@ -57,7 +58,7 @@ export class Rule {
                 .set(r => r.lastUpdated).toContext(ec => ec.occurred))
             .join(FeatureAdded, e => e
                 .on(r => r.featureId)
-                .usingKeyFrom(ev => ev.name)
+                .usingKeyFrom(ev => ev.id)
                 .set(r => r.featureName).to(ev => ev.name))
             .join(ComponentAdded, e => e
                 .on(r => r.componentId)

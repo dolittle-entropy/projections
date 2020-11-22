@@ -10,6 +10,7 @@ export * from './IOperationGroup';
 export * from './JoinEvent';
 export * from './OperationContext';
 export * from './OperationGroup';
+export * from './OperationsConverter';
 export * from './PropertyMapper';
 export * from './UnknownChildOperation';
 export * from './UnknownOperation';

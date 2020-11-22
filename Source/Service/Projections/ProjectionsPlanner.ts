@@ -7,28 +7,14 @@ import { Projection } from './Projection';
 import { ProjectionDescriptor } from '../../SDK/ProjectionDescriptor';
 import { ScopeId, StreamId } from '@dolittle/sdk.events';
 import { EventSourceKeyStrategy } from '../Keys/EventSourceKeyStrategy';
-import { FromEvent } from '../Operations/FromEvent';
 
-import { OperationDescriptor } from '../../SDK/OperationDescriptor';
-import { ChildOperationDescriptor } from '../../SDK/ChildOperationDescriptor';
-import { JoinEvent } from '../Operations/JoinEvent';
-import { UnknownOperation, UnknownChildOperation, PropertyMapper, IChildOperation, IOperationContext, OperationGroup } from '../Operations';
-
-import { PropertyPath } from '../PropertyPath';
-import { PropertyUtilities } from '../../PropertyUtilities';
-import { PropertyAccessor } from '../PropertyAccessor';
 import { IStateManager } from '../IStateManager';
 import { IProjectionsPlanner } from './IProjectionsPlanner';
 
 import OperationTypes from '../../OperationTypes';
-import ChildOperationTypes from '../../ChildOperationTypes';
 import { KeyStrategiesConverter } from '../Keys';
+import { OperationGroup, OperationsConverter } from '../Operations';
 
-
-export type PropertyMapConfiguration = {
-    sourceProperty: string;
-    targetProperty: string;
-};
 
 export class ProjectionsPlanner implements IProjectionsPlanner {
 
@@ -43,11 +29,11 @@ export class ProjectionsPlanner implements IProjectionsPlanner {
 
         const fromOperations = descriptor.operations
             .filter(_ => _.id === OperationTypes.FromEvent)
-            .map(_ => this.buildOperationFrom(_));
+            .map(_ => OperationsConverter.toOperation(_));
 
         const joinOperations = descriptor.operations
             .filter(_ => _.id === OperationTypes.JoinEvent)
-            .map(_ => this.buildOperationFrom(_));
+            .map(_ => OperationsConverter.toOperation(_));
 
         const intermediateStateName = `intermediates-${stream.toString()}`;
         const intermediateState = await this._intermediatesManager.getFor(intermediateStateName);
@@ -75,44 +61,6 @@ export class ProjectionsPlanner implements IProjectionsPlanner {
         const projection = new Projection(stream, ScopeId.from(descriptor.scope), [topLevelOperationGroup]);
 
         return projection;
-    }
-
-
-    private buildOperationFrom(descriptor: OperationDescriptor) {
-        switch (descriptor.id) {
-            case OperationTypes.FromEvent: {
-                return new FromEvent(descriptor.eventTypes, this.buildChildOperations(descriptor.children));
-            };
-            case OperationTypes.JoinEvent: {
-                return new JoinEvent(descriptor.eventTypes, this.buildChildOperations(descriptor.children));
-            };
-        }
-
-        throw new UnknownOperation(descriptor.id);
-    }
-
-
-    private buildChildOperations(children: ChildOperationDescriptor[]): IChildOperation[] {
-        return children.map(_ => {
-            switch (_.id) {
-                case ChildOperationTypes.PropertyMap: {
-                    const config = _.configuration as PropertyMapConfiguration;
-                    const eventProperty = PropertyUtilities.getPropertyDescriptorFor<IOperationContext>(_ => _.event);
-                    const sourceProperty = new PropertyAccessor(new PropertyPath(`${eventProperty.path}.${config.sourceProperty}`));
-                    const targetProperty = new PropertyAccessor(new PropertyPath(`${config.targetProperty}`));
-                    return new PropertyMapper(sourceProperty, targetProperty, this.buildChildOperations(_.children));
-                };
-                case ChildOperationTypes.PropertyMapFromContext: {
-                    const config = _.configuration as PropertyMapConfiguration;
-                    const eventContextProperty = PropertyUtilities.getPropertyDescriptorFor<IOperationContext>(_ => _.eventContext);
-                    const sourceProperty = new PropertyAccessor(new PropertyPath(`${eventContextProperty.path}.${config.sourceProperty}`));
-                    const targetProperty = new PropertyAccessor(new PropertyPath(`${config.targetProperty}`));
-                    return new PropertyMapper(sourceProperty, targetProperty, this.buildChildOperations(_.children));
-                };
-            }
-
-            throw new UnknownChildOperation(_.id);
-        });
     }
 }
 

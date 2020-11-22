@@ -28,11 +28,11 @@ export class ProjectionsPlanner implements IProjectionsPlanner {
         const stream = StreamId.from(descriptor.stream);
 
         const fromOperations = descriptor.operations
-            .filter(_ => _.id === OperationTypes.FromEvent)
+            .filter(_ => _.id.toString() === OperationTypes.FromEvent.toString())
             .map(_ => OperationsConverter.toOperation(_));
 
         const joinOperations = descriptor.operations
-            .filter(_ => _.id === OperationTypes.JoinEvent)
+            .filter(_ => _.id.toString() === OperationTypes.JoinEvent.toString())
             .map(_ => OperationsConverter.toOperation(_));
 
         const intermediateStateName = `intermediates-${stream.toString()}`;
@@ -50,7 +50,7 @@ export class ProjectionsPlanner implements IProjectionsPlanner {
 
         // Children group
 
-        // Post Joins group
+        // Hook up properties that match the on() relationship and add child operation to the setting of this property on any From() operations
 
         const projectionState = await this._projectionsManager.getFor(descriptor.targetModel.name);
         const fromsOperationGroup = new OperationGroup(

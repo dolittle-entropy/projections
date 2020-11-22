@@ -15,7 +15,7 @@ export class OperationTypeId extends ConceptAs<Guid, '@dolittle/projections.Oper
     /**
      * Gets the unknown {@link OperationId}
      */
-    static unknown: OperationTypeId = OperationTypeId.from('00000000-0000-0000-0000-000000000000');
+    static unknown: OperationTypeId = OperationTypeId.from(Guid.empty);
 
     /**
      * Creates a {@link OperationId} from a guid.

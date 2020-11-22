@@ -15,7 +15,7 @@ export class KeyStrategyId extends ConceptAs<Guid, '@dolittle/projections.KeyStr
     /**
      * Gets the unknown {@link KeyStrategyId}
      */
-    static unknown: KeyStrategyId = KeyStrategyId.from('00000000-0000-0000-0000-000000000000');
+    static unknown: KeyStrategyId = KeyStrategyId.from(Guid.empty);
 
     /**
      * Creates a {@link KeyStrategyId} from a guid.

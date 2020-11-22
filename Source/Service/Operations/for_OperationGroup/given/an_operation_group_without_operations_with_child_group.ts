@@ -17,6 +17,7 @@ export class an_operation_group_without_operations_with_child_group extends all_
         super();
 
         this.childGroup = {
+            name: 'child',
             children: [],
             operations: [],
 

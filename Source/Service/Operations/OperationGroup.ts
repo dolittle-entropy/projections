@@ -17,6 +17,7 @@ export class OperationGroup implements IOperationGroup {
     private readonly _operationsByEventType: Map<EventTypeId, IOperation[]> = new Map();
 
     constructor(
+        readonly name: string,
         readonly stream: StreamId,
         readonly keyStrategies: IKeyStrategy[],
         readonly operations: IOperation[],

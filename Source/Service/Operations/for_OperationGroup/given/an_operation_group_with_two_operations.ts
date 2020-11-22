@@ -43,6 +43,7 @@ export class an_operation_group_with_two_operations extends all_dependencies {
         };
 
         this.operationGroup = new OperationGroup(
+            '',
             StreamId.from('0d17c309-afed-46b6-912f-69f136f0264e'),
             [this.keyStrategy],
             [this.firstOperation, this.secondOperation],

@@ -29,6 +29,7 @@ export class an_operation_group_without_operations_with_child_group extends all_
         };
 
         this.operationGroup = new OperationGroup(
+            '',
             StreamId.from('0d17c309-afed-46b6-912f-69f136f0264e'),
             [this.keyStrategy],
             [],

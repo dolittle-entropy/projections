@@ -39,6 +39,7 @@ export class ProjectionsPlanner implements IProjectionsPlanner {
         const intermediateState = await this._intermediatesManager.getFor(intermediateStateName);
 
         const joinsOperationGroup = new OperationGroup(
+            'Join',
             stream,
             [new EventSourceKeyStrategy()],
             joinOperations,
@@ -49,7 +50,8 @@ export class ProjectionsPlanner implements IProjectionsPlanner {
 
 
         const projectionState = await this._projectionsManager.getFor(descriptor.targetModel.name);
-        const topLevelOperationGroup = new OperationGroup(
+        const fromsOperationGroup = new OperationGroup(
+            'From',
             stream,
             KeyStrategiesConverter.toKeyStrategies(descriptor.keyStrategies),
             fromOperations,
@@ -58,7 +60,7 @@ export class ProjectionsPlanner implements IProjectionsPlanner {
             this._logger
         );
 
-        const projection = new Projection(stream, ScopeId.from(descriptor.scope), [topLevelOperationGroup]);
+        const projection = new Projection(stream, ScopeId.from(descriptor.scope), [fromsOperationGroup]);
 
         return projection;
     }

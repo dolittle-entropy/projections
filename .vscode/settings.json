@@ -14,6 +14,7 @@
     "eslint.alwaysShowStatus": true,
 
     "cSpell.words": [
+        "froms",
         "grpc",
         "luxon",
         "typegoose",

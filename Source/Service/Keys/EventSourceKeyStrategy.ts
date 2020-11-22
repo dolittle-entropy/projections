@@ -10,6 +10,6 @@ export class EventSourceKeyStrategy implements IKeyStrategy {
     }
 
     get(event: any, eventContext: EventContext): any {
-        return eventContext.eventSourceId.value;
+        return eventContext.eventSourceId.value.toString();
     }
 }

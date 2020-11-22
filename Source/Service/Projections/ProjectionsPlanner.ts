@@ -1,12 +1,12 @@
 // Copyright (c) Dolittle. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+import { Logger } from 'winston';
+
 import { Projection } from './Projection';
 import { ProjectionDescriptor } from '../../SDK/ProjectionDescriptor';
 import { ScopeId, StreamId } from '@dolittle/sdk.events';
 import { EventSourceKeyStrategy } from '../Keys/EventSourceKeyStrategy';
-import { PropertyKeyStrategy } from '../Keys/PropertyKeyStrategy';
-import { UnknownKeyStrategy } from '../UnknownKeyStrategy';
 import { FromEvent } from '../Operations/FromEvent';
 
 import { OperationDescriptor } from '../../SDK/OperationDescriptor';
@@ -17,9 +17,6 @@ import { UnknownChildOperation } from '../UnknownChildOperation';
 import { PropertyMapper } from '../Operations/PropertyMapper';
 import { IChildOperation } from '../IChildOperation';
 
-import KeyStrategyTypes from '../../KeyStrategyTypes';
-import OperationTypes from '../../OperationTypes';
-import ChildOperationTypes from '../../ChildOperationTypes';
 import { PropertyPath } from '../PropertyPath';
 import { PropertyUtilities } from '../../PropertyUtilities';
 import { IOperationContext } from '../IOperationContext';
@@ -28,7 +25,9 @@ import { OperationGroup } from '../OperationGroup';
 import { IStateManager } from '../IStateManager';
 import { IProjectionsPlanner } from './IProjectionsPlanner';
 
-import { Logger } from 'winston';
+import OperationTypes from '../../OperationTypes';
+import ChildOperationTypes from '../../ChildOperationTypes';
+import { KeyStrategiesConverter } from '../Keys';
 
 
 export type PropertyMapConfiguration = {
@@ -71,7 +70,7 @@ export class ProjectionsPlanner implements IProjectionsPlanner {
         const projectionState = await this._projectionsManager.getFor(descriptor.targetModel.name);
         const topLevelOperationGroup = new OperationGroup(
             stream,
-            this.getKeyStrategiesFor(descriptor),
+            KeyStrategiesConverter.getFor(descriptor.keyStrategies),
             fromOperations,
             [joinsOperationGroup],
             projectionState,
@@ -83,21 +82,6 @@ export class ProjectionsPlanner implements IProjectionsPlanner {
         return projection;
     }
 
-    private getKeyStrategiesFor(descriptor: ProjectionDescriptor) {
-        return descriptor.keyStrategies.map(_ => {
-
-            switch (_.id) {
-                case KeyStrategyTypes.EventSourceIdentifier: {
-                    return new EventSourceKeyStrategy();
-                };
-                case KeyStrategyTypes.Property: {
-                    return new PropertyKeyStrategy(_.configuration);
-                }
-            }
-
-            throw new UnknownKeyStrategy(_.id);
-        });
-    }
 
     private buildOperationFrom(descriptor: OperationDescriptor) {
         switch (descriptor.id) {

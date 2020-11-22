@@ -42,7 +42,6 @@ export class OperationGroup implements IOperationGroup {
             let currentState = {};
 
             if (this._operationsByEventType.has(eventType)) {
-
                 initial = await this._state.get(key) || {};
 
                 currentState = { ...initial };

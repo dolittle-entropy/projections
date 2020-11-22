@@ -5,9 +5,10 @@ import { EventContext } from '@dolittle/sdk.events';
 import { IOperationContext } from './IOperationContext';
 
 export class OperationContext implements IOperationContext {
-    constructor(readonly key: any, readonly model: any, readonly event: any, readonly eventContext: EventContext) {
+    constructor(
+        readonly key: any,
+        readonly model: any,
+        readonly event: any,
+        readonly eventContext: EventContext) {
     }
 }
-
-
-

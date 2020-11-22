@@ -49,7 +49,6 @@ export class OperationGroup implements IOperationGroup {
                 for (const operation of this._operationsByEventType.get(eventType)!) {
                     const operationContext = new OperationContext(key, currentState, event, context);
                     currentState = await this.performOperationAndChildren(operation, operationContext, currentState);
-                    console.log(currentState);
                 }
             }
 
@@ -78,7 +77,6 @@ export class OperationGroup implements IOperationGroup {
 
         return currentState;
     }
-
 
     private getKeyStrategyFor(event: any, context: EventContext): IKeyStrategy {
         const keyStrategy = this.keyStrategies.find(_ => _.has(event, context));

@@ -10,6 +10,7 @@ import { IOperation } from '../../IOperation';
 import { OperationContext } from '../../OperationContext';
 
 import { all_dependencies } from './all_dependencies';
+import { NullKeyStrategy } from '../../..//Keys/NullKeyStrategy';
 
 export class an_operation_group_with_two_operations extends all_dependencies {
     operationGroup: OperationGroup;
@@ -29,6 +30,7 @@ export class an_operation_group_with_two_operations extends all_dependencies {
         };
 
         this.firstOperation = {
+            keyStrategy: new NullKeyStrategy(),
             eventTypes: [this.eventType],
             children: [],
 
@@ -36,6 +38,7 @@ export class an_operation_group_with_two_operations extends all_dependencies {
         };
 
         this.secondOperation = {
+            keyStrategy: new NullKeyStrategy(),
             eventTypes: [this.eventType],
             children: [],
 

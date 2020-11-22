@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import sinon from 'sinon';
+import { NullKeyStrategy } from '../../../Keys/NullKeyStrategy';
 import { IOperation } from '../../IOperation';
 import { OperationContext } from '../../OperationContext';
 import { an_operation_group_with_two_operations } from './an_operation_group_with_two_operations';
@@ -20,6 +21,7 @@ export class an_operation_group_with_two_operations_and_child_operations extends
         super();
 
         this.firstOperationFirstChild = {
+            keyStrategy: new NullKeyStrategy(),
             eventTypes: [this.eventType],
             children: [],
 
@@ -27,6 +29,7 @@ export class an_operation_group_with_two_operations_and_child_operations extends
         };
 
         this.firstOperationSecondChild = {
+            keyStrategy: new NullKeyStrategy(),
             eventTypes: [this.eventType],
             children: [],
 
@@ -36,6 +39,7 @@ export class an_operation_group_with_two_operations_and_child_operations extends
         this.firstOperation.children = [this.firstOperationFirstChild, this.firstOperationSecondChild];
 
         this.secondOperationFirstChild = {
+            keyStrategy: new NullKeyStrategy(),
             eventTypes: [this.eventType],
             children: [],
 
@@ -43,6 +47,7 @@ export class an_operation_group_with_two_operations_and_child_operations extends
         };
 
         this.secondOperationSecondChild = {
+            keyStrategy: new NullKeyStrategy(),
             eventTypes: [this.eventType],
             children: [],
 

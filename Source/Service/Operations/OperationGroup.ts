@@ -35,20 +35,31 @@ export class OperationGroup implements IOperationGroup {
 
     async handle(eventType: EventTypeId, event: any, context: EventContext): Promise<void> {
         try {
-            const keyStrategy = this.getKeyStrategyFor(event, context);
-            const key = keyStrategy.get(event, context);
-
-            let initial = {};
-            let currentState = {};
+            let currentState: any = {};
+            const stateToSet: Map<any, any> = new Map();
 
             if (this._operationsByEventType.has(eventType)) {
-                initial = await this._state.get(key) || {};
-
-                currentState = { ...initial };
-
                 for (const operation of this._operationsByEventType.get(eventType)!) {
-                    const operationContext = new OperationContext(key, currentState, event, context);
-                    currentState = await this.performOperationAndChildren(operation, operationContext, currentState);
+                    let key: any;
+                    if (operation.keyStrategy.has(event, context)) {
+                        key = operation.keyStrategy.get(event, context);
+                    }
+
+                    if (!key) {
+                        const keyStrategy = this.getKeyStrategyFor(event, context);
+                        key = keyStrategy.get(event, context);
+                    }
+
+                    const initial = await this._state.get(key) || {};
+                    const operationContext = new OperationContext(key, initial, event, context);
+                    const modifiedState = await this.performOperationAndChildren(operation, operationContext, initial);
+                    currentState = {...currentState, ...modifiedState};
+
+                    console.log(currentState);
+
+                    if (!deepEqual(initial, currentState)) {
+                        stateToSet.set(key, currentState);
+                    }
                 }
             }
 
@@ -56,8 +67,8 @@ export class OperationGroup implements IOperationGroup {
                 await childGroup.handle(eventType, event, context);
             }
 
-            if (!deepEqual(initial, currentState)) {
-                await this._state.set(key, currentState);
+            for (const [key, state] of stateToSet) {
+                await this._state.set(key, state);
             }
         } catch (ex) {
             this._logger.error(`Couldn't handle event of type '${eventType.toString()}' in projection '${this.stream.toString()}'`, ex);

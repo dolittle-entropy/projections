@@ -46,7 +46,8 @@ export class all_dependencies {
         );
         this.state = {
             get: sinon.stub().returns({}),
-            set: sinon.stub()
+            set: sinon.stub(),
+            setMany: sinon.stub()
         };
     }
 }

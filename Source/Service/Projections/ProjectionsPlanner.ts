@@ -70,7 +70,7 @@ export class ProjectionsPlanner implements IProjectionsPlanner {
         const projectionState = await this._projectionsManager.getFor(descriptor.targetModel.name);
         const topLevelOperationGroup = new OperationGroup(
             stream,
-            KeyStrategiesConverter.getFor(descriptor.keyStrategies),
+            KeyStrategiesConverter.toKeyStrategies(descriptor.keyStrategies),
             fromOperations,
             [joinsOperationGroup],
             projectionState,

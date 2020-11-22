@@ -3,24 +3,26 @@
 
 import { KeyStrategyDescriptor } from 'Source/SDK/KeyStrategyDescriptor';
 import { IKeyStrategy } from './IKeyStrategy';
-import KeyStrategyTypes from '../../KeyStrategyTypes';
 import { EventSourceKeyStrategy } from './EventSourceKeyStrategy';
 import { PropertyKeyStrategy } from './PropertyKeyStrategy';
 import { UnknownKeyStrategy } from './UnknownKeyStrategy';
+import KeyStrategyTypes from '../../KeyStrategyTypes';
 
 export class KeyStrategiesConverter {
-    static getFor(keyStrategies: KeyStrategyDescriptor[]): IKeyStrategy[] {
-        return keyStrategies.map(_ => {
-            switch (_.id) {
-                case KeyStrategyTypes.EventSourceIdentifier: {
-                    return new EventSourceKeyStrategy();
-                };
-                case KeyStrategyTypes.Property: {
-                    return new PropertyKeyStrategy(_.configuration);
-                }
-            }
+    static toKeyStrategies(keyStrategies: KeyStrategyDescriptor[]): IKeyStrategy[] {
+        return keyStrategies.map(this.toKeyStrategy);
+    }
 
-            throw new UnknownKeyStrategy(_.id);
-        });
+    static toKeyStrategy(keyStrategy: KeyStrategyDescriptor): IKeyStrategy {
+        switch (keyStrategy.id) {
+            case KeyStrategyTypes.EventSourceIdentifier: {
+                return new EventSourceKeyStrategy();
+            };
+            case KeyStrategyTypes.Property: {
+                return new PropertyKeyStrategy(keyStrategy.configuration);
+            }
+        }
+
+        throw new UnknownKeyStrategy(keyStrategy.id);
     }
 }

@@ -12,5 +12,6 @@ export * from './OperationContext';
 export * from './OperationGroup';
 export * from './OperationsConverter';
 export * from './PropertyMapper';
+export * from './UnableToResolveKeyForEvent';
 export * from './UnknownChildOperation';
 export * from './UnknownOperation';

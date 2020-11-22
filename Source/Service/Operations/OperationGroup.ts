@@ -11,7 +11,7 @@ import { IState } from '../IState';
 import { OperationContext } from './OperationContext';
 import { IBaseOperation } from './IBaseOperation';
 import { IKeyStrategy } from '../Keys';
-import { UnableToResolveKeyForEvent } from '../UnableToResolveKeyForEvent';
+import { UnableToResolveKeyForEvent } from './UnableToResolveKeyForEvent';
 
 export class OperationGroup implements IOperationGroup {
     private readonly _operationsByEventType: Map<EventTypeId, IOperation[]> = new Map();

@@ -2,7 +2,7 @@
     "private": true,
     "workspaces": [
         "Source",
-        "Samples/Basic"
+        "Samples/Basic/*"
     ],
     "scripts": {
         "prebuild": "yarn clean",

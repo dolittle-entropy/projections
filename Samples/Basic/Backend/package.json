@@ -1,0 +1,37 @@
+{
+    "private": true,
+    "name": "basic",
+    "version": "1.0.0",
+    "main": "Distribution/index.js",
+    "author": "Dolittle",
+    "license": "MIT",
+    "scripts": {
+        "dev": "nodemon ./index.ts",
+        "build": "tsc -b"
+    },
+    "nodemonConfig": {
+        "restartable": "rs",
+        "ignore": [
+            "Distribution",
+            "*.d.ts"
+        ],
+        "events": {
+            "restart": "(cd ../../Source;yarn build)"
+
+        },
+        "execMap": {
+            "ts": "ts-node"
+        },
+        "watch": [
+            "./",
+            "../../Source"
+        ],
+        "ext": "ts"
+    },
+    "dependencies": {
+        "@dolittle/projections": "1.0.0",
+        "@types/express": "^4.17.9",
+        "body-parser": "^1.19.0",
+        "express": "4.17.1"
+    }
+}

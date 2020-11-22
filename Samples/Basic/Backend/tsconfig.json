@@ -2,8 +2,11 @@
     "extends": "../../../tsconfig.json",
     "compilerOptions": {
         "rootDir": "./",
-        "outDir": "dist"
+        "outDir": "Distribution"
     },
     "references": [
+        {
+            "path": "../../Source"
+        }
     ]
 }

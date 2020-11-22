@@ -1,0 +1,14 @@
+{
+    "name": "@shared/dependencyinversion",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.ts",
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "tsyringe": "4.3.0"
+    },
+    "devDependencies": {
+        "reflect-metadata": "0.1.13"
+    }
+}

@@ -91,5 +91,7 @@ Then, the simplest way to work with the code is to run the [basic sample](./Samp
 Navigate to the folder and run:
 
 ```shell
-$ yarn dev
+$ yarn start
 ```
+
+This will start both the backend and the frontend. You can access the frontend on [http://localhost:9000](http://localhost:9000).

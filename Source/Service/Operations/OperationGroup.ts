@@ -55,8 +55,6 @@ export class OperationGroup implements IOperationGroup {
                     const modifiedState = await this.performOperationAndChildren(operation, operationContext, initial);
                     currentState = {...currentState, ...modifiedState};
 
-                    console.log(currentState);
-
                     if (!deepEqual(initial, currentState)) {
                         stateToSet.set(key, currentState);
                     }

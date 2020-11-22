@@ -5,13 +5,13 @@ import { Constructor } from '@dolittle/types';
 import { IContainer, Container } from '@dolittle/sdk.common';
 import { Client, ClientBuilder } from '@dolittle/sdk';
 import { ProjectionBuilder, ProjectionBuilderCallback } from './SDK/ProjectionBuilder';
-import { ProjectionsPlanner } from './Service/Projections/ProjectionsPlanner';
 import { ProjectionDescriptor } from './SDK/ProjectionDescriptor';
 import { ProjectionsConfigurationBuilder, ProjectionsConfigurationBuilderCallback } from './ProjectionsConfigurationBuilder';
-import { ProjectionsStateManager } from './Service/MongoDB/ProjectionsStateManager';
 import { IntermediatesConfigurationBuilder, IntermediatesConfigurationBuilderCallback } from './IntermediatesConfigurationBuilder';
+import { ProjectionsStateManager } from './Service/MongoDB/ProjectionsStateManager';
 import { IntermediatesStateManager } from './Service/MongoDB/IntermediatesStateManager';
-import { ProjectionsManager } from './Service/Projections/ProjectionsManager';
+
+import { ProjectionsPlanner, ProjectionsManager } from './Service/Projections';
 
 let _host = 'localhost';
 let _port = 50053;

@@ -3,7 +3,7 @@
 
 import { IChildOperation } from './IChildOperation';
 import { IOperationContext } from './IOperationContext';
-import { PropertyAccessor } from '../PropertyAccessor';
+import { PropertyAccessor } from '../Properties';
 
 export class PropertyMapper implements IChildOperation {
     constructor(private readonly _sourceProperty: PropertyAccessor, private readonly _targetProperty: PropertyAccessor, readonly children: IChildOperation[]) {

@@ -48,6 +48,9 @@ export class ProjectionsPlanner implements IProjectionsPlanner {
             this._logger
         );
 
+        // Children group
+
+        // Post Joins group
 
         const projectionState = await this._projectionsManager.getFor(descriptor.targetModel.name);
         const fromsOperationGroup = new OperationGroup(

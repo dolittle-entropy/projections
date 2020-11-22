@@ -3,8 +3,8 @@
 
 import { ChildOperationDescriptor } from '../../SDK/ChildOperationDescriptor';
 import { OperationDescriptor } from '../../SDK/OperationDescriptor';
-import { PropertyAccessor } from '../PropertyAccessor';
-import { PropertyPath } from '../PropertyPath';
+import { PropertyAccessor } from '../Properties/PropertyAccessor';
+import { PropertyPath } from '../Properties';
 import { FromEvent } from './FromEvent';
 import { IOperationContext } from './IOperationContext';
 import { JoinEvent } from './JoinEvent';

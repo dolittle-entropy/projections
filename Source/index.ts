@@ -6,18 +6,17 @@ import { IContainer, Container } from '@dolittle/sdk.common';
 import { Client, ClientBuilder } from '@dolittle/sdk';
 import { ProjectionBuilder, ProjectionBuilderCallback } from './SDK/ProjectionBuilder';
 import { ProjectionDescriptor } from './SDK/ProjectionDescriptor';
-import { ProjectionsConfigurationBuilder, ProjectionsConfigurationBuilderCallback } from './ProjectionsConfigurationBuilder';
-import { IntermediatesConfigurationBuilder, IntermediatesConfigurationBuilderCallback } from './IntermediatesConfigurationBuilder';
+import { StateConfigurationBuilder, StateConfigurationBuilderCallback } from './StateConfigurationBuilder';
 
-import { IntermediatesStateManager, ProjectionsStateManager } from './Service/MongoDB';
+import { StateManager } from './Service/MongoDB';
 import { ProjectionsPlanner, ProjectionsManager } from './Service/Projections';
 
 let _host = 'localhost';
 let _port = 50053;
 let _container: IContainer = new Container();
 
-const projectionsConfigurationBuilder = new ProjectionsConfigurationBuilder();
-const intermediatesConfigurationBuilder = new IntermediatesConfigurationBuilder();
+const projectionsConfigurationBuilder = new StateConfigurationBuilder();
+const intermediatesConfigurationBuilder = new StateConfigurationBuilder();
 
 declare module '@dolittle/sdk' {
     interface ClientBuilder {
@@ -26,13 +25,13 @@ declare module '@dolittle/sdk' {
          * Configure the behavior of projections, system wide.
          * @param {ProjectionsConfigurationBuilderCallback} callback Callback for building the projections configuration.
          */
-        withProjections(callback: ProjectionsConfigurationBuilderCallback): ClientBuilder;
+        withProjections(callback: StateConfigurationBuilderCallback): ClientBuilder;
 
         /**
          * Configure the behavior of projections, system wide.
-         * @param {IntermediatesConfigurationBuilderCallback callback Callback for building the intermediates configuration.
+         * @param {StateConfigurationBuilderCallback callback Callback for building the intermediates configuration.
          */
-        withProjectionIntermediates(callback: IntermediatesConfigurationBuilderCallback): ClientBuilder;
+        withProjectionIntermediates(callback: StateConfigurationBuilderCallback): ClientBuilder;
 
         /**
          * Build a projection from events to a document of a type.
@@ -50,12 +49,12 @@ declare module '@dolittle/sdk' {
 const _projections: ProjectionBuilder<any>[] = [];
 
 
-ClientBuilder.prototype.withProjections = function (callback: ProjectionsConfigurationBuilderCallback) {
+ClientBuilder.prototype.withProjections = function (callback: StateConfigurationBuilderCallback) {
     callback(projectionsConfigurationBuilder);
     return this;
 };
 
-ClientBuilder.prototype.withProjectionIntermediates = function (callback: IntermediatesConfigurationBuilderCallback) {
+ClientBuilder.prototype.withProjectionIntermediates = function (callback: StateConfigurationBuilderCallback) {
     callback(intermediatesConfigurationBuilder);
     return this;
 };
@@ -91,9 +90,9 @@ ClientBuilder.prototype.build = function (): Client {
     client.projections = [];
 
     const projectionsConfiguration = projectionsConfigurationBuilder.build();
-    const projectionsStateManager = new ProjectionsStateManager(projectionsConfiguration);
+    const projectionsStateManager = new StateManager(projectionsConfiguration);
     const intermediatesConfiguration = intermediatesConfigurationBuilder.build();
-    const intermediatesStateManager = new IntermediatesStateManager(intermediatesConfiguration);
+    const intermediatesStateManager = new StateManager(intermediatesConfiguration);
 
     const projectionsPlanner = new ProjectionsPlanner(projectionsStateManager, intermediatesStateManager, client.logger);
     const projectionsManager = new ProjectionsManager(connectionString, client, _container, client.logger);

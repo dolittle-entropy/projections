@@ -1,12 +1,12 @@
 // Copyright (c) Dolittle. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import { IntermediatesConfiguration } from './IntermediatesConfiguration';
+import { StateConfiguration } from './StateConfiguration';
 import { MissingPersistenceConfigurationForIntermediates } from './MissingPersistenceConfigurationForIntermediates';
 
-export type IntermediatesConfigurationBuilderCallback = (builder: IntermediatesConfigurationBuilder) => void;
+export type StateConfigurationBuilderCallback = (builder: StateConfigurationBuilder) => void;
 
-export class IntermediatesConfigurationBuilder {
+export class StateConfigurationBuilder {
     private _connectionString?: string;
     private _databaseName?: string;
 
@@ -15,11 +15,11 @@ export class IntermediatesConfigurationBuilder {
         this._databaseName = databaseName;
     }
 
-    build(): IntermediatesConfiguration {
+    build(): StateConfiguration {
         if (!this._connectionString || !this._databaseName) {
             throw new MissingPersistenceConfigurationForIntermediates();
         }
 
-        return new IntermediatesConfiguration(this._connectionString, this._databaseName);
+        return new StateConfiguration(this._connectionString, this._databaseName);
     }
 }

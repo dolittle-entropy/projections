@@ -5,12 +5,12 @@ import { IState } from '../IState';
 import { IStateManager } from '../IStateManager';
 import { State } from './State';
 import { MongoClient } from 'mongodb';
-import { IntermediatesConfiguration } from '../../IntermediatesConfiguration';
+import { StateConfiguration } from '../../StateConfiguration';
 
-export class IntermediatesStateManager implements IStateManager {
+export class StateManager implements IStateManager {
     private _mongoClient?: MongoClient;
 
-    constructor(private readonly _configuration: IntermediatesConfiguration) {
+    constructor(private readonly _configuration: StateConfiguration) {
     }
 
     async getFor(name: string): Promise<IState> {

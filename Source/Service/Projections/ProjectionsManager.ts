@@ -8,6 +8,7 @@ import { EventHandlersBuilder } from '@dolittle/sdk.events.handling';
 import { Cancellation } from '@dolittle/sdk.resilience';
 import { MicroserviceId, Environment, ExecutionContext, TenantId, CorrelationId, Claims, Version } from '@dolittle/sdk.execution';
 import { Client } from '@dolittle/sdk';
+import { EventTypeId } from '@dolittle/sdk.events';
 import { IContainer } from '@dolittle/sdk.common';
 
 
@@ -15,6 +16,7 @@ import { Projection } from './Projection';
 import { IProjectionsManager } from './IProjectionsManager';
 
 import { Logger } from 'winston';
+import { IOperationGroup, OperationGroup } from '../Operations';
 
 export class ProjectionsManager implements IProjectionsManager {
 
@@ -43,7 +45,14 @@ export class ProjectionsManager implements IProjectionsManager {
         const distinct = (value: any, index: number, self: any[]) => {
             return self.indexOf(value) === index;
         };
-        const eventTypes = projection.operationGroups.flatMap(_ => _.operations.flatMap(o => o.eventTypes)).filter(distinct);
+
+        let eventTypes: EventTypeId[] = [];
+        const collectEventTypes = (group: IOperationGroup) => {
+            eventTypes = [...eventTypes, ...group.operations.flatMap(o => o.eventTypes)];
+            group.children.forEach(collectEventTypes);
+        };
+        projection.operationGroups.forEach(collectEventTypes);
+        eventTypes = eventTypes.filter(distinct);
 
         eventHandlers.createEventHandler(projection.stream.value, b => {
             const builder = b.partitioned();

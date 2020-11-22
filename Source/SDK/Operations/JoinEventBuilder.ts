@@ -5,12 +5,12 @@ import { Constructor, PropertyAccessor } from '@dolittle/types';
 import { IOperationBuilder } from '../IOperationBuilder';
 import { OperationDescriptor } from '../OperationDescriptor';
 import { SetBuilder } from './SetBuilder';
-import OperationTypes from '../../OperationTypes';
 import { OperationBuilderContext } from '../OperationBuilderContext';
 import { IChildOperationBuilder } from '../IChildOperationBuilder';
 import { PropertyUtilities } from '../../PropertyUtilities';
 import { MissingOnDefinitionForJoin } from './MissingOnDefinitionForJoin';
 import { KeyStrategyDescriptor } from '../KeyStrategyDescriptor';
+import OperationTypes from '../../OperationTypes';
 import KeyStrategyTypes from '../../KeyStrategyTypes';
 
 export type JoinEventBuilderCallback<TDocument extends object, TEvent extends object> = (builder: JoinEventBuilder<TDocument, TEvent>) => void;
@@ -60,4 +60,3 @@ export class JoinEventBuilder<TDocument extends object, TEvent extends object> i
         return new OperationDescriptor(OperationTypes.JoinEvent, [eventTypeId], configuration, children);
     }
 }
-

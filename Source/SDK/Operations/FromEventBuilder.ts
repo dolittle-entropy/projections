@@ -6,17 +6,29 @@ import { IOperationBuilder } from '../IOperationBuilder';
 import { OperationDescriptor } from '../OperationDescriptor';
 import { SetBuilder } from './SetBuilder';
 import { OperationBuilderContext } from '../OperationBuilderContext';
-import OperationTypes from '../../OperationTypes';
 import { IChildOperationBuilder } from '../IChildOperationBuilder';
 import { PropertyUtilities } from '../../PropertyUtilities';
+import { KeyStrategyDescriptor } from '../KeyStrategyDescriptor';
+import OperationTypes from '../../OperationTypes';
+import KeyStrategyTypes from '../../KeyStrategyTypes';
 
 export type FromEventBuilderCallback<TDocument extends object, TEvent extends object> = (builder: FromEventBuilder<TDocument, TEvent>) => void;
 
+export type FromEventConfiguration = {
+    keyStrategy: KeyStrategyDescriptor;
+};
 
-export class FromEventBuilder<TDocument extends object, TEvent extends object> implements IOperationBuilder{
+export class FromEventBuilder<TDocument extends object, TEvent extends object> implements IOperationBuilder {
     private readonly _builders: IChildOperationBuilder[] = [];
+    private _keyStrategy: KeyStrategyDescriptor = new KeyStrategyDescriptor(KeyStrategyTypes.NotSet);
 
-    constructor(private readonly _eventType: Constructor<TEvent>) {}
+    constructor(private readonly _eventType: Constructor<TEvent>) { }
+
+    usingKeyFrom(property: PropertyAccessor<TEvent>): FromEventBuilder<TDocument, TEvent> {
+        const propertyDescriptor = PropertyUtilities.getPropertyDescriptorFor(property);
+        this._keyStrategy = new KeyStrategyDescriptor(KeyStrategyTypes.Property, propertyDescriptor.path);
+        return this;
+    }
 
     set(targetProperty: PropertyAccessor<TDocument>): SetBuilder<FromEventBuilder<TDocument, TEvent>, TDocument, TEvent> {
         const propertyDescriptor = PropertyUtilities.getPropertyDescriptorFor(targetProperty);
@@ -28,6 +40,9 @@ export class FromEventBuilder<TDocument extends object, TEvent extends object> i
     build(buildContext: OperationBuilderContext): OperationDescriptor {
         const children = this._builders.map(_ => _.build(buildContext));
         const eventTypeId = buildContext.eventTypes.getFor(this._eventType).id;
-        return new OperationDescriptor(OperationTypes.FromEvent, [eventTypeId], {}, children);
+        const configuration: FromEventConfiguration = {
+            keyStrategy: this._keyStrategy
+        };
+        return new OperationDescriptor(OperationTypes.FromEvent, [eventTypeId], configuration, children);
     }
 }

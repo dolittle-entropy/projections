@@ -6,6 +6,7 @@ import { IKeyStrategy } from './IKeyStrategy';
 import { EventSourceKeyStrategy } from './EventSourceKeyStrategy';
 import { PropertyKeyStrategy } from './PropertyKeyStrategy';
 import { UnknownKeyStrategy } from './UnknownKeyStrategy';
+import { NullKeyStrategy } from './NullKeyStrategy';
 import KeyStrategyTypes from '../../KeyStrategyTypes';
 
 export class KeyStrategiesConverter {
@@ -15,6 +16,10 @@ export class KeyStrategiesConverter {
 
     static toKeyStrategy(keyStrategy: KeyStrategyDescriptor): IKeyStrategy {
         switch (keyStrategy.id) {
+            case KeyStrategyTypes.NotSet: {
+                return new NullKeyStrategy();
+            };
+
             case KeyStrategyTypes.EventSourceIdentifier: {
                 return new EventSourceKeyStrategy();
             };

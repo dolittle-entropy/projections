@@ -16,10 +16,16 @@ import { UnknownChildOperation } from './UnknownChildOperation';
 import OperationTypes from '../../OperationTypes';
 import ChildOperationTypes from '../../ChildOperationTypes';
 import { KeyStrategyDescriptor } from '../../SDK/KeyStrategyDescriptor';
+import { KeyStrategiesConverter } from '../Keys';
+import { NullKeyStrategy } from '../Keys/NullKeyStrategy';
 
 export type PropertyMapConfiguration = {
     sourceProperty: string;
     targetProperty: string;
+};
+
+export type FromEventConfiguration = {
+    keyStrategy: KeyStrategyDescriptor;
 };
 
 export type JoinEventConfiguration = {
@@ -32,13 +38,14 @@ export class OperationsConverter {
     static toOperation(descriptor: OperationDescriptor) {
         switch (descriptor.id) {
             case OperationTypes.FromEvent: {
-                return new FromEvent(descriptor.eventTypes, this.toOperations(descriptor.children));
+                const configuration: FromEventConfiguration = descriptor.configuration;
+                return new FromEvent(descriptor.eventTypes, KeyStrategiesConverter.toKeyStrategy(configuration.keyStrategy), this.toOperations(descriptor.children));
             };
             case OperationTypes.JoinEvent: {
                 const configuration: JoinEventConfiguration = descriptor.configuration;
                 const eventProperty = PropertyUtilities.getPropertyDescriptorFor<IOperationContext>(_ => _.event);
                 const onProperty = new PropertyAccessor(new PropertyPath(`${eventProperty.path}.${configuration.onProperty}`));
-                return new JoinEvent(descriptor.eventTypes, onProperty, this.toOperations(descriptor.children));
+                return new JoinEvent(descriptor.eventTypes, KeyStrategiesConverter.toKeyStrategy(configuration.keyStrategy), onProperty, this.toOperations(descriptor.children));
             };
         }
 
@@ -54,14 +61,14 @@ export class OperationsConverter {
                     const eventProperty = PropertyUtilities.getPropertyDescriptorFor<IOperationContext>(_ => _.event);
                     const sourceProperty = new PropertyAccessor(new PropertyPath(`${eventProperty.path}.${config.sourceProperty}`));
                     const targetProperty = new PropertyAccessor(new PropertyPath(`${config.targetProperty}`));
-                    return new PropertyMapper(sourceProperty, targetProperty, this.toOperations(_.children));
+                    return new PropertyMapper(sourceProperty, targetProperty, new NullKeyStrategy(), this.toOperations(_.children));
                 };
                 case ChildOperationTypes.PropertyMapFromContext: {
                     const config = _.configuration as PropertyMapConfiguration;
                     const eventContextProperty = PropertyUtilities.getPropertyDescriptorFor<IOperationContext>(_ => _.eventContext);
                     const sourceProperty = new PropertyAccessor(new PropertyPath(`${eventContextProperty.path}.${config.sourceProperty}`));
                     const targetProperty = new PropertyAccessor(new PropertyPath(`${config.targetProperty}`));
-                    return new PropertyMapper(sourceProperty, targetProperty, this.toOperations(_.children));
+                    return new PropertyMapper(sourceProperty, targetProperty, new NullKeyStrategy(), this.toOperations(_.children));
                 };
             }
 

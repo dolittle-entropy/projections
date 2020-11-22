@@ -15,10 +15,16 @@ import { UnknownOperation } from './UnknownOperation';
 import { UnknownChildOperation } from './UnknownChildOperation';
 import OperationTypes from '../../OperationTypes';
 import ChildOperationTypes from '../../ChildOperationTypes';
+import { KeyStrategyDescriptor } from '../../SDK/KeyStrategyDescriptor';
 
 export type PropertyMapConfiguration = {
     sourceProperty: string;
     targetProperty: string;
+};
+
+export type JoinEventConfiguration = {
+    onProperty: string;
+    keyStrategy: KeyStrategyDescriptor;
 };
 
 export class OperationsConverter {
@@ -29,7 +35,10 @@ export class OperationsConverter {
                 return new FromEvent(descriptor.eventTypes, this.toOperations(descriptor.children));
             };
             case OperationTypes.JoinEvent: {
-                return new JoinEvent(descriptor.eventTypes, this.toOperations(descriptor.children));
+                const configuration: JoinEventConfiguration = descriptor.configuration;
+                const eventProperty = PropertyUtilities.getPropertyDescriptorFor<IOperationContext>(_ => _.event);
+                const onProperty = new PropertyAccessor(new PropertyPath(`${eventProperty.path}.${configuration.onProperty}`));
+                return new JoinEvent(descriptor.eventTypes, onProperty, this.toOperations(descriptor.children));
             };
         }
 

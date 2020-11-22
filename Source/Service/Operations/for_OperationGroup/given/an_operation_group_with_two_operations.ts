@@ -4,7 +4,7 @@
 import sinon from 'sinon';
 
 import { StreamId } from '@dolittle/sdk.events';
-import { IKeyStrategy } from '../../Keys/IKeyStrategy';
+import { IKeyStrategy } from '../../../Keys/IKeyStrategy';
 import { OperationGroup } from '../..//OperationGroup';
 import { IOperation } from '../../IOperation';
 import { OperationContext } from '../../OperationContext';

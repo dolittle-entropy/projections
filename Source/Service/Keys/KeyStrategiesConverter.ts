@@ -1,7 +1,7 @@
 // Copyright (c) Dolittle. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import { KeyStrategyDescriptor } from 'Source/SDK/KeyStrategyDescriptor';
+import { KeyStrategyDescriptor } from '../../SDK/KeyStrategyDescriptor';
 import { IKeyStrategy } from './IKeyStrategy';
 import { EventSourceKeyStrategy } from './EventSourceKeyStrategy';
 import { PropertyKeyStrategy } from './PropertyKeyStrategy';

@@ -1,8 +1,8 @@
 // Copyright (c) Dolittle. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import { IChildOperation } from '../IChildOperation';
-import { IOperationContext } from '../IOperationContext';
+import { IChildOperation } from './IChildOperation';
+import { IOperationContext } from './IOperationContext';
 import { PropertyAccessor } from '../PropertyAccessor';
 
 export class PropertyMapper implements IChildOperation {

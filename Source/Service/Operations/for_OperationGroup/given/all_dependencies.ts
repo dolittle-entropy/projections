@@ -15,9 +15,9 @@ import {
     Version
 } from '@dolittle/sdk.execution';
 
-import { IState } from '../../IState';
+import { IState } from '../../../IState';
 import { Logger } from 'winston';
-import { LoggerInstance } from '../../SpecMocks/Logger';
+import { LoggerInstance } from '../../../SpecMocks/Logger';
 
 export class all_dependencies {
     state: IState;

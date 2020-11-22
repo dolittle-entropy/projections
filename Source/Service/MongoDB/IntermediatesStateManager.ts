@@ -5,7 +5,7 @@ import { IState } from '../IState';
 import { IStateManager } from '../IStateManager';
 import { State } from './State';
 import { MongoClient } from 'mongodb';
-import { IntermediatesConfiguration } from 'Source/IntermediatesConfiguration';
+import { IntermediatesConfiguration } from '../../IntermediatesConfiguration';
 
 export class IntermediatesStateManager implements IStateManager {
     private _mongoClient?: MongoClient;

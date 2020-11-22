@@ -7,11 +7,11 @@ import { Logger } from 'winston';
 import { EventContext, EventTypeId, StreamId } from '@dolittle/sdk.events';
 import { IOperation } from './IOperation';
 import { IOperationGroup } from './IOperationGroup';
-import { IState } from './IState';
+import { IState } from '../IState';
 import { OperationContext } from './OperationContext';
 import { IBaseOperation } from './IBaseOperation';
-import { IKeyStrategy } from './Keys/IKeyStrategy';
-import { UnableToResolveKeyForEvent } from './UnableToResolveKeyForEvent';
+import { IKeyStrategy } from '../Keys';
+import { UnableToResolveKeyForEvent } from '../UnableToResolveKeyForEvent';
 
 export class OperationGroup implements IOperationGroup {
     private readonly _operationsByEventType: Map<EventTypeId, IOperation[]> = new Map();

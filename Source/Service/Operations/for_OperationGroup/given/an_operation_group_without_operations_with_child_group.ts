@@ -3,10 +3,10 @@
 
 import sinon from 'sinon';
 import { StreamId } from '@dolittle/sdk.events';
-import { IKeyStrategy } from '../../Keys/IKeyStrategy';
+import { IKeyStrategy } from '../../../Keys/IKeyStrategy';
 import { all_dependencies } from './all_dependencies';
 import { OperationGroup } from '../../OperationGroup';
-import { IOperationGroup } from 'Source/Service/IOperationGroup';
+import { IOperationGroup } from '../../IOperationGroup';
 
 export class an_operation_group_without_operations_with_child_group extends all_dependencies {
     operationGroup: OperationGroup;

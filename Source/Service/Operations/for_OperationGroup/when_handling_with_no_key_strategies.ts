@@ -2,7 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import * as given from './given';
-import { UnableToResolveKeyForEvent } from '../UnableToResolveKeyForEvent';
+import { UnableToResolveKeyForEvent } from '../../UnableToResolveKeyForEvent';
 import sinon from 'sinon';
 
 describe('when handling with no key strategies', async () => {

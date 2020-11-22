@@ -12,16 +12,11 @@ import { FromEvent } from '../Operations/FromEvent';
 import { OperationDescriptor } from '../../SDK/OperationDescriptor';
 import { ChildOperationDescriptor } from '../../SDK/ChildOperationDescriptor';
 import { JoinEvent } from '../Operations/JoinEvent';
-import { UnknownOperation } from '../UnknownOperation';
-import { UnknownChildOperation } from '../UnknownChildOperation';
-import { PropertyMapper } from '../Operations/PropertyMapper';
-import { IChildOperation } from '../IChildOperation';
+import { UnknownOperation, UnknownChildOperation, PropertyMapper, IChildOperation, IOperationContext, OperationGroup } from '../Operations';
 
 import { PropertyPath } from '../PropertyPath';
 import { PropertyUtilities } from '../../PropertyUtilities';
-import { IOperationContext } from '../IOperationContext';
 import { PropertyAccessor } from '../PropertyAccessor';
-import { OperationGroup } from '../OperationGroup';
 import { IStateManager } from '../IStateManager';
 import { IProjectionsPlanner } from './IProjectionsPlanner';
 

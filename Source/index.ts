@@ -5,12 +5,13 @@ import { Constructor } from '@dolittle/types';
 import { IContainer, Container } from '@dolittle/sdk.common';
 import { Client, ClientBuilder } from '@dolittle/sdk';
 import { ProjectionBuilder, ProjectionBuilderCallback } from './SDK/ProjectionBuilder';
-import { ProjectionService } from './Service/ProjectionService';
+import { ProjectionsPlanner } from './Service/Projections/ProjectionsPlanner';
 import { ProjectionDescriptor } from './SDK/ProjectionDescriptor';
 import { ProjectionsConfigurationBuilder, ProjectionsConfigurationBuilderCallback } from './ProjectionsConfigurationBuilder';
-import { ProjectionsManager } from './Service/MongoDB/ProjectionsManager';
+import { ProjectionsStateManager } from './Service/MongoDB/ProjectionsStateManager';
 import { IntermediatesConfigurationBuilder, IntermediatesConfigurationBuilderCallback } from './IntermediatesConfigurationBuilder';
-import { IntermediatesManager } from './Service/MongoDB/IntermediatesManager';
+import { IntermediatesStateManager } from './Service/MongoDB/IntermediatesStateManager';
+import { ProjectionsManager } from './Service/Projections/ProjectionsManager';
 
 let _host = 'localhost';
 let _port = 50053;
@@ -91,14 +92,21 @@ ClientBuilder.prototype.build = function (): Client {
     client.projections = [];
 
     const projectionsConfiguration = projectionsConfigurationBuilder.build();
-    const projectionsManager = new ProjectionsManager(projectionsConfiguration);
+    const projectionsStateManager = new ProjectionsStateManager(projectionsConfiguration);
     const intermediatesConfiguration = intermediatesConfigurationBuilder.build();
-    const intermediatesManager = new IntermediatesManager(intermediatesConfiguration);
+    const intermediatesStateManager = new IntermediatesStateManager(intermediatesConfiguration);
+
+    const projectionsPlanner = new ProjectionsPlanner(projectionsStateManager, intermediatesStateManager, client.logger);
+    const projectionsManager = new ProjectionsManager(connectionString, client, _container, client.logger);
 
     for (const projectionBuilder of _projections) {
         const projectionDescriptor = projectionBuilder.build(client.eventTypes);
         client.projections.push(projectionDescriptor);
-        ProjectionService.register(client, projectionsManager, intermediatesManager, _container, connectionString, projectionDescriptor);
+
+        (async () => {
+            const projection = await projectionsPlanner.planFrom(projectionDescriptor);
+            await projectionsManager.register(projection);
+        })();
     }
 
     return client;

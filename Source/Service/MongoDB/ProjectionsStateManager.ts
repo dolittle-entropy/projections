@@ -1,17 +1,19 @@
 // Copyright (c) Dolittle. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+import { ProjectionsConfiguration } from '../../ProjectionsConfiguration';
 import { IState } from '../IState';
 import { IStateManager } from '../IStateManager';
 import { State } from './State';
 import { MongoClient } from 'mongodb';
-import { IntermediatesConfiguration } from 'Source/IntermediatesConfiguration';
 
-export class IntermediatesManager implements IStateManager {
+export class ProjectionsStateManager implements IStateManager {
     private _mongoClient?: MongoClient;
 
-    constructor(private readonly _configuration: IntermediatesConfiguration) {
+
+    constructor(private readonly _configuration: ProjectionsConfiguration) {
     }
+
 
     async getFor(name: string): Promise<IState> {
         const mongoClient = await this.getMongoClient();

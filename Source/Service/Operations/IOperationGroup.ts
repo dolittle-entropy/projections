@@ -5,6 +5,7 @@ import { EventContext, EventTypeId } from '@dolittle/sdk.events';
 import { IOperation } from './IOperation';
 
 export interface IOperationGroup {
+    name: string;
     children: IOperationGroup[];
     operations: IOperation[];
 

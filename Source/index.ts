@@ -8,9 +8,8 @@ import { ProjectionBuilder, ProjectionBuilderCallback } from './SDK/ProjectionBu
 import { ProjectionDescriptor } from './SDK/ProjectionDescriptor';
 import { ProjectionsConfigurationBuilder, ProjectionsConfigurationBuilderCallback } from './ProjectionsConfigurationBuilder';
 import { IntermediatesConfigurationBuilder, IntermediatesConfigurationBuilderCallback } from './IntermediatesConfigurationBuilder';
-import { ProjectionsStateManager } from './Service/MongoDB/ProjectionsStateManager';
-import { IntermediatesStateManager } from './Service/MongoDB/IntermediatesStateManager';
 
+import { IntermediatesStateManager, ProjectionsStateManager } from './Service/MongoDB';
 import { ProjectionsPlanner, ProjectionsManager } from './Service/Projections';
 
 let _host = 'localhost';

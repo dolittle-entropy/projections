@@ -14,9 +14,9 @@ import '@dolittle/projections';
 export class Rule {
     type!: number;
     priority!: number;
-    featureId!: Guid;
+    featureId!: string;
     featureName!: string;
-    componentId!: Guid;
+    componentId!: string;
     componentName!: string;
     lastUpdated!: Date;
 }
@@ -91,7 +91,7 @@ export class Rule {
         const componentId = '7c5b0da1-cfdf-48c0-a8c7-e3ad7b751b21';
         const ruleId = 'afe8b77f-5430-4a98-8fa5-a7c6f63c2e1f';
 
-        await eventStore.commit(new FeatureAdded(Guid.as(featureId), 'My Feature'), featureId);
+        await eventStore.commit(new FeatureAdded(featureId, 'My Feature'), featureId);
         await eventStore.commit(new RuleDefined(ruleId, 1, 2, featureId, componentId), ruleId);
         await eventStore.commit(new ComponentAdded('My Component'), componentId);
         await eventStore.commit(new RuleDefined(ruleId, 1, 3, featureId, componentId), ruleId);

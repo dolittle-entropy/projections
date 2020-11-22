@@ -6,6 +6,6 @@ import { Guid } from '@dolittle/rudiments';
 
 @eventType('988ebe3f-1270-46ca-a515-f973b6d64dca')
 export class FeatureAdded {
-    constructor(readonly id: Guid, readonly name: string) {}
+    constructor(readonly id: string, readonly name: string) {}
 }
 

@@ -21,6 +21,10 @@ export class Rule {
     lastUpdated!: Date;
 }
 
+export class SomeChild {
+
+}
+
 (async () => {
     const loggerOptions = {
         level: 'info',

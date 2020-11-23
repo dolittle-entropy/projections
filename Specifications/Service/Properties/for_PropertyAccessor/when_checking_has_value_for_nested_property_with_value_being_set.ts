@@ -1,8 +1,7 @@
 // Copyright (c) Dolittle. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import { PropertyAccessor } from '../PropertyAccessor';
-import { PropertyPath } from '../PropertyPath';
+import { PropertyAccessor, PropertyPath } from '@dolittle/projections/Service/Properties';
 
 describe('when checking has value for nested property with value being set', () => {
     const instance = {

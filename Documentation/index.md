@@ -10,18 +10,10 @@ to allow for separating these and formalize the engine as an official runtime se
 The design of how this should work, its API and ideas date back a decade and has been loosely
 inspired by the initial C# stab at defining an API that can be found [here](https://github.com/dolittle-entropy/MapReduce).
 
-## State
+## Table of contents
 
-The projection engine stores 2 types of state; documents in a read / view cache, often referred to as
-read models. The second type is the intermediate state. This type of state is internal to the engine
-and should be stored alongside in the same database as the rest of the Dolittle event store.
-
-## Getting started
-
-```shell
-$ yarn add @dolittle/projections
-```
-
-### Configuring Mongo
-
-The projection engine only supports Mongo at the moment.
+| Title | Description |
+| ----- | ----------- |
+| [Get Started](getting-started.md) | Guide on how to get started |
+| [Keys](keys.md) | Documentation on how keys are resolved from events |
+| [State](state.md) | Description on how state management works in the engine |

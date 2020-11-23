@@ -4,9 +4,16 @@
 [![Build Status](https://github.com/dolittle-entropy/projections/workflows/TypeScript%20Library%20CI%2FCD/badge.svg)](https://github.com/dolittle-entropy/projections/actions?query=workflow%3A%22TypeScript+Library+CI%2FCD%22)
 [![CodeQl](https://github.com/dolittle-entropy/projections/workflows/CodeQL/badge.svg)](https://github.com/dolittle-entropy/projections/actions?query=workflow%3ACodeQL)
 
+## Documentation
+
+The documentation and getting started guide can be found [here](./Documentation).
+
 ## Motivation and goals
 
 The goal of this project is to prove the concept of a declarative projection engine for [Dolittle](https://dolittle.io) based on event sourcing.
+
+The design of how this should work, its API and ideas date back a decade and has been loosely
+inspired by the initial C# stab at defining an API that can be found [here](https://github.com/dolittle-entropy/MapReduce).
 
 ### Problem
 

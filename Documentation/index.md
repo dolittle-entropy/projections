@@ -7,6 +7,9 @@ and is not an official service of the Dolittle runtime environment. This means t
 process with the process that defines the projections. It has however been architected in a way
 to allow for separating these and formalize the engine as an official runtime service.
 
+The design of how this should work, its API and ideas date back a decade and has been loosely
+inspired by the initial C# stab at defining an API that can be found [here](https://github.com/dolittle-entropy/MapReduce).
+
 ## State
 
 The projection engine stores 2 types of state; documents in a read / view cache, often referred to as

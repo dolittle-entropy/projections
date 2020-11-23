@@ -13,5 +13,5 @@ describe('when handling with no operations', async () => {
         await context.operationGroup.handle(context.eventType, context.event, context.eventContext);
     })();
 
-    it('should ask child group to handle', () => context.childGroup.handle.should.be.calledWith(context.eventType, context.event, context.eventContext));
+    it('should ask child group to handle and pass correct parent group', () => context.childGroup.handle.should.be.calledWith(context.eventType, context.event, context.eventContext, context.operationGroup));
 });

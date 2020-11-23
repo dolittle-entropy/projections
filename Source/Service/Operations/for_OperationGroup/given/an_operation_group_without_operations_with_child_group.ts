@@ -7,6 +7,7 @@ import { IKeyStrategy } from '../../../Keys/IKeyStrategy';
 import { all_dependencies } from './all_dependencies';
 import { OperationGroup } from '../../OperationGroup';
 import { IOperationGroup } from '../../IOperationGroup';
+import { IState } from '../../../IState';
 
 export class an_operation_group_without_operations_with_child_group extends all_dependencies {
     operationGroup: OperationGroup;
@@ -20,6 +21,7 @@ export class an_operation_group_without_operations_with_child_group extends all_
             name: 'child',
             children: [],
             operations: [],
+            state: {} as IState,
 
             handle: sinon.stub()
         };

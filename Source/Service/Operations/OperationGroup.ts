@@ -22,7 +22,7 @@ export class OperationGroup implements IOperationGroup {
         readonly keyStrategies: IKeyStrategy[],
         readonly operations: IOperation[],
         readonly children: IOperationGroup[],
-        private readonly _state: IState,
+        readonly state: IState,
         private readonly _logger: Logger) {
 
         for (const operation of operations) {
@@ -33,7 +33,7 @@ export class OperationGroup implements IOperationGroup {
         }
     }
 
-    async handle(eventType: EventTypeId, event: any, context: EventContext): Promise<void> {
+    async handle(eventType: EventTypeId, event: any, context: EventContext, parentGroup?: IOperationGroup): Promise<void> {
         try {
             let currentState: any = {};
             const stateToSet: Map<any, any> = new Map();
@@ -50,10 +50,10 @@ export class OperationGroup implements IOperationGroup {
                         key = keyStrategy.get(event, context);
                     }
 
-                    const initial = await this._state.get(key) || {};
-                    const operationContext = new OperationContext(key, initial, event, context);
+                    const initial = await this.state.get(key) || {};
+                    const operationContext = new OperationContext(key, initial, event, context, this, parentGroup);
                     const modifiedState = await this.performOperationAndChildren(operation, operationContext, initial);
-                    currentState = {...currentState, ...modifiedState};
+                    currentState = { ...currentState, ...modifiedState };
 
                     if (!deepEqual(initial, currentState)) {
                         stateToSet.set(key, currentState);
@@ -62,11 +62,11 @@ export class OperationGroup implements IOperationGroup {
             }
 
             for (const childGroup of this.children) {
-                await childGroup.handle(eventType, event, context);
+                await childGroup.handle(eventType, event, context, this);
             }
 
             for (const [key, state] of stateToSet) {
-                await this._state.set(key, state);
+                await this.state.set(key, state);
             }
         } catch (ex) {
             this._logger.error(`Couldn't handle event of type '${eventType.toString()}' in projection '${this.stream.toString()}'`, ex);
@@ -79,7 +79,13 @@ export class OperationGroup implements IOperationGroup {
         currentState = { ...currentState, ...stateAfterOperation };
 
         for (const child of operation.children) {
-            operationContext = new OperationContext(operationContext.key, currentState, operationContext.event, operationContext.eventContext);
+            operationContext = new OperationContext(
+                operationContext.key,
+                currentState,
+                operationContext.event,
+                operationContext.eventContext,
+                operationContext.group,
+                operationContext.parentGroup);
             stateAfterOperation = await this.performOperationAndChildren(child, operationContext, currentState);
             currentState = { ...currentState, ...stateAfterOperation };
         }

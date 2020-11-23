@@ -10,6 +10,7 @@ import { createLogger, format, transports } from 'winston';
 
 import { Guid } from '@dolittle/rudiments';
 import '@dolittle/projections';
+import { ChildAdded } from './events/ChildAdded';
 
 export class Rule {
     type!: number;
@@ -19,10 +20,12 @@ export class Rule {
     componentId!: string;
     componentName!: string;
     lastUpdated!: Date;
+    children!: SomeChild[];
 }
 
 export class SomeChild {
-
+    id!: any;
+    name!: string;
 }
 
 (async () => {
@@ -46,7 +49,8 @@ export class SomeChild {
         .withEventTypes(_ => _
             .register(ComponentAdded)
             .register(FeatureAdded)
-            .register(RuleDefined))
+            .register(RuleDefined)
+            .register(ChildAdded))
         .withProjections(_ => _.storeInMongo('mongodb://localhost:27017', 'Basic'))
         .withProjectionIntermediates(_ => _.storeInMongo('mongodb://localhost:27017', 'event_store_basic'))
         .withProjectionFor(Rule, p => p
@@ -66,7 +70,13 @@ export class SomeChild {
                 .set(r => r.featureName).to(ev => ev.name))
             .join(ComponentAdded, e => e
                 .on(r => r.componentId)
-                .set(r => r.componentName).to(ev => ev.name)))
+                .set(r => r.componentName).to(ev => ev.name))
+            .children(SomeChild, c => c
+                .identifiedBy(cc => cc.id)
+                .storedIn(cc => cc.children)
+                .from(ChildAdded, cb => cb
+                    .set(cc => cc.name).to(ev => ev.name)))
+        )
         .build();
 
         /*

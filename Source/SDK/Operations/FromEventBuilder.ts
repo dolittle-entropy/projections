@@ -49,3 +49,5 @@ export class FromEventBuilder<TDocument extends object, TEvent extends object> i
         return new OperationDescriptor(OperationTypes.FromEvent, [eventTypeId], configuration, children);
     }
 }
+
+

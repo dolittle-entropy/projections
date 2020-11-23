@@ -18,6 +18,9 @@ export type FromEventConfiguration = {
     keyStrategy: KeyStrategyDescriptor;
 };
 
+/**
+ * Represents the builder for building From event operation.
+ */
 export class FromEventBuilder<TDocument extends object, TEvent extends object> implements IOperationBuilder {
     private readonly _builders: IChildOperationBuilder[] = [];
     private _keyStrategy: KeyStrategyDescriptor = new KeyStrategyDescriptor(KeyStrategyTypes.NotSet);

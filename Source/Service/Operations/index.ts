@@ -9,6 +9,7 @@ export * from './IOperationContext';
 export * from './IOperationGroup';
 export * from './JoinEvent';
 export * from './PostJoinEvent';
+export * from './PostRelationalPropertySet';
 export * from './OperationContext';
 export * from './OperationGroup';
 export * from './OperationsConverter';

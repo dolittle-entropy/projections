@@ -7,13 +7,13 @@ import { PropertyAccessor } from '../Properties';
 import { IKeyStrategy } from '../Keys';
 
 export class PropertyMapper implements IChildOperation {
-    constructor(private readonly _sourceProperty: PropertyAccessor, private readonly _targetProperty: PropertyAccessor, readonly keyStrategy: IKeyStrategy, readonly children: IChildOperation[]) {
+    constructor(readonly sourceProperty: PropertyAccessor, readonly targetProperty: PropertyAccessor, readonly keyStrategy: IKeyStrategy, readonly children: IChildOperation[]) {
     }
 
     async perform(context: IOperationContext): Promise<any> {
         const changes = {};
-        const value = this._sourceProperty.get(context);
-        this._targetProperty.set(changes, value);
+        const value = this.sourceProperty.get(context);
+        this.targetProperty.set(changes, value);
         return changes;
     }
 }

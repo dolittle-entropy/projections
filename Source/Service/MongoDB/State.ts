@@ -12,16 +12,21 @@ export class State implements IState {
 
     async get(id: any): Promise<any> {
         const result = await this._collection.findOne({ _id: id });
+        if (result) {
+            delete result._id;
+        }
         return result;
     }
 
     async set(id: any, content: any): Promise<void> {
+        delete content._id;
         await this._collection.updateOne({ _id: id }, { $set: content }, { upsert: true });
     }
 
     async setMany(property: PropertyAccessor, id: any, content: any): Promise<void> {
         const filter: any = {};
         property.set(filter, id);
+        delete content._id;
         await this._collection.updateMany(filter, { $set: content });
     }
 }

@@ -13,7 +13,7 @@ import { IProjectionsPlanner } from './IProjectionsPlanner';
 
 import OperationTypes from '../../OperationTypes';
 import { KeyStrategiesConverter } from '../Keys';
-import { JoinEvent, OperationGroup, OperationsConverter, PostJoinEvent } from '../Operations';
+import { JoinEvent, OperationGroup, OperationsConverter, PostJoinEvent, PostRelationalPropertySet, PropertyMapper } from '../Operations';
 
 
 export class ProjectionsPlanner implements IProjectionsPlanner {
@@ -38,7 +38,17 @@ export class ProjectionsPlanner implements IProjectionsPlanner {
         const intermediateStateName = `intermediates-${stream.toString()}`;
         const intermediateState = await this._intermediatesManager.getFor(intermediateStateName);
 
-        joinOperations.forEach(_ => _.children.push(new PostJoinEvent(_.eventTypes, _.keyStrategy, _.onProperty, [])));
+        joinOperations.forEach(_ => {
+            _.children.push(new PostJoinEvent(_.eventTypes, _.keyStrategy, _.onProperty, []));
+            const filtered = fromOperations
+                .flatMap(o => o.children)
+                .filter(o =>
+                    (o instanceof PropertyMapper) &&
+                    ((o as PropertyMapper).targetProperty.path.path === _.onProperty.path.path)) as PropertyMapper[];
+            filtered.forEach(_ => {
+                _.children.push(new PostRelationalPropertySet(_.keyStrategy, _.targetProperty, intermediateState, []));
+            });
+        });
 
         const joinsOperationGroup = new OperationGroup(
             'Join',

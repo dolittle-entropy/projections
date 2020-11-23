@@ -13,7 +13,7 @@ import { IProjectionsPlanner } from './IProjectionsPlanner';
 
 import OperationTypes from '../../OperationTypes';
 import { KeyStrategiesConverter } from '../Keys';
-import { OperationGroup, OperationsConverter } from '../Operations';
+import { JoinEvent, OperationGroup, OperationsConverter, PostJoinEvent } from '../Operations';
 
 
 export class ProjectionsPlanner implements IProjectionsPlanner {
@@ -33,10 +33,12 @@ export class ProjectionsPlanner implements IProjectionsPlanner {
 
         const joinOperations = descriptor.operations
             .filter(_ => _.id.toString() === OperationTypes.JoinEvent.toString())
-            .map(_ => OperationsConverter.toOperation(_));
+            .map(_ => OperationsConverter.toOperation(_) as JoinEvent);
 
         const intermediateStateName = `intermediates-${stream.toString()}`;
         const intermediateState = await this._intermediatesManager.getFor(intermediateStateName);
+
+        joinOperations.forEach(_ => _.children.push(new PostJoinEvent(_.eventTypes, _.keyStrategy, _.onProperty, [])));
 
         const joinsOperationGroup = new OperationGroup(
             'Join',

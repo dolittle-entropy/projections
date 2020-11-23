@@ -8,6 +8,7 @@ import { PropertyKeyStrategy } from './PropertyKeyStrategy';
 import { UnknownKeyStrategy } from './UnknownKeyStrategy';
 import { NullKeyStrategy } from './NullKeyStrategy';
 import KeyStrategyTypes from '../../KeyStrategyTypes';
+import { PropertyAccessor, PropertyPath } from '../Properties';
 
 export class KeyStrategiesConverter {
     static toKeyStrategies(keyStrategies: KeyStrategyDescriptor[]): IKeyStrategy[] {
@@ -24,7 +25,7 @@ export class KeyStrategiesConverter {
                 return new EventSourceKeyStrategy();
             };
             case KeyStrategyTypes.Property: {
-                return new PropertyKeyStrategy(keyStrategy.configuration);
+                return new PropertyKeyStrategy(new PropertyAccessor(new PropertyPath(keyStrategy.configuration)));
             }
         }
 

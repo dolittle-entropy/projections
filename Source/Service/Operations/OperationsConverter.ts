@@ -43,8 +43,7 @@ export class OperationsConverter {
             };
             case OperationTypes.JoinEvent: {
                 const configuration: JoinEventConfiguration = descriptor.configuration;
-                const eventProperty = PropertyUtilities.getPropertyDescriptorFor<IOperationContext>(_ => _.event);
-                const onProperty = new PropertyAccessor(new PropertyPath(`${eventProperty.path}.${configuration.onProperty}`));
+                const onProperty = new PropertyAccessor(new PropertyPath(configuration.onProperty));
                 return new JoinEvent(descriptor.eventTypes, KeyStrategiesConverter.toKeyStrategy(configuration.keyStrategy), onProperty, this.toOperations(descriptor.children));
             };
         }

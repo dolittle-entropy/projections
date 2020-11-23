@@ -3,6 +3,7 @@
 
 import { Collection, FilterQuery } from 'mongodb';
 import { IState } from '../IState';
+import { PropertyAccessor } from '../Properties';
 
 export class State implements IState {
 
@@ -18,9 +19,9 @@ export class State implements IState {
         await this._collection.updateOne({ _id: id }, { $set: content }, { upsert: true });
     }
 
-    async setMany(property: string, id: any, content: any): Promise<void> {
+    async setMany(property: PropertyAccessor, id: any, content: any): Promise<void> {
         const filter: any = {};
-        filter[property] = id;
+        property.set(filter, id);
         await this._collection.updateMany(filter, { $set: content });
     }
 }

@@ -13,6 +13,23 @@ export class PropertyAccessor {
         this._setter = eval(`(instance, value) => { instance.${path.path} = value; }`);
     }
 
+    isValueSet(instance: any): boolean {
+        let currentInstance = instance;
+        let currentValue: any;
+        for (const segment of this.path.segments) {
+            if (!currentInstance[segment]) {
+                return false;
+            }
+            currentValue = currentInstance[segment];
+            currentInstance = currentInstance[segment];
+        }
+
+        if (currentValue) {
+            return true;
+        }
+        return false;
+    }
+
     get(instance: any): any {
         try {
             return this._getter(instance);

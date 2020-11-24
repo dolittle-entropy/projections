@@ -39,6 +39,6 @@
      },
 
      "exclude": [
-         "**/Distribution", "node_modules", "Distribution"
+         "**/dist", "node_modules", "dist"
      ]
 }

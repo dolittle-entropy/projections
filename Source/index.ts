@@ -49,18 +49,18 @@ declare module '@dolittle/sdk' {
 const _projections: ProjectionBuilder<any>[] = [];
 
 
-ClientBuilder.prototype.withProjections = function (callback: StateConfigurationBuilderCallback) {
+ClientBuilder.prototype.withProjections = function (callback: StateConfigurationBuilderCallback): ClientBuilder {
     callback(projectionsConfigurationBuilder);
     return this;
 };
 
-ClientBuilder.prototype.withProjectionIntermediates = function (callback: StateConfigurationBuilderCallback) {
+ClientBuilder.prototype.withProjectionIntermediates = function (callback: StateConfigurationBuilderCallback): ClientBuilder {
     callback(intermediatesConfigurationBuilder);
     return this;
 };
 
 
-ClientBuilder.prototype.withProjectionFor = function <TDocument extends object>(targetType: Constructor<TDocument>, callback: ProjectionBuilderCallback<TDocument>) {
+ClientBuilder.prototype.withProjectionFor = function <TDocument extends object>(targetType: Constructor<TDocument>, callback: ProjectionBuilderCallback<TDocument>): ClientBuilder {
     const projectionBuilder = new ProjectionBuilder<TDocument>(targetType, this);
     callback(projectionBuilder);
     _projections.push(projectionBuilder);

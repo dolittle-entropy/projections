@@ -2,7 +2,7 @@
     "private": true,
     "name": "basic",
     "version": "1.0.0",
-    "main": "Distribution/index.js",
+    "main": "dist/index.js",
     "author": "Dolittle",
     "license": "MIT",
     "scripts": {
@@ -12,7 +12,7 @@
     "nodemonConfig": {
         "restartable": "rs",
         "ignore": [
-            "Distribution",
+            "dist",
             "*.d.ts"
         ],
         "events": {

@@ -2,14 +2,15 @@
     "name": "@dolittle/projections",
     "version": "1.0.0",
     "description": "",
-    "main": "Distribution/index.js",
-    "types": "Distribution/index.d.ts",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
     "author": "Dolittle",
     "license": "MIT",
+    "private": false,
     "scripts": {
-        "test": "yarn build && yarn test:run",
-        "test:run": "gulp test-run --gulpfile ../node_modules/@dolittle/typescript.build/Gulpfile.js",
-        "test:clean": "gulp test-clean --gulpfile ../node_modules/@dolittle/typescript.build/Gulpfile.js",
+        "prepublishOnly": "yarn build && yarn test",
+        "prebuild": "tsc -b --clean",
+        "test": "mocha ../mocha.js --require ts-node/register ../Specifications/**/*.ts",
         "build": "tsc -b"
     },
     "dependencies": {

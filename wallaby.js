@@ -5,14 +5,15 @@
 module.exports = function (wallaby) {
     return {
         files: [
-            'Specifications/tsconfig.json',
-            'tsconfig.json',
             { pattern: 'node_modules/chai/chai.js', instrument: false },
-            'Source/**/*.ts'
+            'Source/**/*.ts',
+            '!Source/**/when_*'
         ],
 
         tests: [
-            'Specifications/**/*.ts'
+            'Source/**/for_*/**/*.ts',
+            '!Source/**/given/**/*.ts',
+            '!**/*.d.ts'
         ],
 
         env: {
@@ -20,15 +21,6 @@ module.exports = function (wallaby) {
         },
 
         setup: (wallaby) => {
-            if (global._tsconfigPathsRegistered) return;
-            const tsConfigPaths = require('tsconfig-paths');
-            const tsconfig = require('./Specifications/tsconfig.json');
-            tsConfigPaths.register({
-              baseUrl: './',
-              paths: tsconfig.compilerOptions.paths
-            });
-            global._tsconfigPathsRegistered = true;
-
             global.expect = chai.expect;
             const should = chai.should();
             global.sinon = require('sinon');

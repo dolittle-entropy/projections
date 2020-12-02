@@ -3,11 +3,11 @@
 
 import sinon from 'sinon';
 import { StreamId } from '@dolittle/sdk.events';
-import { IKeyStrategy } from '@dolittle/projections/Service/Keys/IKeyStrategy';
+import { IKeyStrategy } from '../../../Keys/IKeyStrategy';
 import { all_dependencies } from './all_dependencies';
-import { OperationGroup } from '@dolittle/projections/Service/Operations/OperationGroup';
-import { IOperationGroup } from '@dolittle/projections/Service/Operations/IOperationGroup';
-import { IState } from '@dolittle/projections/Service/IState';
+import { OperationGroup } from '../../../Operations/OperationGroup';
+import { IOperationGroup } from '../../../Operations/IOperationGroup';
+import { IState } from '../../../IState';
 
 export class an_operation_group_without_operations_with_child_group extends all_dependencies {
     operationGroup: OperationGroup;

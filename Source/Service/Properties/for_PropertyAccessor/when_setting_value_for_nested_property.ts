@@ -1,15 +1,11 @@
 // Copyright (c) Dolittle. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import { PropertyAccessor, PropertyPath } from '@dolittle/projections/Service/Properties';
+import { PropertyAccessor } from '../PropertyAccessor';
+import { PropertyPath } from '../PropertyPath';
 
-describe('when setting value for nested property without child instances there', () => {
-    const instance = {
-        first: {
-            second: {
-                third: 42
-            }
-        }
+describe('when setting value for nested property', () => {
+    const instance: any = {
     };
     const valueToSet = 43;
 

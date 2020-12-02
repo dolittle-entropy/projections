@@ -3,9 +3,9 @@
 
 import sinon from 'sinon';
 import { StreamId } from '@dolittle/sdk.events';
-import { IKeyStrategy } from '@dolittle/projections/Service/Keys/IKeyStrategy';
 import { all_dependencies } from './all_dependencies';
-import { OperationGroup } from '@dolittle/projections/Service/Operations/OperationGroup';
+import { IKeyStrategy } from '../../../Keys/IKeyStrategy';
+import { OperationGroup } from '../../../Operations/OperationGroup';
 
 export class an_operation_group_without_operations extends all_dependencies {
     operationGroup: OperationGroup;

@@ -10,7 +10,7 @@
     "scripts": {
         "prepublishOnly": "yarn build && yarn test",
         "prebuild": "tsc -b --clean",
-        "test": "mocha ../mocha.js --require ts-node/register ../Specifications/**/*.ts",
+        "test": "mocha",
         "build": "tsc -b"
     },
     "dependencies": {

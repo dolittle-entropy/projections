@@ -7,10 +7,8 @@ import { Constructor } from '@dolittle/types';
 import { IEventTypes } from '@dolittle/sdk.artifacts';
 import { ScopeId } from '@dolittle/sdk.events';
 
-
 import { ModelDescriptor } from './ModelDescriptor';
 import { ProjectionDescriptor } from './ProjectionDescriptor';
-
 
 import { ProjectionMustHaveAUniqueIdentifier } from './ProjectionMustHaveAUniqueIdentifier';
 import { OperationBuilderContext } from './OperationBuilderContext';
@@ -19,13 +17,12 @@ import { ProjectionOperationBuilder } from './ProjectionOperationBuilder';
 
 export type ProjectionBuilderCallback<TDocument extends object> = (builder: ProjectionBuilder<TDocument>) => void;
 
-
 /**
  * Represents the builder of a projection for a specific type.
  */
 export class ProjectionBuilder<TDocument extends object> extends ProjectionOperationBuilder<TDocument, ProjectionBuilder<TDocument>> {
     private _id?: Guid;
-    private _fromScope: ScopeId = ScopeId.default;
+    private _inScope: ScopeId = ScopeId.default;
     private _model: ModelDescriptor;
 
     private _keyStrategiesBuilder: KeyStrategiesBuilder;
@@ -52,16 +49,31 @@ export class ProjectionBuilder<TDocument extends object> extends ProjectionOpera
         return this;
     }
 
+    /**
+     * Build strategy for how to deal with keys. This can be used as a fallback mechanism or the default mechanism.
+     * Unless a specific key strategy is specified within an operation, it will use this.
+     * It will try the strategies in sequence and use the first that succeeds.
+     * @param {KeyStrategiesBuilderCallback} callback Callback for building key strategies
+     * @returns {ProjectionBuilder{TDocument}} Continuation for building.
+     */
     withKeys(callback: KeyStrategiesBuilderCallback): ProjectionBuilder<TDocument> {
         callback(this._keyStrategiesBuilder);
         return this;
     }
 
+    /**
+     * The projection should be run in a specific scope.
+     * @param {ScopeId | Guid | string} id Unique identifier of the scope.
+     */
     inScope(id: ScopeId | Guid | string): ProjectionBuilder<TDocument> {
-        this._fromScope = ScopeId.from(id);
+        this._inScope = ScopeId.from(id);
         return this;
     }
 
+    /**
+     * Use specific model name. This is typically used as the table / collection name in the persisted state.
+     * @param {string} name Name of the model
+     */
     useModelName(name: string): ProjectionBuilder<TDocument> {
         this._model = new ModelDescriptor(name);
         return this;
@@ -78,7 +90,7 @@ export class ProjectionBuilder<TDocument extends object> extends ProjectionOpera
             this._model,
             this._keyStrategiesBuilder.build(),
             operations,
-            this._fromScope);
+            this._inScope);
 
         return projection;
     }

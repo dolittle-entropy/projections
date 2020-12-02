@@ -6,7 +6,7 @@ $ yarn add @dolittle/projections
 
 ## Configuring State
 
-**The projection engine only supports Mongo at the moment.**
+> The projection engine only supports Mongo at the moment.
 
 The engine produces two kinds of states; the result of a completed projection and
 possible intermediate state that is used to fulfill projections as events occur.

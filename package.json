@@ -10,7 +10,7 @@
         "postbuild": "yarn lint",
         "clean": "tsc -b --clean",
         "build": "tsc -b Source/tsconfig.json && tsc -b Samples/Basic/Backend/tsconfig.json",
-        "test": "mocha ./mocha.js --require ts-node/register Specifications/**/*.ts",
+        "test": "mocha",
         "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
         "ci": "yarn build && yarn test"
     },

@@ -52,7 +52,6 @@ export class ChildBuilder<TDocument extends object, TChild extends object> imple
         if (!this._storedInProperty) {
             throw new MissingPropertyToStoreChildrenIn(this.childType);
         }
-
         const configuration: ChildConfiguration = {
             identifierProperty: this._identifierProperty,
             storedInProperty: this._storedInProperty

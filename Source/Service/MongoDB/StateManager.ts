@@ -21,7 +21,7 @@ export class StateManager implements IStateManager {
 
     private async getMongoClient(): Promise<MongoClient> {
         if (!this._mongoClient || !this._mongoClient.isConnected) {
-            this._mongoClient = await MongoClient.connect(this._configuration.connectionString, { useUnifiedTopology: true });
+            this._mongoClient = await MongoClient.connect(this._configuration.connectionString, { useNewUrlParser: true });
         }
         return this._mongoClient;
     }

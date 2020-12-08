@@ -18,6 +18,7 @@ import ChildOperationTypes from '../../ChildOperationTypes';
 import { KeyStrategyDescriptor } from '../../SDK/KeyStrategyDescriptor';
 import { KeyStrategiesConverter } from '../Keys';
 import { NullKeyStrategy } from '../Keys/NullKeyStrategy';
+import { ChildFromEvent } from './ChildFromEvent';
 
 export type PropertyMapConfiguration = {
     sourceProperty: string;
@@ -33,9 +34,15 @@ export type JoinEventConfiguration = {
     keyStrategy: KeyStrategyDescriptor;
 };
 
+export type ChildConfiguration = {
+    storedInProperty: string;
+    identifierProperty: string;
+};
+
 export class OperationsConverter {
 
     static toOperation(descriptor: OperationDescriptor) {
+        console.log(descriptor.id.toString());
         switch (descriptor.id) {
             case OperationTypes.FromEvent: {
                 const configuration: FromEventConfiguration = descriptor.configuration;
@@ -46,6 +53,12 @@ export class OperationsConverter {
                 const onProperty = new PropertyAccessor(new PropertyPath(configuration.onProperty));
                 return new JoinEvent(descriptor.eventTypes, KeyStrategiesConverter.toKeyStrategy(configuration.keyStrategy), onProperty, this.toOperations(descriptor.children));
             };
+            case OperationTypes.Child: {
+                const configuration: ChildConfiguration = descriptor.configuration;
+                const identifierProperty = new PropertyAccessor(new PropertyPath(configuration.identifierProperty));
+                const nullKeyStrategy = new NullKeyStrategy();
+                return new ChildFromEvent(descriptor.eventTypes, nullKeyStrategy, this.toOperations(descriptor.children));
+            }
         }
 
         throw new UnknownOperation(descriptor.id);

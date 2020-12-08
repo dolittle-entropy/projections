@@ -14,6 +14,7 @@ import { IProjectionsPlanner } from './IProjectionsPlanner';
 import OperationTypes from '../../OperationTypes';
 import { KeyStrategiesConverter } from '../Keys';
 import { JoinEvent, OperationGroup, OperationsConverter, PostJoinEvent, PostRelationalPropertySet, PropertyMapper } from '../Operations';
+import { ChildFromEvent } from '../Operations/ChildFromEvent';
 
 
 export class ProjectionsPlanner implements IProjectionsPlanner {
@@ -34,6 +35,11 @@ export class ProjectionsPlanner implements IProjectionsPlanner {
         const joinOperations = descriptor.operations
             .filter(_ => _.id.toString() === OperationTypes.JoinEvent.toString())
             .map(_ => OperationsConverter.toOperation(_) as JoinEvent);
+
+            /*
+        const childFromEventOperations = descriptor.operations
+            .filter(_ => _.id.toString() === OperationTypes.Child.toString())
+            .map(_ => OperationsConverter.toOperation(_) as ChildFromEvent);*/
 
         const intermediateStateName = `intermediates-${stream.toString()}`;
         const intermediateState = await this._intermediatesManager.getFor(intermediateStateName);
@@ -60,7 +66,6 @@ export class ProjectionsPlanner implements IProjectionsPlanner {
             this._logger
         );
 
-        // Children group
 
         // Hook up properties that match the on() relationship and add child operation to the setting of this property on any From() operations
 
@@ -75,8 +80,19 @@ export class ProjectionsPlanner implements IProjectionsPlanner {
             this._logger
         );
 
-        const projection = new Projection(stream, ScopeId.from(descriptor.scope), [fromsOperationGroup]);
+        // Children group
+        /*
+        const childrenOperationGroup = new OperationGroup(
+            'Children',
+            stream,
+            [new EventSourceKeyStrategy()],
+            childFromEventOperations,
+            [],
+            intermediateState,
+            this._logger
+        );*/
 
+        const projection = new Projection(stream, ScopeId.from(descriptor.scope), [fromsOperationGroup]);
         return projection;
     }
 }

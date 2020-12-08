@@ -2,11 +2,7 @@
     "private": true,
     "workspaces": [
         "Source",
-        "Samples/Basic/Backend",
-        "Samples/Basic/DependencyInversion",
-        "Samples/Basic/MVVM",
-        "Samples/Basic/Web",
-        "Samples/Basic/WebPack"
+        "Samples/Basic"
     ],
     "scripts": {
         "prebuild": "yarn clean",

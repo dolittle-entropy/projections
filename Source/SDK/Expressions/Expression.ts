@@ -21,3 +21,7 @@ export class IncrementExpression extends Expression {
 
 export class DecrementExpression extends Expression {
 }
+
+export class BinaryExpression extends Expression {
+
+}

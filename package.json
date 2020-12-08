@@ -8,7 +8,7 @@
         "prebuild": "yarn clean",
         "postbuild": "yarn lint",
         "clean": "tsc -b --clean",
-        "build": "tsc -b Source/tsconfig.json && tsc -b Samples/Basic/Backend/tsconfig.json",
+        "build": "tsc -b Source/tsconfig.json && tsc -b Samples/Basic/tsconfig.json",
         "test": "mocha",
         "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet",
         "ci": "yarn build && yarn test"

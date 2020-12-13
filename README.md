@@ -6,7 +6,7 @@
 
 ## Documentation
 
-The documentation and getting started guide can be found [here](./Documentation/index.md).
+The documentation and getting started guide can be found [here](./Documentation/README.md).
 
 ## Motivation and goals
 

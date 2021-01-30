@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import { ExpressionTypeId } from '../../ExpressionTypeId';
+import { IOperationContext } from '../Operations';
 import { Expression } from './Expression';
 
 export abstract class BinaryExpression extends Expression {
@@ -11,7 +12,7 @@ export abstract class BinaryExpression extends Expression {
 
     abstract operationString: string;
 
-    invoke() {
+    invoke(context: IOperationContext) {
         throw new Error('Method not implemented.');
     }
 

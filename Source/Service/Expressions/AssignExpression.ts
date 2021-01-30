@@ -4,10 +4,17 @@
 import ExpressionTypes from '../../ExpressionTypes';
 import { Expression } from './Expression';
 import { BinaryExpression } from './BinaryExpression';
+import { PropertyExpression } from './PropertyExpression';
+import { IOperationContext } from '../Operations';
 
 export class AssignExpression extends BinaryExpression {
-    constructor(left: Expression, right: Expression) {
+    constructor(left: PropertyExpression, right: Expression) {
         super(ExpressionTypes.Assign, left, right);
+    }
+
+    invoke(context: IOperationContext) {
+        const value = this.right.invoke(context);
+        (this.left as PropertyExpression).propertyAccessor.set(context, value);
     }
 
     readonly operationString: string = '=';

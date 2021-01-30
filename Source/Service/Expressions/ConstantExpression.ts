@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import ExpressionTypes from '../../ExpressionTypes';
+import { IOperationContext } from '../Operations';
 import { Expression } from './Expression';
 
 export class ConstantExpression extends Expression {
@@ -9,8 +10,8 @@ export class ConstantExpression extends Expression {
         super(ExpressionTypes.Constant);
     }
 
-    invoke() {
-        throw new Error('Method not implemented.');
+    invoke(context: IOperationContext) {
+        return this.value;
     }
 
     toString(): string {

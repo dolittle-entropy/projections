@@ -12,6 +12,8 @@ import { Guid } from '@dolittle/rudiments';
 import '@dolittle/projections';
 import { ChildAdded } from './events/ChildAdded';
 import { Expression } from '@dolittle/projections/Service/Expressions';
+import { IOperationContext } from '@dolittle/projections/Service/Operations';
+import { EventSourceId } from '@dolittle/sdk.events';
 
 export class Rule {
     type!: number;
@@ -44,12 +46,40 @@ export class SomeChild {
 
     const logger = createLogger(loggerOptions);
 
+    /*
     const ex = Expression.subtract(
-        Expression.property('hello'),
+        Expression.property('eventContext.eventSourceId'),
+        Expression.constant(42)
+    );
+    */
+
+    const context = {
+        eventContext: {
+            eventSourceId: EventSourceId.from('c0cead6e-cf61-4cca-b4d5-efda1876c71f')
+        },
+        model: {
+            something: 43
+        }
+    } as IOperationContext;
+
+    const ex = Expression.assign(
+        Expression.property('model.something'),
         Expression.constant(42)
     );
 
-    console.log(`${ex}`);
+    ex.invoke(context);
+
+    console.log(context);
+
+    /*const ex = Expression.property('eventContext.eventSourceId');
+
+    const result = ex.invoke({
+        eventContext: {
+            eventSourceId: EventSourceId.from('c0cead6e-cf61-4cca-b4d5-efda1876c71f')
+        }
+    } as IOperationContext);
+
+    console.log(`${ex} - ${result}`);*/
 
 
     /*

@@ -13,13 +13,14 @@ import { GreaterThanExpression } from './GreaterThanExpression';
 import { GreaterThanOrEqualExpression } from './GreaterThanOrEqualExpression';
 import { LessThanExpression } from './LessThanExpression';
 import { LessThanOrEqualExpression } from './LessThanOrEqualExpression';
+import { PropertyAccessor, PropertyPath } from '../Properties';
 
 
 declare module '@dolittle/projections/Service/Expressions/Expression' {
     namespace Expression {
         export function property(path: string): PropertyExpression;
         export function constant(value: any): ConstantExpression;
-        export function assign(left: Expression, right: Expression): AssignExpression;
+        export function assign(left: PropertyExpression, right: Expression): AssignExpression;
         export function add(left: Expression, right: Expression): AddExpression;
         export function subtract(left: Expression, right: Expression): SubtractExpression;
         export function equal(left: Expression, right: Expression): EqualExpression;
@@ -32,14 +33,14 @@ declare module '@dolittle/projections/Service/Expressions/Expression' {
 }
 
 Expression.property = function (path: string): PropertyExpression {
-    return new PropertyExpression(path);
+    return new PropertyExpression(new PropertyAccessor(new PropertyPath(path)));
 };
 
 Expression.constant = function (value: any): ConstantExpression {
     return new ConstantExpression(value);
 };
 
-Expression.assign = function (left: Expression, right: Expression): AssignExpression {
+Expression.assign = function (left: PropertyExpression, right: Expression): AssignExpression {
     return new AssignExpression(left, right);
 };
 

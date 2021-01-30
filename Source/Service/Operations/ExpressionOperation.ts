@@ -13,7 +13,7 @@ export class ExpressionOperation implements IChildOperation {
 
     async perform(context: IOperationContext): Promise<any> {
         const changes = {};
-        const dataContext = new OperationDataContext(changes, context.dataContext.eventContext, context.dataContext.eventContext);
+        const dataContext = new OperationDataContext(changes, context.dataContext.event, context.dataContext.eventContext);
         this.expression.invoke(dataContext);
         return dataContext.model;
     }

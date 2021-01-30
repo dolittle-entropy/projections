@@ -10,7 +10,7 @@ export class KeyStrategiesBuilder {
     private _strategies: KeyStrategyDescriptor[] = [];
 
     usingProperty(propertyPath: string): KeyStrategiesBuilder {
-        this._strategies.push(KeyStrategyDescriptor.fromProperty(propertyPath));
+        this._strategies.push(KeyStrategyDescriptor.fromProperty(`event.${propertyPath}`));
         return this;
     }
 

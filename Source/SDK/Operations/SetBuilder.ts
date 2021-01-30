@@ -9,6 +9,7 @@ import { OperationBuilderContext } from '../OperationBuilderContext';
 import { PropertyUtilities } from '../../PropertyUtilities';
 import ChildOperationTypes from '../..//ChildOperationTypes';
 import { MissingOperationForSettingProperty } from './MissingOperationForSettingProperty';
+import { Expression } from '../Expressions';
 
 export type PropertyMapConfiguration = {
     sourceProperty: string;
@@ -24,25 +25,22 @@ export class SetBuilder<TParent, TDocument, TEvent extends object> implements IC
 
     to(sourceProperty: PropertyAccessor<TEvent>): TParent {
         const propertyDescriptor = PropertyUtilities.getPropertyDescriptorFor(sourceProperty);
-
-        const config: PropertyMapConfiguration = {
-            sourceProperty: propertyDescriptor.path,
-            targetProperty: this._targetPropertyPath
-        };
-        this._operationDescriptor = new ChildOperationDescriptor(ChildOperationTypes.PropertyMap, config);
+        const expression = Expression.assign(
+            Expression.property(`model.${this._targetPropertyPath}`),
+            Expression.property(`event.${propertyDescriptor.path}`)
+        );
+        this._operationDescriptor = new ChildOperationDescriptor(ChildOperationTypes.Expression, expression);
 
         return this._parent;
     }
 
     toContext(sourceProperty: PropertyAccessor<EventContext>): TParent {
         const propertyDescriptor = PropertyUtilities.getPropertyDescriptorFor(sourceProperty);
-
-        const config: PropertyMapConfiguration = {
-            sourceProperty: propertyDescriptor.path,
-            targetProperty: this._targetPropertyPath
-        };
-        this._operationDescriptor = new ChildOperationDescriptor(ChildOperationTypes.PropertyMapFromContext, config);
-
+        const expression = Expression.assign(
+            Expression.property(`model.${this._targetPropertyPath}`),
+            Expression.property(`eventContext.${propertyDescriptor.path}`)
+        );
+        this._operationDescriptor = new ChildOperationDescriptor(ChildOperationTypes.Expression, expression);
         return this._parent;
     }
 

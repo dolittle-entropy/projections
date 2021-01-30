@@ -28,7 +28,7 @@ export class FromEventBuilder<TDocument extends object, TEvent extends object> i
 
     usingKeyFrom(property: PropertyAccessor<TEvent>): FromEventBuilder<TDocument, TEvent> {
         const propertyDescriptor = PropertyUtilities.getPropertyDescriptorFor(property);
-        this._keyStrategy = KeyStrategyDescriptor.fromProperty(propertyDescriptor.path);
+        this._keyStrategy = KeyStrategyDescriptor.fromProperty(`event.${propertyDescriptor.path}`);
         return this;
     }
 

@@ -6,10 +6,7 @@ import { OperationDescriptor } from '../../SDK/OperationDescriptor';
 import { PropertyAccessor } from '../Properties/PropertyAccessor';
 import { PropertyPath } from '../Properties';
 import { FromEvent } from './FromEvent';
-import { IOperationContext } from './IOperationContext';
 import { JoinEvent } from './JoinEvent';
-import { PropertyMapper } from './PropertyMapper';
-import { PropertyUtilities } from '../../PropertyUtilities';
 import { IChildOperation } from './IChildOperation';
 import { UnknownOperation } from './UnknownOperation';
 import { UnknownChildOperation } from './UnknownChildOperation';
@@ -17,8 +14,10 @@ import OperationTypes from '../../OperationTypes';
 import ChildOperationTypes from '../../ChildOperationTypes';
 import { KeyStrategyDescriptor } from '../../SDK/KeyStrategyDescriptor';
 import { KeyStrategiesConverter } from '../Keys';
-import { ChildFromEvent } from './ChildFromEvent';
 import { NullKeyStrategy } from '../Keys/NullKeyStrategy';
+import * as SdkExpressions from '../../SDK/Expressions';
+import { ExpressionsConverter } from '../Expressions/ExpressionsConverter';
+import { ExpressionOperation } from './ExpressionOperation';
 
 export type PropertyMapConfiguration = {
     sourceProperty: string;
@@ -55,7 +54,6 @@ export class OperationsConverter {
             };
             case OperationTypes.Child: {
                 const configuration: ChildConfiguration = descriptor.configuration;
-                const identifierProperty = new PropertyAccessor(new PropertyPath(configuration.identifierProperty));
                 throw new Error('Not implemented');
                 //return new ChildFromEvent(descriptor.eventTypes, nullKeyStrategy, this.toOperations(descriptor.children));
             }
@@ -68,19 +66,10 @@ export class OperationsConverter {
     static toOperations(children: ChildOperationDescriptor[]): IChildOperation[] {
         return children.map(_ => {
             switch (_.id) {
-                case ChildOperationTypes.PropertyMap: {
-                    const config = _.configuration as PropertyMapConfiguration;
-                    const eventProperty = PropertyUtilities.getPropertyDescriptorFor<IOperationContext>(_ => _.dataContext.event);
-                    const sourceProperty = new PropertyAccessor(new PropertyPath(`${eventProperty.path}.${config.sourceProperty}`));
-                    const targetProperty = new PropertyAccessor(new PropertyPath(`${config.targetProperty}`));
-                    return new PropertyMapper(sourceProperty, targetProperty, new NullKeyStrategy(), this.toOperations(_.children));
-                };
-                case ChildOperationTypes.PropertyMapFromContext: {
-                    const config = _.configuration as PropertyMapConfiguration;
-                    const eventContextProperty = PropertyUtilities.getPropertyDescriptorFor<IOperationContext>(_ => _.dataContext.eventContext);
-                    const sourceProperty = new PropertyAccessor(new PropertyPath(`${eventContextProperty.path}.${config.sourceProperty}`));
-                    const targetProperty = new PropertyAccessor(new PropertyPath(`${config.targetProperty}`));
-                    return new PropertyMapper(sourceProperty, targetProperty, new NullKeyStrategy(), this.toOperations(_.children));
+                case ChildOperationTypes.Expression: {
+                    const sdkExpression = _.configuration as SdkExpressions.Expression;
+                    const expression = ExpressionsConverter.toExpression(sdkExpression);
+                    return new ExpressionOperation(expression, new NullKeyStrategy(), this.toOperations(_.children));
                 };
             }
 

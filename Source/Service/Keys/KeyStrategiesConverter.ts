@@ -13,6 +13,8 @@ export class KeyStrategiesConverter {
 
     static toKeyStrategy(keyStrategy: KeyStrategyDescriptor): IKeyStrategy {
         const expression = ExpressionsConverter.toExpression(keyStrategy.expression);
+
+        console.log(`KeyStrategy : ${expression} - ${keyStrategy.expression}`);
         return new ExpressionKeyStrategy(expression);
     }
 }

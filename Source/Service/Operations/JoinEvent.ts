@@ -13,6 +13,6 @@ export class JoinEvent implements IOperation {
     }
 
     perform(context: IOperationContext) {
-        return context.model;
+        return context.dataContext.model;
     }
 }

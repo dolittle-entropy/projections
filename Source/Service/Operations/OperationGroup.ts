@@ -12,6 +12,9 @@ import { OperationContext } from './OperationContext';
 import { IBaseOperation } from './IBaseOperation';
 import { IKeyStrategy } from '../Keys';
 import { UnableToResolveKeyForEvent } from './UnableToResolveKeyForEvent';
+import { OperationDataContext } from './OperationDataContext';
+import { IOperationDataContext } from './IOperationDataContext';
+import { IOperationContext } from './IOperationContext';
 
 export class OperationGroup implements IOperationGroup {
     private readonly _operationsByEventType: Map<EventTypeId, IOperation[]> = new Map();
@@ -40,19 +43,21 @@ export class OperationGroup implements IOperationGroup {
 
             if (this._operationsByEventType.has(eventType)) {
                 for (const operation of this._operationsByEventType.get(eventType)!) {
+                    let dataContext = new OperationDataContext({}, event, context);
                     let key: any;
-                    if (operation.keyStrategy.has(event, context)) {
-                        key = operation.keyStrategy.get(event, context);
+                    if (operation.keyStrategy.has(dataContext)) {
+                        key = operation.keyStrategy.get(dataContext);
                     }
 
                     if (!key) {
-                        const keyStrategy = this.getKeyStrategyFor(event, context);
-                        key = keyStrategy.get(event, context);
+                        const keyStrategy = this.getKeyStrategyFor(dataContext);
+                        key = keyStrategy.get(dataContext);
                     }
 
                     const initial = await this.state.get(key) || {};
-                    const operationContext = new OperationContext(key, initial, event, context, this, parentGroup);
-                    const modifiedState = await this.performOperationAndChildren(operation, operationContext, initial);
+                    dataContext = new OperationDataContext(initial, event, context);
+                    const operationContext = new OperationContext(key, dataContext, this, parentGroup);
+                    const modifiedState = await this.performOperationAndChildren(operation, dataContext, operationContext, initial);
                     currentState = { ...currentState, ...modifiedState };
 
                     if (!deepEqual(initial, currentState)) {
@@ -74,34 +79,33 @@ export class OperationGroup implements IOperationGroup {
         }
     }
 
-    private async performOperationAndChildren(operation: IBaseOperation, operationContext: OperationContext, currentState: any): Promise<any> {
+    private async performOperationAndChildren(operation: IBaseOperation, dataContext: IOperationDataContext, operationContext: IOperationContext, currentState: any): Promise<any> {
         let stateAfterOperation = await operation.perform(operationContext);
         currentState = { ...currentState, ...stateAfterOperation };
 
         for (const child of operation.children) {
+            dataContext = new OperationDataContext(currentState, dataContext.event, dataContext.eventContext);
             operationContext = new OperationContext(
                 operationContext.key,
-                currentState,
-                operationContext.event,
-                operationContext.eventContext,
+                dataContext,
                 operationContext.group,
                 operationContext.parentGroup);
-            stateAfterOperation = await this.performOperationAndChildren(child, operationContext, currentState);
+            stateAfterOperation = await this.performOperationAndChildren(child, dataContext, operationContext, currentState);
             currentState = { ...currentState, ...stateAfterOperation };
         }
 
         return currentState;
     }
 
-    private getKeyStrategyFor(event: any, context: EventContext): IKeyStrategy {
-        const keyStrategy = this.keyStrategies.find(_ => _.has(event, context));
-        this.throwIfUnableToResolveKey(keyStrategy, event, context);
+    private getKeyStrategyFor(dataContext: IOperationDataContext): IKeyStrategy {
+        const keyStrategy = this.keyStrategies.find(_ => _.has(dataContext));
+        this.throwIfUnableToResolveKey(keyStrategy, dataContext);
         return keyStrategy!;
     }
 
-    private throwIfUnableToResolveKey(keyStrategy: IKeyStrategy | undefined, event: any, context: EventContext) {
+    private throwIfUnableToResolveKey(keyStrategy: IKeyStrategy | undefined, dataContext: IOperationDataContext) {
         if (!keyStrategy) {
-            throw new UnableToResolveKeyForEvent(event, context);
+            throw new UnableToResolveKeyForEvent(dataContext);
         }
     }
 }

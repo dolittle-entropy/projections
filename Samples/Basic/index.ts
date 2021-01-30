@@ -7,13 +7,8 @@ import express from 'express';
 import { TenantId } from '@dolittle/sdk.execution';
 import { ComponentAdded, FeatureAdded, RuleDefined } from './events';
 import { createLogger, format, transports } from 'winston';
-
-import { Guid } from '@dolittle/rudiments';
-import '@dolittle/projections';
 import { ChildAdded } from './events/ChildAdded';
-import { Expression } from '@dolittle/projections/Service/Expressions';
-import { IOperationContext } from '@dolittle/projections/Service/Operations';
-import { EventSourceId } from '@dolittle/sdk.events';
+import '@dolittle/projections';
 
 export class Rule {
     type!: number;
@@ -46,43 +41,6 @@ export class SomeChild {
 
     const logger = createLogger(loggerOptions);
 
-    /*
-    const ex = Expression.subtract(
-        Expression.property('eventContext.eventSourceId'),
-        Expression.constant(42)
-    );
-    */
-
-    const context = {
-        eventContext: {
-            eventSourceId: EventSourceId.from('c0cead6e-cf61-4cca-b4d5-efda1876c71f')
-        },
-        model: {
-            something: 43
-        }
-    } as IOperationContext;
-
-    const ex = Expression.assign(
-        Expression.property('model.something'),
-        Expression.constant(42)
-    );
-
-    ex.invoke(context);
-
-    console.log(context);
-
-    /*const ex = Expression.property('eventContext.eventSourceId');
-
-    const result = ex.invoke({
-        eventContext: {
-            eventSourceId: EventSourceId.from('c0cead6e-cf61-4cca-b4d5-efda1876c71f')
-        }
-    } as IOperationContext);
-
-    console.log(`${ex} - ${result}`);*/
-
-
-    /*
     const client = Client
         .forMicroservice('78cf6cf3-2ed1-4e8c-b456-f8f4365c31cd')
         .withLogging(logger)
@@ -154,5 +112,5 @@ export class SomeChild {
     const expressPort = process.env.PORT || 3000;
     app.listen({ port: expressPort, hostname: '0.0.0.0' }, () => {
         console.log(`Server is running on port ${expressPort}.`);
-    });*/
+    });
 })();

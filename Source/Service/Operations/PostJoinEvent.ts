@@ -14,12 +14,12 @@ export class PostJoinEvent implements IOperation {
 
     async perform(context: IOperationContext) {
         if (context.hasParentGroup) {
-            const key = this.keyStrategy.get(context.event, context.eventContext);
-            const valuesToUpdate = { ...context.model };
+            const key = this.keyStrategy.get(context.dataContext);
+            const valuesToUpdate = { ...context.dataContext.model };
             context.parentGroup?.state.setMany(this.onProperty, key, valuesToUpdate);
         }
 
-        return context.model;
+        return context.dataContext.model;
     }
 }
 

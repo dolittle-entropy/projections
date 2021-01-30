@@ -13,12 +13,12 @@ export class PostRelationalPropertySet implements IChildOperation {
     }
 
     async perform(context: IOperationContext) {
-        const id = this.targetProperty.get(context.model);
+        const id = this.targetProperty.get(context.dataContext.model);
 
         const state = await this._intermediateState.get(id);
         if (state) {
             return state;
         }
-        return context.model;
+        return context.dataContext.model;
     }
 }

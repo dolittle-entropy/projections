@@ -3,6 +3,8 @@
 
 import { KeyStrategyDescriptor } from '../../SDK/KeyStrategyDescriptor';
 import { IKeyStrategy } from './IKeyStrategy';
+import { ExpressionKeyStrategy } from './ExpressionKeyStrategy';
+import { ExpressionsConverter } from '../Expressions/ExpressionsConverter';
 
 export class KeyStrategiesConverter {
     static toKeyStrategies(keyStrategies: KeyStrategyDescriptor[]): IKeyStrategy[] {
@@ -10,6 +12,7 @@ export class KeyStrategiesConverter {
     }
 
     static toKeyStrategy(keyStrategy: KeyStrategyDescriptor): IKeyStrategy {
-        throw new Error('Not implemented');
+        const expression = ExpressionsConverter.toExpression(keyStrategy.expression);
+        return new ExpressionKeyStrategy(expression);
     }
 }

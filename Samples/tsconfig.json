@@ -6,7 +6,7 @@
     },
     "paths": {
         "@dolittle/projections*": [
-            "../Source"
+            "../Source*"
         ]
     },
     "references": [

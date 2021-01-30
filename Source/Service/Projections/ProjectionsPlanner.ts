@@ -6,7 +6,6 @@ import { Logger } from 'winston';
 import { Projection } from './Projection';
 import { ProjectionDescriptor } from '../../SDK/ProjectionDescriptor';
 import { ScopeId, StreamId } from '@dolittle/sdk.events';
-import { EventSourceKeyStrategy } from '../Keys/EventSourceKeyStrategy';
 
 import { IStateManager } from '../IStateManager';
 import { IProjectionsPlanner } from './IProjectionsPlanner';
@@ -15,6 +14,8 @@ import OperationTypes from '../../OperationTypes';
 import { KeyStrategiesConverter } from '../Keys';
 import { JoinEvent, OperationGroup, OperationsConverter, PostJoinEvent, PostRelationalPropertySet, PropertyMapper } from '../Operations';
 import { ChildFromEvent } from '../Operations/ChildFromEvent';
+import { ExpressionKeyStrategy } from '../Keys/ExpressionKeyStrategy';
+import { Expression } from '../Expressions';
 
 
 export class ProjectionsPlanner implements IProjectionsPlanner {
@@ -59,7 +60,7 @@ export class ProjectionsPlanner implements IProjectionsPlanner {
         const joinsOperationGroup = new OperationGroup(
             'Join',
             stream,
-            [new EventSourceKeyStrategy()],
+            [new ExpressionKeyStrategy(Expression.property('eventContext.eventSourceId'))],
             joinOperations,
             [],
             intermediateState,

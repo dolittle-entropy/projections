@@ -12,7 +12,6 @@ export class ChildFromEvent implements IOperation {
     }
 
     perform(context: IOperationContext) {
-        console.log('Gotta have myself some children');
-        return context.model;
+        return context.dataContext.model;
     }
 }

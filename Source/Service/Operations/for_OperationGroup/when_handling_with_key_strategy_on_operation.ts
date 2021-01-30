@@ -3,7 +3,7 @@
 
 import * as given from './given';
 import sinon from 'sinon';
-import { OperationContext } from '../OperationContext';
+import { IOperationDataContext } from '../IOperationDataContext';
 
 describe('when handling with key strategy on operation', async () => {
     const context = new given.an_operation_group_with_two_operations();
@@ -13,8 +13,8 @@ describe('when handling with key strategy on operation', async () => {
     const operationKey = '10cdac2d-33ed-484b-ba19-3b0ca68c0b9a';
 
     context.firstOperation.keyStrategy = {
-        has: (operationContext: OperationContext) => true,
-        get: (operationContext: OperationContext) => operationKey
+        has: (operationContext: IOperationDataContext) => true,
+        get: (operationContext: IOperationDataContext) => operationKey
     };
 
     (async beforeEach => {

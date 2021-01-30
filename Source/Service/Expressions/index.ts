@@ -7,6 +7,7 @@ export * from './BinaryExpression';
 export * from './ConstantExpression';
 export * from './EqualExpression';
 export * from './Expression';
+export * from './ExpressionsConverter';
 export * from './GreaterThanExpression';
 export * from './GreaterThanOrEqualExpression';
 export * from './LessThanExpression';

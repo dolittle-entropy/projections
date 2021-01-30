@@ -18,6 +18,7 @@ import ChildOperationTypes from '../../ChildOperationTypes';
 import { KeyStrategyDescriptor } from '../../SDK/KeyStrategyDescriptor';
 import { KeyStrategiesConverter } from '../Keys';
 import { ChildFromEvent } from './ChildFromEvent';
+import { NullKeyStrategy } from '../Keys/NullKeyStrategy';
 
 export type PropertyMapConfiguration = {
     sourceProperty: string;
@@ -44,6 +45,7 @@ export class OperationsConverter {
         switch (descriptor.id) {
             case OperationTypes.FromEvent: {
                 const configuration: FromEventConfiguration = descriptor.configuration;
+                console.log(configuration.keyStrategy);
                 return new FromEvent(descriptor.eventTypes, KeyStrategiesConverter.toKeyStrategy(configuration.keyStrategy), this.toOperations(descriptor.children));
             };
             case OperationTypes.JoinEvent: {
@@ -68,19 +70,17 @@ export class OperationsConverter {
             switch (_.id) {
                 case ChildOperationTypes.PropertyMap: {
                     const config = _.configuration as PropertyMapConfiguration;
-                    const eventProperty = PropertyUtilities.getPropertyDescriptorFor<IOperationContext>(_ => _.event);
+                    const eventProperty = PropertyUtilities.getPropertyDescriptorFor<IOperationContext>(_ => _.dataContext.event);
                     const sourceProperty = new PropertyAccessor(new PropertyPath(`${eventProperty.path}.${config.sourceProperty}`));
                     const targetProperty = new PropertyAccessor(new PropertyPath(`${config.targetProperty}`));
-                    throw new Error('Not implemented');
-                    //return new PropertyMapper(sourceProperty, targetProperty, new NullKeyStrategy(), this.toOperations(_.children));
+                    return new PropertyMapper(sourceProperty, targetProperty, new NullKeyStrategy(), this.toOperations(_.children));
                 };
                 case ChildOperationTypes.PropertyMapFromContext: {
                     const config = _.configuration as PropertyMapConfiguration;
-                    const eventContextProperty = PropertyUtilities.getPropertyDescriptorFor<IOperationContext>(_ => _.eventContext);
+                    const eventContextProperty = PropertyUtilities.getPropertyDescriptorFor<IOperationContext>(_ => _.dataContext.eventContext);
                     const sourceProperty = new PropertyAccessor(new PropertyPath(`${eventContextProperty.path}.${config.sourceProperty}`));
                     const targetProperty = new PropertyAccessor(new PropertyPath(`${config.targetProperty}`));
-                    throw new Error('Not implemented');
-                    //return new PropertyMapper(sourceProperty, targetProperty, new NullKeyStrategy(), this.toOperations(_.children));
+                    return new PropertyMapper(sourceProperty, targetProperty, new NullKeyStrategy(), this.toOperations(_.children));
                 };
             }
 

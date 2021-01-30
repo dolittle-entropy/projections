@@ -44,12 +44,12 @@ export class SomeChild {
 
     const logger = createLogger(loggerOptions);
 
-    const ex = Expression.assign(
+    const ex = Expression.subtract(
         Expression.property('hello'),
         Expression.constant(42)
     );
 
-    console.log(ex);
+    console.log(`${ex}`);
 
 
     /*

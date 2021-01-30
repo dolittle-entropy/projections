@@ -12,4 +12,8 @@ export class PropertyExpression extends Expression {
     invoke() {
         throw new Error('Method not implemented.');
     }
+
+    toString() {
+        return this.path;
+    }
 }

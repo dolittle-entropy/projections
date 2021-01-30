@@ -9,4 +9,6 @@ export class NotEqualExpression extends BinaryExpression {
     constructor(left: Expression, right: Expression) {
         super(ExpressionTypes.NotEqual, left, right);
     }
+
+    readonly operationString: string = '!=';
 }

@@ -10,4 +10,6 @@ export class LessThanExpression extends BinaryExpression {
     constructor(left: Expression, right: Expression) {
         super(ExpressionTypes.LessThan, left, right);
     }
+
+    readonly operationString: string = '<';
 }

@@ -9,4 +9,6 @@ export class AddExpression extends BinaryExpression {
     constructor(left: Expression, right: Expression) {
         super(ExpressionTypes.Add, left, right);
     }
+
+    readonly operationString: string = '+';
 }

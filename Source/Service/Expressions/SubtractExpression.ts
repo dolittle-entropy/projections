@@ -9,4 +9,6 @@ export class SubtractExpression extends BinaryExpression {
     constructor(left: Expression, right: Expression) {
         super(ExpressionTypes.Subtract, left, right);
     }
+
+    readonly operationString: string = '-';
 }

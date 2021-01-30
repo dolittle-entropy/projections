@@ -9,4 +9,6 @@ export class GreaterThanOrEqualExpression extends BinaryExpression {
     constructor(left: Expression, right: Expression) {
         super(ExpressionTypes.GreaterThanOrEqual, left, right);
     }
+
+    readonly operationString: string = '>=';
 }

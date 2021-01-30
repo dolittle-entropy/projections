@@ -9,4 +9,6 @@ export class AssignExpression extends BinaryExpression {
     constructor(left: Expression, right: Expression) {
         super(ExpressionTypes.Assign, left, right);
     }
+
+    readonly operationString: string = '=';
 }

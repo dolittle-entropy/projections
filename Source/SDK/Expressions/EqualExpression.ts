@@ -9,4 +9,6 @@ export class EqualExpression extends BinaryExpression {
     constructor(left: Expression, right: Expression) {
         super(ExpressionTypes.Equal, left, right);
     }
+
+    readonly operationString: string = '==';
 }

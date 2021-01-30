@@ -8,4 +8,8 @@ export class ConstantExpression extends Expression {
     constructor(readonly value: any) {
         super(ExpressionTypes.Constant);
     }
+
+    toString(): string {
+        return `${this.value}`;
+    }
 }

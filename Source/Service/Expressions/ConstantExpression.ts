@@ -12,4 +12,8 @@ export class ConstantExpression extends Expression {
     invoke() {
         throw new Error('Method not implemented.');
     }
+
+    toString(): string {
+        return `${this.value}`;
+    }
 }

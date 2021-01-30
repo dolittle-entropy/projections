@@ -8,4 +8,8 @@ export class PropertyExpression extends Expression {
     constructor(readonly path: string) {
         super(ExpressionTypes.Property);
     }
+
+    toString() {
+        return this.path;
+    }
 }

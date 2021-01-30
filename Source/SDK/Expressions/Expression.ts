@@ -3,8 +3,12 @@
 
 import { ExpressionTypeId } from '../../ExpressionTypeId';
 
-export class Expression {
+export abstract class Expression {
     constructor(readonly type: ExpressionTypeId) {
     }
+
+    abstract toString(): string;
 }
+
+
 

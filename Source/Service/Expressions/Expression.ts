@@ -8,6 +8,7 @@ export abstract class Expression {
     }
 
     abstract invoke(): any;
+    abstract toString(): string;
 }
 
 

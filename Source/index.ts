@@ -11,6 +11,9 @@ import { StateConfigurationBuilder, StateConfigurationBuilderCallback } from './
 import { StateManager } from './Service/MongoDB';
 import { ProjectionsPlanner, ProjectionsManager } from './Service/Projections';
 
+export * from './SDK/Expressions';
+import './SDK/Expressions';
+
 let _host = 'localhost';
 let _port = 50053;
 let _container: IContainer = new Container();

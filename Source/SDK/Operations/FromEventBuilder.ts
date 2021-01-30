@@ -10,7 +10,6 @@ import { IChildOperationBuilder } from '../IChildOperationBuilder';
 import { PropertyUtilities } from '../../PropertyUtilities';
 import { KeyStrategyDescriptor } from '../KeyStrategyDescriptor';
 import OperationTypes from '../../OperationTypes';
-import KeyStrategyTypes from '../../KeyStrategyTypes';
 
 export type FromEventBuilderCallback<TDocument extends object, TEvent extends object> = (builder: FromEventBuilder<TDocument, TEvent>) => void;
 
@@ -23,13 +22,13 @@ export type FromEventConfiguration = {
  */
 export class FromEventBuilder<TDocument extends object, TEvent extends object> implements IOperationBuilder {
     private readonly _builders: IChildOperationBuilder[] = [];
-    private _keyStrategy: KeyStrategyDescriptor = new KeyStrategyDescriptor(KeyStrategyTypes.NotSet);
+    private _keyStrategy: KeyStrategyDescriptor = KeyStrategyDescriptor.fromEventSourceId();
 
     constructor(private readonly _eventType: Constructor<TEvent>) { }
 
     usingKeyFrom(property: PropertyAccessor<TEvent>): FromEventBuilder<TDocument, TEvent> {
         const propertyDescriptor = PropertyUtilities.getPropertyDescriptorFor(property);
-        this._keyStrategy = new KeyStrategyDescriptor(KeyStrategyTypes.Property, propertyDescriptor.path);
+        this._keyStrategy = KeyStrategyDescriptor.fromProperty(propertyDescriptor.path);
         return this;
     }
 
@@ -49,5 +48,3 @@ export class FromEventBuilder<TDocument extends object, TEvent extends object> i
         return new OperationDescriptor(OperationTypes.FromEvent, [eventTypeId], configuration, children);
     }
 }
-
-

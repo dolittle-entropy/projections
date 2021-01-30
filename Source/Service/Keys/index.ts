@@ -5,4 +5,3 @@ export * from './EventSourceKeyStrategy';
 export * from './IKeyStrategy';
 export * from './KeyStrategiesConverter';
 export * from './PropertyKeyStrategy';
-export * from './UnknownKeyStrategy';

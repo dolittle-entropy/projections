@@ -4,6 +4,11 @@
         "rootDir": "./",
         "outDir": "dist"
     },
+    "paths": {
+        "@dolittle/projections*": [
+            "../Source"
+        ]
+    },
     "references": [
         {
             "path": "./Basic"

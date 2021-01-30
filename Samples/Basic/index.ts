@@ -11,6 +11,7 @@ import { createLogger, format, transports } from 'winston';
 import { Guid } from '@dolittle/rudiments';
 import '@dolittle/projections';
 import { ChildAdded } from './events/ChildAdded';
+import { Expression } from '@dolittle/projections/Service/Expressions';
 
 export class Rule {
     type!: number;
@@ -43,6 +44,15 @@ export class SomeChild {
 
     const logger = createLogger(loggerOptions);
 
+    const ex = Expression.assign(
+        Expression.property('hello'),
+        Expression.constant(42)
+    );
+
+    console.log(ex);
+
+
+    /*
     const client = Client
         .forMicroservice('78cf6cf3-2ed1-4e8c-b456-f8f4365c31cd')
         .withLogging(logger)
@@ -114,5 +124,5 @@ export class SomeChild {
     const expressPort = process.env.PORT || 3000;
     app.listen({ port: expressPort, hostname: '0.0.0.0' }, () => {
         console.log(`Server is running on port ${expressPort}.`);
-    });
+    });*/
 })();

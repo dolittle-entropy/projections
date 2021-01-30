@@ -8,7 +8,6 @@ import { ModelDescriptor } from './ModelDescriptor';
 import { OperationDescriptor } from './OperationDescriptor';
 
 
-
 export class ProjectionDescriptor {
     constructor(readonly stream: Guid,
         readonly targetModel: ModelDescriptor,

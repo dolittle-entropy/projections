@@ -11,7 +11,7 @@ import { PropertyUtilities } from '../../PropertyUtilities';
 import { MissingOnDefinitionForJoin } from './MissingOnDefinitionForJoin';
 import { KeyStrategyDescriptor } from '../KeyStrategyDescriptor';
 import OperationTypes from '../../OperationTypes';
-import KeyStrategyTypes from '../../KeyStrategyTypes';
+import { Expression } from '../Expressions';
 
 export type JoinEventBuilderCallback<TDocument extends object, TEvent extends object> = (builder: JoinEventBuilder<TDocument, TEvent>) => void;
 
@@ -23,7 +23,7 @@ export type JoinEventConfiguration = {
 export class JoinEventBuilder<TDocument extends object, TEvent extends object> implements IOperationBuilder {
     private readonly _builders: IChildOperationBuilder[] = [];
     private _onProperty?: string;
-    private _keyStrategy: KeyStrategyDescriptor = new KeyStrategyDescriptor(KeyStrategyTypes.EventSourceIdentifier);
+    private _keyStrategy: KeyStrategyDescriptor = KeyStrategyDescriptor.fromEventSourceId();
 
     constructor(private readonly _eventType: Constructor<TEvent>) { }
 
@@ -35,7 +35,7 @@ export class JoinEventBuilder<TDocument extends object, TEvent extends object> i
 
     usingKeyFrom(property: PropertyAccessor<TEvent>): JoinEventBuilder<TDocument, TEvent> {
         const propertyDescriptor = PropertyUtilities.getPropertyDescriptorFor(property);
-        this._keyStrategy = new KeyStrategyDescriptor(KeyStrategyTypes.Property, propertyDescriptor.path);
+        this._keyStrategy = new KeyStrategyDescriptor(Expression.property(propertyDescriptor.path));
         return this;
     }
 

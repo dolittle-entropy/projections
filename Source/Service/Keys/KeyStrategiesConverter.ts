@@ -3,12 +3,6 @@
 
 import { KeyStrategyDescriptor } from '../../SDK/KeyStrategyDescriptor';
 import { IKeyStrategy } from './IKeyStrategy';
-import { EventSourceKeyStrategy } from './EventSourceKeyStrategy';
-import { PropertyKeyStrategy } from './PropertyKeyStrategy';
-import { UnknownKeyStrategy } from './UnknownKeyStrategy';
-import { NullKeyStrategy } from './NullKeyStrategy';
-import KeyStrategyTypes from '../../KeyStrategyTypes';
-import { PropertyAccessor, PropertyPath } from '../Properties';
 
 export class KeyStrategiesConverter {
     static toKeyStrategies(keyStrategies: KeyStrategyDescriptor[]): IKeyStrategy[] {
@@ -16,19 +10,6 @@ export class KeyStrategiesConverter {
     }
 
     static toKeyStrategy(keyStrategy: KeyStrategyDescriptor): IKeyStrategy {
-        switch (keyStrategy.id) {
-            case KeyStrategyTypes.NotSet: {
-                return new NullKeyStrategy();
-            };
-
-            case KeyStrategyTypes.EventSourceIdentifier: {
-                return new EventSourceKeyStrategy();
-            };
-            case KeyStrategyTypes.Property: {
-                return new PropertyKeyStrategy(new PropertyAccessor(new PropertyPath(keyStrategy.configuration)));
-            }
-        }
-
-        throw new UnknownKeyStrategy(keyStrategy.id);
+        throw new Error('Not implemented');
     }
 }

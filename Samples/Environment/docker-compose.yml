@@ -8,7 +8,7 @@ services:
       driver: none
   
   runtime:
-    image: dolittle/runtime:5.1.4
+    image: dolittle/runtime:5.3.2
     volumes:
       - ./resources.json:/app/.dolittle/resources.json
       - ./tenants.json:/app/.dolittle/tenants.json

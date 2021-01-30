@@ -1,28 +1,27 @@
 // Copyright (c) Dolittle. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import KeyStrategyTypes from '../KeyStrategyTypes';
+import { Expression } from './Expressions/Expression';
 import { KeyStrategyDescriptor } from './KeyStrategyDescriptor';
 
 export type KeyStrategiesBuilderCallback = (builder: KeyStrategiesBuilder) => void;
 
 export class KeyStrategiesBuilder {
     private _strategies: KeyStrategyDescriptor[] = [];
-    private _defaultKeyStrategy: KeyStrategyDescriptor = new KeyStrategyDescriptor(KeyStrategyTypes.EventSourceIdentifier);
 
     usingProperty(propertyPath: string): KeyStrategiesBuilder {
-        this._strategies.push(new KeyStrategyDescriptor(KeyStrategyTypes.Property, propertyPath));
+        this._strategies.push(KeyStrategyDescriptor.fromProperty(propertyPath));
         return this;
     }
 
     usingEventSourceId(): KeyStrategiesBuilder {
-        this._strategies.push(new KeyStrategyDescriptor(KeyStrategyTypes.EventSourceIdentifier));
+        this._strategies.push(KeyStrategyDescriptor.fromEventSourceId());
         return this;
     }
 
     build(): KeyStrategyDescriptor[] {
         if (this._strategies.length === 0) {
-            return [this._defaultKeyStrategy];
+            return [KeyStrategyDescriptor.fromEventSourceId()];
         }
         return this._strategies;
     }

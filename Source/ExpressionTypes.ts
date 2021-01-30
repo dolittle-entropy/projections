@@ -4,9 +4,15 @@
 import { ExpressionTypeId } from './ExpressionTypeId';
 
 export default {
-    Member: ExpressionTypeId.from('acaedb43-ffe0-4578-9bb3-791560608004'),
+    Property: ExpressionTypeId.from('acaedb43-ffe0-4578-9bb3-791560608004'),
     Constant: ExpressionTypeId.from('1554d6f6-b74a-4973-8937-b1ee20f5f513'),
-    Conditional: ExpressionTypeId.from('f94f1bc2-9014-49b4-8237-4be0bab24c0d'),
-    IncrementExpression: ExpressionTypeId.from('31fd44b5-bf20-4671-8ebe-5df8581dcfe1'),
-    DecrementExpression: ExpressionTypeId.from('62bb4b89-dd68-47e0-9f74-cb6f760fe4ec')
+    Assign: ExpressionTypeId.from('37a4dc59-50de-458c-bc64-09c5e084e8e3'),
+    Add: ExpressionTypeId.from('2bbe70af-5859-40ed-9837-d56cb1c4b006'),
+    Subtract: ExpressionTypeId.from('5ef07764-bfef-4026-bd24-88c9bf590348'),
+    Equal: ExpressionTypeId.from('99f16e8d-bddb-4b61-ba06-17bc2b9df15f'),
+    NotEqual: ExpressionTypeId.from('860e483e-f9b8-47db-b65e-ec3aa329a9d3'),
+    GreaterThan: ExpressionTypeId.from('3f0ccb8f-2930-4e2d-a523-ad0f06861c5f'),
+    LessThan: ExpressionTypeId.from('95a7bf0f-9f40-49bd-8acb-d45f90ec2e83'),
+    GreaterThanOrEqual: ExpressionTypeId.from('10e262ed-3430-4acc-ba12-5bf093be26df'),
+    LessThanOrEqual: ExpressionTypeId.from('9f578fe3-a6e3-4165-991e-9c4c1c3067bd')
 };

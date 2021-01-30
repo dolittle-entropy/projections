@@ -42,7 +42,6 @@ export type ChildConfiguration = {
 export class OperationsConverter {
 
     static toOperation(descriptor: OperationDescriptor) {
-        console.log(descriptor.id.toString());
         switch (descriptor.id) {
             case OperationTypes.FromEvent: {
                 const configuration: FromEventConfiguration = descriptor.configuration;

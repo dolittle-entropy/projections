@@ -4,6 +4,7 @@
 import { DialogResult, useDialog } from '@dolittle/vanir-react';
 import { DetailsList, IColumn, IconButton, SelectionMode, Stack } from '@fluentui/react';
 import React from 'react';
+import { ProjectionsEditorDialog } from './ProjectionsEditorDialog';
 import { ProjectionsEditorDialogInput } from './ProjectionsEditorDialogInput';
 import { ProjectionsEditorDialogOutput } from './ProjectionsEditorDialogOutput';
 
@@ -60,6 +61,8 @@ export const Projections = () => {
                 selectionMode={SelectionMode.none}
                 onItemInvoked={showItem}
             />
+
+            <ProjectionsEditorDialog {...projectionEditorDialogProps}/>
 
             <IconButton iconProps={{
                 iconName: 'CirclePlus'

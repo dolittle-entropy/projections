@@ -12,7 +12,7 @@ import { PropertyType } from './PropertyType';
 
 const dialogContentProps: IDialogContentProps = {
     type: DialogType.normal,
-    title: 'Event',
+    title: 'Event Type',
     closeButtonAriaLabel: 'Close'
 };
 

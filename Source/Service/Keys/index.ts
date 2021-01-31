@@ -4,3 +4,4 @@
 export * from './IKeyStrategy';
 export * from './KeyStrategiesConverter';
 export * from './ExpressionKeyStrategy';
+export * from './KeyContext';

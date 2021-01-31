@@ -15,4 +15,9 @@ export class PropertyPath {
     constructor(readonly path: string) {
         this.segments = path.split('.');
     }
+
+
+    toString() {
+        return this.path;
+    }
 }

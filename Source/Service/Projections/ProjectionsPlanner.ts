@@ -17,6 +17,7 @@ import { ChildFromEvent } from '../Operations/ChildFromEvent';
 import { ExpressionKeyStrategy } from '../Keys/ExpressionKeyStrategy';
 import { Expression, ExpressionsConverter } from '../Expressions';
 import { ExpressionOperation } from '../Operations/ExpressionOperation';
+import { IObjectComparer } from '../Changes/IObjectComparer';
 
 
 export class ProjectionsPlanner implements IProjectionsPlanner {
@@ -24,6 +25,7 @@ export class ProjectionsPlanner implements IProjectionsPlanner {
     constructor(
         private readonly _projectionsManager: IStateManager,
         private readonly _intermediatesManager: IStateManager,
+        private readonly _objectComparer: IObjectComparer,
         private readonly _logger: Logger) {
     }
 
@@ -70,6 +72,7 @@ export class ProjectionsPlanner implements IProjectionsPlanner {
             joinOperations,
             [],
             intermediateState,
+            this._objectComparer,
             this._logger
         );
 
@@ -84,6 +87,7 @@ export class ProjectionsPlanner implements IProjectionsPlanner {
             fromOperations,
             [joinsOperationGroup],
             projectionState,
+            this._objectComparer,
             this._logger
         );
 
@@ -96,6 +100,7 @@ export class ProjectionsPlanner implements IProjectionsPlanner {
             childFromEventOperations,
             [],
             intermediateState,
+            this._objectComparer,
             this._logger
         );*/
 

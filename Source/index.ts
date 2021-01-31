@@ -13,6 +13,7 @@ import { ProjectionsPlanner, ProjectionsManager } from './Service/Projections';
 
 export * from './SDK/Expressions';
 import './SDK/Expressions';
+import { ObjectComparer } from './Service/Changes';
 
 let _host = 'localhost';
 let _port = 50053;
@@ -93,11 +94,12 @@ ClientBuilder.prototype.build = function (): Client {
     client.projections = [];
 
     const projectionsConfiguration = projectionsConfigurationBuilder.build();
-    const projectionsStateManager = new StateManager(projectionsConfiguration);
+    const projectionsStateManager = new StateManager(projectionsConfiguration, client.logger);
     const intermediatesConfiguration = intermediatesConfigurationBuilder.build();
-    const intermediatesStateManager = new StateManager(intermediatesConfiguration);
+    const intermediatesStateManager = new StateManager(intermediatesConfiguration, client.logger);
+    const objectComparer = new ObjectComparer();
 
-    const projectionsPlanner = new ProjectionsPlanner(projectionsStateManager, intermediatesStateManager, client.logger);
+    const projectionsPlanner = new ProjectionsPlanner(projectionsStateManager, intermediatesStateManager, objectComparer, client.logger);
     const projectionsManager = new ProjectionsManager(connectionString, client, _container, client.logger);
 
     for (const projectionBuilder of _projections) {

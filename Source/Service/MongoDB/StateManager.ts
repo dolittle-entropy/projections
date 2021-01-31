@@ -6,17 +6,18 @@ import { IStateManager } from '../IStateManager';
 import { State } from './State';
 import { MongoClient } from 'mongodb';
 import { StateConfiguration } from '../../StateConfiguration';
+import { Logger } from 'winston';
 
 export class StateManager implements IStateManager {
     private _mongoClient?: MongoClient;
 
-    constructor(private readonly _configuration: StateConfiguration) {
+    constructor(private readonly _configuration: StateConfiguration, private readonly _logger: Logger) {
     }
 
     async getFor(name: string): Promise<IState> {
         const mongoClient = await this.getMongoClient();
         const collection = mongoClient.db(this._configuration.databaseName).collection(name);
-        return new State(collection);
+        return new State(collection, this._logger);
     }
 
     private async getMongoClient(): Promise<MongoClient> {

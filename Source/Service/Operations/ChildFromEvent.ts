@@ -1,6 +1,7 @@
 // Copyright (c) Dolittle. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+import { Changeset } from '../Changes';
 import { Expression } from '../Expressions';
 import { IKeyStrategy } from '../Keys';
 import { IOperation } from './IOperation';
@@ -10,7 +11,7 @@ export class ChildFromEvent implements IOperation {
     constructor(readonly filter: Expression, readonly keyStrategy: IKeyStrategy, readonly children: IOperation[]) {
     }
 
-    perform(context: IOperationContext) {
-        return context.dataContext.model;
+    async perform(context: IOperationContext) {
+        return Changeset.noChanges;
     }
 }

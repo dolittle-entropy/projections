@@ -4,10 +4,11 @@
 import { Collection, FilterQuery } from 'mongodb';
 import { IState } from '../IState';
 import { PropertyAccessor } from '../Properties';
+import { Logger } from 'winston';
 
 export class State implements IState {
 
-    constructor(private readonly _collection: Collection) {
+    constructor(private readonly _collection: Collection, private readonly _logger: Logger) {
     }
 
     async get(id: any): Promise<any> {
@@ -20,13 +21,18 @@ export class State implements IState {
 
     async set(id: any, content: any): Promise<void> {
         delete content._id;
-        await this._collection.updateOne({ _id: id }, { $set: content }, { upsert: true });
+
+        const key = { _id: id };
+        this._logger.info(`Set state on '${this._collection.collectionName}'`, key, content);
+        await this._collection.updateOne(key, { $set: content }, { upsert: true });
     }
 
     async setMany(property: PropertyAccessor, id: any, content: any): Promise<void> {
         const filter: any = {};
         property.set(filter, id);
-        delete content._id;
+
+        this._logger.info(`Update '${this._collection.collectionName}'`, filter, content);
+
         await this._collection.updateMany(filter, { $set: content });
     }
 }

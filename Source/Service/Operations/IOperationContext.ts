@@ -3,6 +3,7 @@
 
 import { IOperationDataContext } from './IOperationDataContext';
 import { IOperationGroup } from './IOperationGroup';
+import { IObjectComparer } from '../Changes/IObjectComparer';
 
 export interface IOperationContext {
     readonly key: any;
@@ -12,5 +13,7 @@ export interface IOperationContext {
     readonly parentGroup?: IOperationGroup;
 
     readonly hasParentGroup: boolean;
+
+    readonly comparer: IObjectComparer;
 }
 

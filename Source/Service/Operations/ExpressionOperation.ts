@@ -4,9 +4,10 @@
 import { IOperationContext } from './IOperationContext';
 import { IKeyStrategy } from '../Keys';
 import { AssignExpression, Expression, PropertyExpression } from '../Expressions';
-import { OperationDataContext } from './OperationDataContext';
 import { IOperation } from './IOperation';
 import { MissingPropertyExpression } from './MissingPropertyExpression';
+import { Changeset } from '../Changes';
+
 export class ExpressionOperation implements IOperation {
     readonly filter: Expression = Expression.noOp();
 
@@ -14,10 +15,10 @@ export class ExpressionOperation implements IOperation {
     }
 
     async perform(context: IOperationContext): Promise<any> {
-        const changes = {};
-        const dataContext = new OperationDataContext(changes, context.dataContext.eventType, context.dataContext.event, context.dataContext.eventContext);
-        this.expression.invoke(dataContext);
-        return dataContext.model;
+        const initial = {...context.dataContext.model};
+        this.expression.invoke(context.dataContext);
+        const changes =  new Changeset(context.comparer.compare(initial, context.dataContext.model));
+        return changes;
     }
 
     hasAssignmentToProperty(): boolean {

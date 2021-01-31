@@ -6,6 +6,8 @@
     "author": "Dolittle",
     "license": "MIT",
     "scripts": {
+        "prestart:dev": "yarn build",
+        "prestart": "yarn build",
         "start:dev": "nodemon --inspect -e ts --exec node -r ts-node/register index.ts",
         "start": "tsc -b && node -r ts-node/register index.ts",
         "build": "tsc -b"

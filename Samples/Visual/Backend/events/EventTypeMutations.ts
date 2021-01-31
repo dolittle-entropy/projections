@@ -5,7 +5,7 @@ import { injectable } from 'tsyringe';
 import { Resolver, Mutation, Arg, InputType, Field } from 'type-graphql';
 import { EventTypeDefinitionModel } from './EventTypeDefinition';
 import { EventTypeDefinitionForWriting } from './EventTypeDefinitionForWriting';
-
+import { Guid } from '@dolittle/rudiments';
 
 @injectable()
 @Resolver()
@@ -18,6 +18,12 @@ export class EventTypeMutations {
             properties: input.properties
         }, { upsert: true });
 
+        return true;
+    }
+
+    @Mutation(() => Boolean)
+    async deleteEventTypeDefinition(@Arg('id') id: string): Promise<boolean> {
+        await EventTypeDefinitionModel.deleteOne({ _id: Guid.parse(id) });
         return true;
     }
 }

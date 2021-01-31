@@ -12,12 +12,6 @@ import { Guid } from '@dolittle/rudiments';
 import { EventTypeDefinition } from './EventTypeDefinition';
 
 export const Events = withViewModel(EventsViewModel, ({ viewModel }) => {
-    const columns: IColumn[] = [{
-        key: 'Name',
-        name: 'name',
-        fieldName: 'name',
-        minWidth: 50
-    }];
 
     const [showEventEditor, eventEditorDialogProps] = useDialog<EventEditorDialogInput, EventEditorDialogOutput>(async (result, output?) => {
         if (result === DialogResult.Success) {
@@ -47,6 +41,23 @@ export const Events = withViewModel(EventsViewModel, ({ viewModel }) => {
 
         showEventEditor(input);
     };
+
+    const deleteItem = async (item: EventTypeDefinition) => {
+        await viewModel.deleteEventTypeDefinition(item);
+        await viewModel.populate();
+    };
+
+    const columns: IColumn[] = [{
+        key: 'Name',
+        name: 'Name',
+        fieldName: 'name',
+        minWidth: 50
+    }, {
+        key: 'Actions',
+        name: 'Actions',
+        minWidth: 50,
+        onRender: (item) => <IconButton iconProps={{iconName:'Delete'}} onClick={() => deleteItem(item)}/>
+    }];
 
     return (
         <>

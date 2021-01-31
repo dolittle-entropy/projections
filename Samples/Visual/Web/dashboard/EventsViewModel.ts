@@ -58,4 +58,16 @@ export class EventsViewModel {
         };
         await this.dataSource.mutate({mutation, variables: data});
     }
+
+    async deleteEventTypeDefinition(definition: EventTypeDefinition) {
+        const mutation = gql`
+            mutation DeleteEventTypeDefinition($id: String!) {
+                deleteEventTypeDefinition(id: $id) 
+            }`;
+
+        const data = {
+            id: definition.id.toString()
+        };
+        await this.dataSource.mutate({mutation, variables: data});
+    }
 }

@@ -4,18 +4,20 @@
 import { withViewModel } from '@dolittle/vanir-react';
 import { Pivot, PivotItem, Stack, StackItem } from '@fluentui/react';
 import React from 'react';
-import { Events } from './eventTypes/Events';
+import { Events } from './events/Events';
+import { EventTypes } from './eventTypes/EventTypes';
 import { HomeViewModel } from './HomeViewModel';
 
 export const Home = withViewModel(HomeViewModel, ({ viewModel }) => {
 
     return (
         <>
-            <Pivot style={{backgroundColor: 'black'}}>
+            <Pivot style={{ backgroundColor: 'black' }}>
                 <PivotItem headerText="Event Types" itemIcon="Storyboard">
-                    <Events />
+                    <EventTypes />
                 </PivotItem>
                 <PivotItem headerText="Events" itemIcon="Picture">
+                    <Events />
                 </PivotItem>
                 <PivotItem headerText="Projections" itemIcon="OpenSource">
                 </PivotItem>

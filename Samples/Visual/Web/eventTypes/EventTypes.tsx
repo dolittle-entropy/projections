@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { DialogResult, useDialog, withViewModel } from '@dolittle/vanir-react';
-import { EventsViewModel } from './EventsViewModel';
+import { EventTypesViewModel } from './EventTypesViewModel';
 import { DetailsList, IColumn, IconButton, SelectionMode } from '@fluentui/react';
 import { EventEditorDialog } from './EventEditorDialog';
 import { EventEditorDialogOutput } from './EventEditorDialogOutput';
@@ -11,7 +11,7 @@ import { EventEditorDialogInput } from './EventEditorDialogInput';
 import { Guid } from '@dolittle/rudiments';
 import { EventTypeDefinition } from './EventTypeDefinition';
 
-export const Events = withViewModel(EventsViewModel, ({ viewModel }) => {
+export const EventTypes = withViewModel(EventTypesViewModel, ({ viewModel }) => {
 
     const [showEventEditor, eventEditorDialogProps] = useDialog<EventEditorDialogInput, EventEditorDialogOutput>(async (result, output?) => {
         if (result === DialogResult.Success) {

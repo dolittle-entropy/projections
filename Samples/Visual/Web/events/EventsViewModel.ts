@@ -3,12 +3,15 @@
 
 import { DataSource } from '@dolittle/vanir-web';
 import gql from 'graphql-tag';
-import { AllEventTypeDefinitionsQuery } from './AllEventTypeDefinitionsQuery';
-import { EventTypeDefinition } from './EventTypeDefinition';
+import { AllEventInstancesQuery } from './AllEventInstancesQuery';
+import { EventInstance } from './EventInstance';
 import { injectable } from 'tsyringe';
+import { EventTypeDefinition } from '../eventTypes/EventTypeDefinition';
+import { AllEventTypeDefinitionsQuery } from '../eventTypes/AllEventTypeDefinitionsQuery';
 
 @injectable()
 export class EventsViewModel {
+    eventInstances: EventInstance[] = [];
     eventTypes: EventTypeDefinition[] = [];
 
     constructor(private readonly dataSource: DataSource) {
@@ -17,9 +20,28 @@ export class EventsViewModel {
 
     async attached() {
         await this.populate();
+        await this.populateEventTypes();
     }
 
     async populate() {
+        const query = gql`
+            query {
+                allEventInstances {
+                    id
+                    eventType
+                    propertyValues {
+                        name
+                        value
+                    }
+                }
+            }        
+        `;
+
+        const result = await this.dataSource.query<AllEventInstancesQuery>({ query, fetchPolicy: 'no-cache' });
+        this.eventInstances = result.data.allEventInstances;
+    }
+
+    async populateEventTypes() {
         const query = gql`
             query {
                 allEventTypes {
@@ -37,20 +59,21 @@ export class EventsViewModel {
         this.eventTypes = result.data.allEventTypes;
     }
 
-    async writeEventTypeDefinition(definition: EventTypeDefinition) {
+
+    async writeEventInstance(definition: EventInstance) {
         const mutation = gql`
-            mutation WriteEventTypeDefinition($input: EventTypeDefinitionForWriting!) {
-                writeEventTypeDefinition(input: $input) 
+            mutation WriteEventInstance($input: EventInstanceForWriting!) {
+                writeEventInstance(input: $input) 
             }`;
 
         const data = {
             input: {
                 id: definition.id.toString(),
-                name: definition.name,
-                properties: definition.properties.map(_ => {
+                eventType: definition.eventType,
+                propertyValues: definition.propertyValues.map(_ => {
                     return {
                         name: _.name,
-                        type: _.type
+                        value: _.value
                     };
                 })
             }
@@ -58,10 +81,10 @@ export class EventsViewModel {
         await this.dataSource.mutate({mutation, variables: data});
     }
 
-    async deleteEventTypeDefinition(definition: EventTypeDefinition) {
+    async deleteEventInstance(definition: EventInstance) {
         const mutation = gql`
-            mutation DeleteEventTypeDefinition($id: String!) {
-                deleteEventTypeDefinition(id: $id) 
+            mutation DeleteEventInstance($id: String!) {
+                deleteEventInstance(id: $id) 
             }`;
 
         const data = {

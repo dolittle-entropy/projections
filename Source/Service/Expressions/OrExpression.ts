@@ -5,7 +5,7 @@ import { Expression } from './Expression';
 import { BinaryExpression } from './BinaryExpression';
 import { IOperationDataContext } from '../Operations';
 
-export class GreaterThanExpression extends BinaryExpression {
+export class OrExpression extends BinaryExpression {
     constructor(left: Expression, right: Expression) {
         super(left, right);
     }
@@ -14,5 +14,5 @@ export class GreaterThanExpression extends BinaryExpression {
         throw new Error('Not implemented');
     }
 
-    readonly operationString: string = '>';
+    readonly operationString: string = '||';
 }

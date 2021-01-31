@@ -9,7 +9,6 @@ import { IOperation } from './IOperation';
 import { IOperationGroup } from './IOperationGroup';
 import { IState } from '../IState';
 import { OperationContext } from './OperationContext';
-import { IBaseOperation } from './IBaseOperation';
 import { IKeyStrategy } from '../Keys';
 import { UnableToResolveKeyForEvent } from './UnableToResolveKeyForEvent';
 import { OperationDataContext } from './OperationDataContext';
@@ -17,7 +16,6 @@ import { IOperationDataContext } from './IOperationDataContext';
 import { IOperationContext } from './IOperationContext';
 
 export class OperationGroup implements IOperationGroup {
-    private readonly _operationsByEventType: Map<EventTypeId, IOperation[]> = new Map();
 
     constructor(
         readonly name: string,
@@ -28,12 +26,6 @@ export class OperationGroup implements IOperationGroup {
         readonly state: IState,
         private readonly _logger: Logger) {
 
-        for (const operation of operations) {
-            for (const eventType of operation.eventTypes) {
-                const operations = this._operationsByEventType.get(eventType) || [];
-                this._operationsByEventType.set(eventType, [...operations, operation]);
-            }
-        }
     }
 
     async handle(eventType: EventTypeId, event: any, context: EventContext, parentGroup?: IOperationGroup): Promise<void> {
@@ -41,28 +33,30 @@ export class OperationGroup implements IOperationGroup {
             let currentState: any = {};
             const stateToSet: Map<any, any> = new Map();
 
-            if (this._operationsByEventType.has(eventType)) {
-                for (const operation of this._operationsByEventType.get(eventType)!) {
-                    let dataContext = new OperationDataContext({}, event, context);
-                    let key: any;
-                    if (operation.keyStrategy.has(dataContext)) {
-                        key = operation.keyStrategy.get(dataContext);
-                    }
+            let dataContext = new OperationDataContext({}, eventType, event, context);
 
-                    if (!key) {
-                        const keyStrategy = this.getKeyStrategyFor(dataContext);
-                        key = keyStrategy.get(dataContext);
-                    }
+            const operations = this.operations.filter(_ => _.filter.invoke(dataContext));
 
-                    const initial = await this.state.get(key) || {};
-                    dataContext = new OperationDataContext(initial, event, context);
-                    const operationContext = new OperationContext(key, dataContext, this, parentGroup);
-                    const modifiedState = await this.performOperationAndChildren(operation, dataContext, operationContext, initial);
-                    currentState = { ...currentState, ...modifiedState };
+            for (const operation of operations) {
 
-                    if (!deepEqual(initial, currentState)) {
-                        stateToSet.set(key, currentState);
-                    }
+                let key: any;
+                if (operation.keyStrategy.has(dataContext)) {
+                    key = operation.keyStrategy.get(dataContext);
+                }
+
+                if (!key) {
+                    const keyStrategy = this.getKeyStrategyFor(dataContext);
+                    key = keyStrategy.get(dataContext);
+                }
+
+                const initial = await this.state.get(key) || {};
+                dataContext = new OperationDataContext(initial, eventType, event, context);
+                const operationContext = new OperationContext(key, dataContext, this, parentGroup);
+                const modifiedState = await this.performOperationAndChildren(operation, dataContext, operationContext, initial);
+                currentState = { ...currentState, ...modifiedState };
+
+                if (!deepEqual(initial, currentState)) {
+                    stateToSet.set(key, currentState);
                 }
             }
 
@@ -79,12 +73,12 @@ export class OperationGroup implements IOperationGroup {
         }
     }
 
-    private async performOperationAndChildren(operation: IBaseOperation, dataContext: IOperationDataContext, operationContext: IOperationContext, currentState: any): Promise<any> {
+    private async performOperationAndChildren(operation: IOperation, dataContext: IOperationDataContext, operationContext: IOperationContext, currentState: any): Promise<any> {
         let stateAfterOperation = await operation.perform(operationContext);
         currentState = { ...currentState, ...stateAfterOperation };
 
         for (const child of operation.children) {
-            dataContext = new OperationDataContext(currentState, dataContext.event, dataContext.eventContext);
+            dataContext = new OperationDataContext(currentState, dataContext.event, dataContext.event, dataContext.eventContext);
             operationContext = new OperationContext(
                 operationContext.key,
                 dataContext,

@@ -4,13 +4,13 @@
 import sinon from 'sinon';
 
 import { StreamId } from '@dolittle/sdk.events';
-import { IKeyStrategy } from '../../../Keys/IKeyStrategy';
-import { OperationGroup } from '../../../Operations/OperationGroup';
-import { IOperation } from '../../../Operations/IOperation';
-import { OperationContext } from '../../../Operations/OperationContext';
+import { IKeyStrategy } from '@dolittle/projections/Service/Keys/IKeyStrategy';
+import { OperationGroup } from '@dolittle/projections/Service/Operations/OperationGroup';
+import { IOperation } from '@dolittle/projections/Service/Operations/IOperation';
+import { OperationContext } from '@dolittle/projections/Service/Operations/OperationContext';
 
 import { all_dependencies } from './all_dependencies';
-import { NullKeyStrategy } from '../../../Keys/NullKeyStrategy';
+import { NullKeyStrategy } from '@dolittle/projections/Service/Keys/NullKeyStrategy';
 
 export class an_operation_group_with_two_operations extends all_dependencies {
     operationGroup: OperationGroup;

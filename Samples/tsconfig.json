@@ -5,12 +5,6 @@
         "outDir": "dist"
     },
     "paths": {
-        "@dolittle/projections": [
-            "../Source"
-        ],
-        "@dolittle/projections*": [
-            "../Source*"
-        ]
     },
     "references": [
         {

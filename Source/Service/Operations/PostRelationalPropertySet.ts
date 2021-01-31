@@ -1,15 +1,18 @@
 // Copyright (c) Dolittle. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+import { Expression } from '../Expressions';
 import { IState } from '../IState';
 import { IKeyStrategy } from '../Keys';
 import { PropertyAccessor } from '../Properties';
-import { IChildOperation } from './IChildOperation';
+import { IOperation } from './IOperation';
 import { IOperationContext } from './IOperationContext';
 
 
-export class PostRelationalPropertySet implements IChildOperation {
-    constructor(readonly keyStrategy: IKeyStrategy, readonly targetProperty: PropertyAccessor, private readonly _intermediateState: IState, readonly children: IChildOperation[]) {
+export class PostRelationalPropertySet implements IOperation {
+    readonly filter: Expression = Expression.noOp();
+
+    constructor(readonly keyStrategy: IKeyStrategy, readonly targetProperty: PropertyAccessor, private readonly _intermediateState: IState, readonly children: IOperation[]) {
     }
 
     async perform(context: IOperationContext) {

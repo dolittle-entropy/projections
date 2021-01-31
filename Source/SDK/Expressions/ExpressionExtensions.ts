@@ -13,6 +13,9 @@ import { GreaterThanExpression } from './GreaterThanExpression';
 import { GreaterThanOrEqualExpression } from './GreaterThanOrEqualExpression';
 import { LessThanExpression } from './LessThanExpression';
 import { LessThanOrEqualExpression } from './LessThanOrEqualExpression';
+import { AndExpression } from './AndExpression';
+import { OrExpression } from './OrExpression';
+import { NoOpExpression } from './NoOpExpression';
 
 
 declare module '@dolittle/projections/SDK/Expressions/Expression' {
@@ -28,6 +31,9 @@ declare module '@dolittle/projections/SDK/Expressions/Expression' {
         export function greaterThanOrEqual(left: Expression, right: Expression): GreaterThanOrEqualExpression;
         export function lessThan(left: Expression, right: Expression): LessThanExpression;
         export function lessThanOrEqual(left: Expression, right: Expression): LessThanOrEqualExpression;
+        export function and(left: Expression, right: Expression): AndExpression;
+        export function or(left: Expression, right: Expression): OrExpression;
+        export function noOp(): NoOpExpression;
     }
 }
 
@@ -73,4 +79,16 @@ Expression.lessThan = function (left: Expression, right: Expression): LessThanEx
 
 Expression.lessThanOrEqual = function (left: Expression, right: Expression): LessThanOrEqualExpression {
     return new LessThanOrEqualExpression(left, right);
+};
+
+Expression.and = function (left: Expression, right: Expression): AndExpression {
+    return new AndExpression(left, right);
+};
+
+Expression.or = function (left: Expression, right: Expression): OrExpression {
+    return new OrExpression(left, right);
+};
+
+Expression.noOp = function () {
+    return new NoOpExpression();
 };

@@ -13,6 +13,7 @@ export * from './GreaterThanOrEqualExpression';
 export * from './LessThanExpression';
 export * from './LessThanOrEqualExpression';
 export * from './NotEqualExpression';
+export * from './NoOpExpression';
 export * from './PropertyExpression';
 export * from './SubtractExpression';
 

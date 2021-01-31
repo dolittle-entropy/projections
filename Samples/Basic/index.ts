@@ -68,8 +68,8 @@ export class SomeChild {
                 .set(r => r.featureName).to(ev => ev.name))
             .join(ComponentAdded, e => e
                 .on(r => r.componentId)
-                .set(r => r.componentName).to(ev => ev.name))
-            .children(SomeChild, c => c
+                .set(r => r.componentName).to(ev => ev.name))*/
+            /*.children(SomeChild, c => c
                 .identifiedBy(cc => cc.id)
                 .storedIn(cc => cc.children)
                 .from(ChildAdded, cb => cb

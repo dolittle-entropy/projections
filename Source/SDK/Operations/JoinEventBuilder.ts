@@ -6,7 +6,6 @@ import { IOperationBuilder } from '../IOperationBuilder';
 import { OperationDescriptor } from '../OperationDescriptor';
 import { SetBuilder } from './SetBuilder';
 import { OperationBuilderContext } from '../OperationBuilderContext';
-import { IChildOperationBuilder } from '../IChildOperationBuilder';
 import { PropertyUtilities } from '../../PropertyUtilities';
 import { MissingOnDefinitionForJoin } from './MissingOnDefinitionForJoin';
 import { KeyStrategyDescriptor } from '../KeyStrategyDescriptor';
@@ -21,7 +20,7 @@ export type JoinEventConfiguration = {
 };
 
 export class JoinEventBuilder<TDocument extends object, TEvent extends object> implements IOperationBuilder {
-    private readonly _builders: IChildOperationBuilder[] = [];
+    private readonly _builders: IOperationBuilder[] = [];
     private _onProperty?: string;
     private _keyStrategy: KeyStrategyDescriptor = KeyStrategyDescriptor.fromEventSourceId();
 
@@ -57,6 +56,10 @@ export class JoinEventBuilder<TDocument extends object, TEvent extends object> i
             onProperty: this._onProperty,
             keyStrategy: this._keyStrategy
         };
-        return new OperationDescriptor(OperationTypes.JoinEvent, [eventTypeId], configuration, children);
+        return new OperationDescriptor(OperationTypes.JoinEvent,
+            Expression.equal(
+                Expression.property('eventType'),
+                Expression.constant(eventTypeId)),
+            configuration, children);
     }
 }

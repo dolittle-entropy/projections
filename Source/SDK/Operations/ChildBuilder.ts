@@ -10,6 +10,7 @@ import { PropertyUtilities } from '../../PropertyUtilities';
 import { MissingIdentifierPropertyForChildDocument } from './MissingIdentifierPropertyForChildDocument';
 import { MissingPropertyToStoreChildrenIn } from './MissingPropertyToStoreChildrenIn';
 import OperationTypes from '../../OperationTypes';
+import { Expression } from '../Expressions';
 
 export type ChildBuilderCallback<TDocument extends object, TChild extends object> = (builder: ChildBuilder<TDocument, TChild>) => void;
 
@@ -57,6 +58,6 @@ export class ChildBuilder<TDocument extends object, TChild extends object> imple
             storedInProperty: this._storedInProperty
         };
         const children = this._builders.map(_ => _.build(buildContext));
-        return new OperationDescriptor(OperationTypes.Child, [], configuration, children);
+        return new OperationDescriptor(OperationTypes.Child, Expression.noOp(), configuration, children);
     }
 }

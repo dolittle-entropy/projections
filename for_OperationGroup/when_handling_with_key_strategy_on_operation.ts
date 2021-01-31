@@ -3,7 +3,7 @@
 
 import * as given from './given';
 import sinon from 'sinon';
-import { IOperationDataContext } from '../IOperationDataContext';
+import { IOperationDataContext } from '@dolittle/projections/Service/Operations/IOperationDataContext';
 
 describe('when handling with key strategy on operation', async () => {
     const context = new given.an_operation_group_with_two_operations();

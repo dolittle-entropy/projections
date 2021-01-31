@@ -6,14 +6,15 @@ import { IOperationBuilder } from '../IOperationBuilder';
 import { OperationDescriptor } from '../OperationDescriptor';
 import { SetBuilder } from './SetBuilder';
 import { OperationBuilderContext } from '../OperationBuilderContext';
-import { IChildOperationBuilder } from '../IChildOperationBuilder';
 import { PropertyUtilities } from '../../PropertyUtilities';
 import { KeyStrategyDescriptor } from '../KeyStrategyDescriptor';
 import OperationTypes from '../../OperationTypes';
+import { Expression } from '../Expressions';
 
 export type FromEventBuilderCallback<TDocument extends object, TEvent extends object> = (builder: FromEventBuilder<TDocument, TEvent>) => void;
 
 export type FromEventConfiguration = {
+    filter: Expression;
     keyStrategy: KeyStrategyDescriptor;
 };
 
@@ -21,7 +22,7 @@ export type FromEventConfiguration = {
  * Represents the builder for building From event operation.
  */
 export class FromEventBuilder<TDocument extends object, TEvent extends object> implements IOperationBuilder {
-    private readonly _builders: IChildOperationBuilder[] = [];
+    private readonly _builders: IOperationBuilder[] = [];
     private _keyStrategy: KeyStrategyDescriptor = KeyStrategyDescriptor.fromEventSourceId();
 
     constructor(private readonly _eventType: Constructor<TEvent>) { }
@@ -43,8 +44,13 @@ export class FromEventBuilder<TDocument extends object, TEvent extends object> i
         const children = this._builders.map(_ => _.build(buildContext));
         const eventTypeId = buildContext.eventTypes.getFor(this._eventType).id;
         const configuration: FromEventConfiguration = {
+            filter: Expression.equal(Expression.property('eventType'), Expression.constant(eventTypeId)),
             keyStrategy: this._keyStrategy
         };
-        return new OperationDescriptor(OperationTypes.FromEvent, [eventTypeId], configuration, children);
+        return new OperationDescriptor(OperationTypes.FromEvent,
+            Expression.equal(
+                Expression.property('eventType'),
+                Expression.constant(eventTypeId)),
+            configuration, children);
     }
 }

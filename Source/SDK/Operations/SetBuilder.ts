@@ -3,22 +3,22 @@
 
 import { PropertyAccessor } from '@dolittle/types';
 import { EventContext } from '@dolittle/sdk.events';
-import { ChildOperationDescriptor } from '../ChildOperationDescriptor';
-import { IChildOperationBuilder } from '../IChildOperationBuilder';
 import { OperationBuilderContext } from '../OperationBuilderContext';
 import { PropertyUtilities } from '../../PropertyUtilities';
-import ChildOperationTypes from '../..//ChildOperationTypes';
 import { MissingOperationForSettingProperty } from './MissingOperationForSettingProperty';
 import { Expression } from '../Expressions';
+import OperationTypes from '../../OperationTypes';
+import { OperationDescriptor } from '../OperationDescriptor';
+import { IOperationBuilder } from '../IOperationBuilder';
 
 export type PropertyMapConfiguration = {
     sourceProperty: string;
     targetProperty: string;
 };
 
-export class SetBuilder<TParent, TDocument, TEvent extends object> implements IChildOperationBuilder {
+export class SetBuilder<TParent, TDocument, TEvent extends object> implements IOperationBuilder {
 
-    private _operationDescriptor?: ChildOperationDescriptor;
+    private _operationDescriptor?: OperationDescriptor;
 
     constructor(private readonly _targetPropertyPath: string, private readonly _parent: TParent) {
     }
@@ -29,8 +29,7 @@ export class SetBuilder<TParent, TDocument, TEvent extends object> implements IC
             Expression.property(`model.${this._targetPropertyPath}`),
             Expression.property(`event.${propertyDescriptor.path}`)
         );
-        this._operationDescriptor = new ChildOperationDescriptor(ChildOperationTypes.Expression, expression);
-
+        this._operationDescriptor = new OperationDescriptor(OperationTypes.Expression, Expression.noOp(), expression);
         return this._parent;
     }
 
@@ -40,11 +39,11 @@ export class SetBuilder<TParent, TDocument, TEvent extends object> implements IC
             Expression.property(`model.${this._targetPropertyPath}`),
             Expression.property(`eventContext.${propertyDescriptor.path}`)
         );
-        this._operationDescriptor = new ChildOperationDescriptor(ChildOperationTypes.Expression, expression);
+        this._operationDescriptor = new OperationDescriptor(OperationTypes.Expression, Expression.noOp(), expression);
         return this._parent;
     }
 
-    build(buildContext: OperationBuilderContext): ChildOperationDescriptor {
+    build(buildContext: OperationBuilderContext): OperationDescriptor {
         this.throwIfMissingOperation();
         return this._operationDescriptor!;
     }

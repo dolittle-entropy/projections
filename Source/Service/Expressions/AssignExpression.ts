@@ -14,6 +14,7 @@ export class AssignExpression extends BinaryExpression {
     invoke(context: IOperationDataContext) {
         const value = this.right.invoke(context);
         (this.left as PropertyExpression).propertyAccessor.set(context, value);
+        return true;
     }
 
     readonly operationString: string = '=';

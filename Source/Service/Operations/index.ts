@@ -3,8 +3,6 @@
 
 export * from './ExpressionOperation';
 export * from './FromEvent';
-export * from './IBaseOperation';
-export * from './IChildOperation';
 export * from './IOperation';
 export * from './IOperationContext';
 export * from './IOperationDataContext';
@@ -17,5 +15,4 @@ export * from './OperationDataContext';
 export * from './OperationGroup';
 export * from './OperationsConverter';
 export * from './UnableToResolveKeyForEvent';
-export * from './UnknownChildOperation';
 export * from './UnknownOperation';

@@ -3,10 +3,15 @@
 
 import { Expression } from './Expression';
 import { BinaryExpression } from './BinaryExpression';
+import { IOperationDataContext } from '../Operations';
 
 export class AddExpression extends BinaryExpression {
     constructor(left: Expression, right: Expression) {
         super(left, right);
+    }
+
+    invoke(context: IOperationDataContext) {
+        throw new Error('Not implemented');
     }
 
     readonly operationString: string = '+';

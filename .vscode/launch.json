@@ -12,6 +12,7 @@
             "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
             "args": ["${workspaceFolder}/Samples/Basic/index.ts"],
             "cwd": "${workspaceFolder}/Samples/Basic",
+            "preLaunchTask": "tsc: build - Sample",
             "skipFiles": [
                 "<node_internals>/**",
                 "node_modules/**"

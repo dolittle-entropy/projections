@@ -2,9 +2,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import sinon from 'sinon';
-import { NullKeyStrategy } from '../../../Keys/NullKeyStrategy';
-import { IOperation } from '../../../Operations/IOperation';
-import { OperationContext } from '../../../Operations/OperationContext';
+import { NullKeyStrategy } from '@dolittle/projections/Service/Keys/NullKeyStrategy';
+import { IOperation } from '@dolittle/projections/Service/Operations/IOperation';
+import { OperationContext } from '@dolittle/projections/Service/Operations/OperationContext';
 import { an_operation_group_with_two_operations } from './an_operation_group_with_two_operations';
 
 export class an_operation_group_with_two_operations_and_child_operations extends an_operation_group_with_two_operations {

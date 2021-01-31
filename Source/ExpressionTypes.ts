@@ -14,5 +14,8 @@ export default {
     GreaterThan: ExpressionTypeId.from('3f0ccb8f-2930-4e2d-a523-ad0f06861c5f'),
     LessThan: ExpressionTypeId.from('95a7bf0f-9f40-49bd-8acb-d45f90ec2e83'),
     GreaterThanOrEqual: ExpressionTypeId.from('10e262ed-3430-4acc-ba12-5bf093be26df'),
-    LessThanOrEqual: ExpressionTypeId.from('9f578fe3-a6e3-4165-991e-9c4c1c3067bd')
+    LessThanOrEqual: ExpressionTypeId.from('9f578fe3-a6e3-4165-991e-9c4c1c3067bd'),
+    And: ExpressionTypeId.from('7125599e-dc57-402a-8fd2-61679082070e'),
+    Or: ExpressionTypeId.from('dc5e5a49-dc5d-4b4d-aa41-fae416b29818'),
+    NoOp: ExpressionTypeId.from('93d6866d-dd07-4443-9816-aa7baebec0e0')
 };

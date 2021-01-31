@@ -70,6 +70,18 @@ export class ExpressionsConverter {
                 ExpressionsConverter.toExpression((expression as Sdk.BinaryExpression).right));
         }
 
+        if (expression instanceof Sdk.AndExpression) {
+            return Expression.and(
+                ExpressionsConverter.toExpression((expression as Sdk.BinaryExpression).left),
+                ExpressionsConverter.toExpression((expression as Sdk.BinaryExpression).right));
+        }
+
+        if (expression instanceof Sdk.OrExpression) {
+            return Expression.or(
+                ExpressionsConverter.toExpression((expression as Sdk.BinaryExpression).left),
+                ExpressionsConverter.toExpression((expression as Sdk.BinaryExpression).right));
+        }
+
         throw new UnknownExpression(expression);
     }
 }

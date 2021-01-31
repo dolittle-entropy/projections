@@ -11,9 +11,7 @@ export abstract class BinaryExpression extends Expression {
 
     abstract operationString: string;
 
-    invoke(context: IOperationDataContext) {
-        throw new Error('Method not implemented.');
-    }
+    abstract invoke(context: IOperationDataContext);
 
     toString() {
         return `${this.left.toString()} ${this.operationString} ${this.right.toString()}`;

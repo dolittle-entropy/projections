@@ -3,7 +3,7 @@
 
 import { Logger } from 'winston';
 
-import { EventContext, EventTypeId, StreamId } from '@dolittle/sdk.events';
+import { EventContext, EventTypeId, StreamId, EventSourceId } from '@dolittle/sdk.events';
 import { IOperation } from './IOperation';
 import { IOperationGroup } from './IOperationGroup';
 import { IState } from '../IState';
@@ -15,6 +15,7 @@ import { IOperationDataContext } from './IOperationDataContext';
 import { IOperationContext } from './IOperationContext';
 import { IObjectComparer } from '../Changes/IObjectComparer';
 import { Changeset } from '../Changes';
+import { Guid } from '@dolittle/rudiments';
 
 export class OperationGroup implements IOperationGroup {
 
@@ -70,6 +71,10 @@ export class OperationGroup implements IOperationGroup {
         if (!key) {
             const keyStrategy = this.getKeyStrategyFor(keyContext);
             key = keyStrategy.get(keyContext);
+        }
+
+        if (key instanceof Guid ||key instanceof EventSourceId) {
+            key = key.toString();
         }
         return key;
     }

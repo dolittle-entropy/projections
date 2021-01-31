@@ -5,6 +5,8 @@ import { Collection, FilterQuery } from 'mongodb';
 import { IState } from '../IState';
 import { PropertyAccessor } from '../Properties';
 import { Logger } from 'winston';
+import { Guid } from '@dolittle/rudiments';
+import { EventSourceId } from '@dolittle/sdk.events';
 
 export class State implements IState {
 
@@ -29,6 +31,9 @@ export class State implements IState {
 
     async setMany(property: PropertyAccessor, id: any, content: any): Promise<void> {
         const filter: any = {};
+        if (id instanceof Guid ||id instanceof EventSourceId) {
+            id = id.toString();
+        }
         property.set(filter, id);
 
         this._logger.info(`Update '${this._collection.collectionName}'`, filter, content);

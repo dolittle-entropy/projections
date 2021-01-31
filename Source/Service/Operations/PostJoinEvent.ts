@@ -8,6 +8,8 @@ import { PropertyAccessor, PropertyPath } from '../Properties';
 import { IOperation } from './IOperation';
 import { IOperationContext } from './IOperationContext';
 import { UpdatePropertiesOnMany } from '../Changes/UpdatePropertiesOnMany';
+import { Guid } from '@dolittle/rudiments';
+import { EventSourceId } from '@dolittle/sdk.events';
 
 export class PostJoinEvent implements IOperation {
     constructor(readonly filter: Expression, readonly keyStrategy: IKeyStrategy, readonly onProperty: PropertyAccessor, readonly children: IOperation[]) {
@@ -15,7 +17,10 @@ export class PostJoinEvent implements IOperation {
 
     async perform(context: IOperationContext) {
         if (context.hasParentGroup) {
-            const key = this.keyStrategy.get(context.dataContext);
+            let key = this.keyStrategy.get(context.dataContext);
+            if (key instanceof Guid ||key instanceof EventSourceId) {
+                key = key.toString();
+            }
             const propertiesChanged = context.comparer.compare({}, context.dataContext.model);
             if (propertiesChanged.length > 0) {
                 let actualOnProperty = this.onProperty;

@@ -1,0 +1,12 @@
+{
+    "extends": "../../../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "./wwwroot",
+        "lib": ["es5", "es6", "dom"]
+    },
+    "references": [
+        {
+            "path": "../Shared/Common"
+        }
+    ]
+}

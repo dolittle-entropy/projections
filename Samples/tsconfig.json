@@ -4,8 +4,6 @@
         "rootDir": "./",
         "outDir": "dist"
     },
-    "paths": {
-    },
     "references": [
         {
             "path": "./Basic"

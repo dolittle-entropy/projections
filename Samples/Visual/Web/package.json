@@ -1,0 +1,29 @@
+{
+    "name": "portal.web",
+    "version": "1.0.0",
+    "description": "",
+    "private": true,
+    "author": "Dolittle",
+    "license": "MIT",
+    "scripts": {
+        "build": "webpack --mode=production",
+        "build:dev": "webpack --mode=development",
+        "start:dev": "webpack-cli serve --mode=development --watch --progress --hot",
+        "clean": "tsc -b --clean",
+        "lint": "eslint '**/*.{js,ts,tsx}' --quiet --fix",
+        "lint:ci": "eslint '**/*.{js,ts,tsx}' --quiet",
+        "ci": "yarn clean && yarn lint:ci && yarn build"
+    },
+    "dependencies": {
+        "@shared/common": "1.0.0",
+        "@fluentui/react-charting": "5.0.0-beta.0",
+        "@uifabric/icons": "7.5.17",
+        "@fluentui/react": "8.0.0-beta.31",
+        "@fluentui/react-hooks": "8.0.0-beta.0",
+        "@dolittle/vanir-react": "^8.0.0",
+        "@dolittle/vanir-web": "^8.0.0"
+    },
+    "devDependencies": {
+        "@types/react-router-dom": "5.1.6"
+    }
+}

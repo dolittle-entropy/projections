@@ -73,7 +73,7 @@ export class OperationGroup implements IOperationGroup {
             key = keyStrategy.get(keyContext);
         }
 
-        if (key instanceof Guid ||key instanceof EventSourceId) {
+        if (key instanceof Guid || key instanceof EventSourceId) {
             key = key.toString();
         }
         return key;

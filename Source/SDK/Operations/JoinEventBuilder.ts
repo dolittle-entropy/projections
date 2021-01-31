@@ -28,13 +28,13 @@ export class JoinEventBuilder<TDocument extends object, TEvent extends object> i
 
     on(property: PropertyAccessor<TDocument>): JoinEventBuilder<TDocument, TEvent> {
         const propertyDescriptor = PropertyUtilities.getPropertyDescriptorFor(property);
-        this._onProperty = propertyDescriptor.path;
+        this._onProperty = `model.${propertyDescriptor.path}`;
         return this;
     }
 
     usingKeyFrom(property: PropertyAccessor<TEvent>): JoinEventBuilder<TDocument, TEvent> {
         const propertyDescriptor = PropertyUtilities.getPropertyDescriptorFor(property);
-        this._keyStrategy = new KeyStrategyDescriptor(Expression.property(propertyDescriptor.path));
+        this._keyStrategy = KeyStrategyDescriptor.fromProperty(`event.${propertyDescriptor.path}`);
         return this;
     }
 

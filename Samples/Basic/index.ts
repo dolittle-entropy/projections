@@ -62,13 +62,13 @@ export class SomeChild {
                 .set(r => r.featureId).to(ev => ev.featureId)
                 .set(r => r.componentId).to(ev => ev.componentId)
                 .set(r => r.lastUpdated).toContext(ec => ec.occurred))
-            /*.join(FeatureAdded, e => e
+            .join(FeatureAdded, e => e
                 .on(r => r.featureId)
                 .usingKeyFrom(ev => ev.id)
                 .set(r => r.featureName).to(ev => ev.name))
             .join(ComponentAdded, e => e
                 .on(r => r.componentId)
-                .set(r => r.componentName).to(ev => ev.name))*/
+                .set(r => r.componentName).to(ev => ev.name))
             /*.children(SomeChild, c => c
                 .identifiedBy(cc => cc.id)
                 .storedIn(cc => cc.children)
@@ -93,10 +93,10 @@ export class SomeChild {
         const componentId = '7c5b0da1-cfdf-48c0-a8c7-e3ad7b751b21';
         const ruleId = 'afe8b77f-5430-4a98-8fa5-a7c6f63c2e1f';
 
-        //await eventStore.commit(new FeatureAdded(featureId, 'My Feature'), featureId);
+        await eventStore.commit(new FeatureAdded(featureId, 'My Feature'), featureId);
         await eventStore.commit(new RuleDefined(ruleId, 1, 2, featureId, componentId), ruleId);
-        //await eventStore.commit(new ComponentAdded('My Component'), componentId);
-        //await eventStore.commit(new RuleDefined(ruleId, 1, 3, featureId, componentId), ruleId);
+        await eventStore.commit(new ComponentAdded('My Component'), componentId);
+        await eventStore.commit(new RuleDefined(ruleId, 1, 3, featureId, componentId), ruleId);
 
         await res.send('Ok');
     });

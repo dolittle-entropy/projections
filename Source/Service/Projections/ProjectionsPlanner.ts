@@ -15,7 +15,7 @@ import { KeyStrategiesConverter } from '../Keys';
 import { JoinEvent, OperationGroup, OperationsConverter, PostJoinEvent, PostRelationalPropertySet } from '../Operations';
 import { ChildFromEvent } from '../Operations/ChildFromEvent';
 import { ExpressionKeyStrategy } from '../Keys/ExpressionKeyStrategy';
-import { Expression } from '../Expressions';
+import { Expression, ExpressionsConverter } from '../Expressions';
 import { ExpressionOperation } from '../Operations/ExpressionOperation';
 
 
@@ -46,18 +46,22 @@ export class ProjectionsPlanner implements IProjectionsPlanner {
         const intermediateStateName = `intermediates-${stream.toString()}`;
         const intermediateState = await this._intermediatesManager.getFor(intermediateStateName);
 
-        /*
         joinOperations.forEach(_ => {
-            _.children.push(new PostJoinEvent(_.eventTypes, _.keyStrategy, _.onProperty, []));
+            _.children.push(new PostJoinEvent(_.filter, _.keyStrategy, _.onProperty, []));
+
+            // Find properties that matches the ON property - we want to
+
             const filtered = fromOperations
                 .flatMap(o => o.children)
                 .filter(o =>
                     (o instanceof ExpressionOperation) &&
-                    ((o as PropertyMapper).targetProperty.path.path === _.onProperty.path.path)) as PropertyMapper[];
+                    (o as ExpressionOperation).hasAssignmentToProperty() &&
+                    (o as ExpressionOperation).getAssignmentProperty().propertyAccessor.path.path === _.onProperty.path.path) as ExpressionOperation[];
+
             filtered.forEach(_ => {
-                _.children.push(new PostRelationalPropertySet(_.keyStrategy, _.targetProperty, intermediateState, []));
+                _.children.push(new PostRelationalPropertySet(_.keyStrategy, _.getAssignmentProperty().propertyAccessor, intermediateState, []));
             });
-        });*/
+        });
 
         const joinsOperationGroup = new OperationGroup(
             'Join',

@@ -3,10 +3,10 @@
 
 import { IOperationContext } from './IOperationContext';
 import { IKeyStrategy } from '../Keys';
-import { Expression } from '../Expressions';
+import { AssignExpression, Expression, PropertyExpression } from '../Expressions';
 import { OperationDataContext } from './OperationDataContext';
 import { IOperation } from './IOperation';
-
+import { MissingPropertyExpression } from './MissingPropertyExpression';
 export class ExpressionOperation implements IOperation {
     readonly filter: Expression = Expression.noOp();
 
@@ -20,4 +20,18 @@ export class ExpressionOperation implements IOperation {
         return dataContext.model;
     }
 
+    hasAssignmentToProperty(): boolean {
+        if (this.expression instanceof AssignExpression) {
+            return (this.expression as AssignExpression).left instanceof PropertyExpression;
+        }
+        return false;
+    }
+
+    getAssignmentProperty(): PropertyExpression {
+        if (this.expression instanceof AssignExpression) {
+            return (this.expression as AssignExpression).left as PropertyExpression;
+        }
+
+        throw new MissingPropertyExpression(this.expression);
+    }
 }

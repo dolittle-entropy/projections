@@ -7,6 +7,7 @@ import React from 'react';
 import { Events } from './events/Events';
 import { EventTypes } from './eventTypes/EventTypes';
 import { HomeViewModel } from './HomeViewModel';
+import { Projections } from './projections/Projections';
 
 export const Home = withViewModel(HomeViewModel, ({ viewModel }) => {
 
@@ -19,7 +20,8 @@ export const Home = withViewModel(HomeViewModel, ({ viewModel }) => {
                 <PivotItem headerText="Events" itemIcon="Picture">
                     <Events />
                 </PivotItem>
-                <PivotItem headerText="Projections" itemIcon="OpenSource">
+                <PivotItem headerText="Projections" itemIcon="MergeDuplicate">
+                    <Projections/>
                 </PivotItem>
                 <PivotItem headerText="Changes" itemIcon="ChangeEntitlements">
                 </PivotItem>

@@ -35,7 +35,6 @@ export class EventsViewModel {
 
         const result = await this.dataSource.query<AllEventTypeDefinitionsQuery>({ query, fetchPolicy: 'no-cache' });
         this.eventTypes = result.data.allEventTypes;
-        console.log(this.eventTypes);
     }
 
     async writeEventTypeDefinition(definition: EventTypeDefinition) {

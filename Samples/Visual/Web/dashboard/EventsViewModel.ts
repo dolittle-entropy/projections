@@ -22,15 +22,20 @@ export class EventsViewModel {
     async populate() {
         const query = gql`
             query {
-            allEventTypes {
-                id,
-                name
-            }
+                allEventTypes {
+                    id
+                    name
+                    properties {
+                        name
+                        type
+                    }
+                }
             }        
         `;
 
-        const result = await this.dataSource.query<AllEventTypeDefinitionsQuery>({ query });
+        const result = await this.dataSource.query<AllEventTypeDefinitionsQuery>({ query, fetchPolicy: 'no-cache' });
         this.eventTypes = result.data.allEventTypes;
+        console.log(this.eventTypes);
     }
 
     async writeEventTypeDefinition(definition: EventTypeDefinition) {
@@ -43,7 +48,12 @@ export class EventsViewModel {
             input: {
                 id: definition.id.toString(),
                 name: definition.name,
-                properties: definition.properties
+                properties: definition.properties.map(_ => {
+                    return {
+                        name: _.name,
+                        type: _.type
+                    };
+                })
             }
         };
         await this.dataSource.mutate({mutation, variables: data});

@@ -5,12 +5,12 @@ import React from 'react';
 
 import { DialogResult, IDialogProps, withViewModel } from '@dolittle/vanir-react';
 import { EventEditorDialogViewModel } from './EventEditorDialogViewModel';
-import { DetailsList, Dialog, DialogFooter, DialogType, Dropdown, IColumn, IconButton, IDropdownOption, PrimaryButton, SelectionMode, Stack, TextField } from '@fluentui/react';
+import { DefaultButton, DetailsList, Dialog, DialogFooter, DialogType, Dropdown, IColumn, IconButton, IDialogContentProps, IDropdownOption, PrimaryButton, SelectionMode, Stack, TextField } from '@fluentui/react';
 import { EventEditorDialogInput } from './EventEditorDialogInput';
 import { EventEditorDialogOutput } from './EventEditorDialogOutput';
 import { PropertyType } from './PropertyType';
 
-const dialogContentProps = {
+const dialogContentProps: IDialogContentProps = {
     type: DialogType.normal,
     title: 'Event',
     closeButtonAriaLabel: 'Close'
@@ -30,19 +30,19 @@ export const EventEditorDialog = withViewModel<EventEditorDialogViewModel, IDial
             key: 'Name',
             name: 'Name',
             fieldName: 'name',
-            minWidth: 50,
+            minWidth: 100,
             onRender: (item, index, column) => <TextField defaultValue={item.name} onChange={(e, nv) => item.name = nv} />
         },
         {
             key: 'Type',
             name: 'Type',
             fieldName: 'type',
-            minWidth: 50,
-            onRender: (item, index, column) => <Dropdown defaultValue={item.type} options={propertyTypeOptions} onChange={(e, nv) => item.type = nv?.key} />
+            minWidth: 100,
+            onRender: (item, index, column) => <Dropdown defaultSelectedKey={item.type} options={propertyTypeOptions} onChange={(e, nv) => item.type = nv?.key} />
         }
     ];
 
-    const close = () => {
+    const done = () => {
         props.onClose(DialogResult.Success, {
             definition: {
                 id: viewModel.id,
@@ -52,10 +52,15 @@ export const EventEditorDialog = withViewModel<EventEditorDialogViewModel, IDial
         });
     };
 
+    function cancel() {
+        props.onClose(DialogResult.Cancelled);
+    }
+
     return (
         <Dialog
+            minWidth={600}
             hidden={!props.visible}
-            onDismiss={close}
+            onDismiss={done}
             dialogContentProps={dialogContentProps}>
 
             <Stack>
@@ -67,7 +72,8 @@ export const EventEditorDialog = withViewModel<EventEditorDialogViewModel, IDial
             </Stack>
 
             <DialogFooter>
-                <PrimaryButton onClick={close} text="Close" />
+                <PrimaryButton onClick={done} text="Done" />
+                <DefaultButton onClick={cancel} text="Cancel" />
             </DialogFooter>
         </Dialog>
     );

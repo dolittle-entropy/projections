@@ -25,6 +25,8 @@ export const Home = withViewModel(HomeViewModel, ({ viewModel }) => {
                 </PivotItem>
                 <PivotItem headerText="Changes" itemIcon="ChangeEntitlements">
                 </PivotItem>
+                <PivotItem headerText="Read Models" itemIcon="ModelingView">
+                </PivotItem>
             </Pivot>
         </>
     );

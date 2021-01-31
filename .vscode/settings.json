@@ -14,9 +14,11 @@
     "eslint.alwaysShowStatus": true,
 
     "cSpell.words": [
+        "fluentui",
         "froms",
         "grpc",
         "luxon",
+        "tsyringe",
         "typegoose",
         "upsert"
     ]

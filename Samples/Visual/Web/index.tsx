@@ -17,6 +17,7 @@ const version: VersionInfo = {
 
 import './index.scss';
 import { App } from './App';
+import './theme';
 
 ReactDOM.render(
     <Bootstrapper name="Portal" prefix="" version={version}>

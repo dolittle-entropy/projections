@@ -22,6 +22,7 @@ let _container: IContainer = new Container();
 const projectionsConfigurationBuilder = new StateConfigurationBuilder();
 const intermediatesConfigurationBuilder = new StateConfigurationBuilder();
 
+
 declare module '@dolittle/sdk' {
     interface ClientBuilder {
 

@@ -5,8 +5,8 @@ import 'reflect-metadata';
 
 import { Host } from '@dolittle/vanir-backend';
 import { RegisterRoutes } from './routes';
-import { EventTypeQueries } from './events/EventTypeQueries';
-import { EventTypeMutations } from './events/EventTypeMutations';
+import { EventTypeQueries } from './eventTypes/EventTypeQueries';
+import { EventTypeMutations } from './eventTypes/EventTypeMutations';
 const swaggerDoc = require('./swagger.json');
 
 (async () => {

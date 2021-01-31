@@ -4,7 +4,7 @@
 import { withViewModel } from '@dolittle/vanir-react';
 import { Pivot, PivotItem, Stack, StackItem } from '@fluentui/react';
 import React from 'react';
-import { Events } from './Events';
+import { Events } from './eventTypes/Events';
 import { HomeViewModel } from './HomeViewModel';
 
 export const Home = withViewModel(HomeViewModel, ({ viewModel }) => {

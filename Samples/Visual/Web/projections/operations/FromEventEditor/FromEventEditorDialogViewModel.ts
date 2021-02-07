@@ -1,10 +1,8 @@
 // Copyright (c) Dolittle. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 import { DataSource } from '@dolittle/vanir-web';
-import gql from 'graphql-tag';
 import { injectable } from 'tsyringe';
 import { EventTypeDefinition } from '../../../eventTypes/EventTypeDefinition';
-import { AllEventTypeDefinitionsQuery } from '../../../eventTypes/AllEventTypeDefinitionsQuery';
 import ExpressionTypes from '../ExpressionTypes';
 import { BinaryExpression } from '../BinaryExpression';
 import { PropertyExpression } from '../PropertyExpression';
@@ -53,6 +51,7 @@ export class FromEventEditorDialogViewModel {
         const expression = new BinaryExpression();
         expression.expressionType = ExpressionTypes.Assign;
         expression.left = new PropertyExpression();
+        expression.right = new PropertyExpression();
         this.expressions = [...this.expressions, expression];
     }
 

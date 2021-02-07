@@ -98,7 +98,7 @@ export const FromEventEditorDialog = withViewModel<FromEventEditorDialogViewMode
 
     const renderExpressionColumn = (item: BinaryExpression) => {
         return <Dropdown
-            defaultSelectedKey={item.expressionType.toString()}
+            defaultSelectedKey={expressionTypes.find(_ => _.data.toString() === item.expressionType.toString())!.key}
             options={expressionTypes}
             onChange={(e, nv) => viewModel.handleExpressionTypeFor(item, nv?.key as number || ExpressionTypeKey.assignProperty)}
         />;

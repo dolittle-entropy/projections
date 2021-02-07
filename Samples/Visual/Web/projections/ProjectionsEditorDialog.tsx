@@ -29,7 +29,6 @@ import { FromEventEditorDialog } from './operations/FromEventEditor/FromEventEdi
 import { FromEvent } from './operations/FromEvent';
 import { KeyStrategyEditor } from './KeyStrategyEditor';
 import OperationTypes from './operations/OperationTypes';
-import { Guid } from '@dolittle/rudiments';
 import { Operation } from './operations/Operation';
 
 const dialogContentProps: IDialogContentProps = {

@@ -16,7 +16,7 @@ export const ReadModelTypes = withViewModel(ReadModelTypesViewModel, ({ viewMode
     const [showReadModelEditor, readModelEditorDialogProps] = useDialog<ReadModelTypeDialogInput, ReadModelTypeDialogOutput>(async (result, output?) => {
         if (result === DialogResult.Success) {
             if (output) {
-                await viewModel.writeReadModelTypeDefinition(output.definition);
+                await viewModel.saveReadModelTypeDefinition(output.definition);
                 await viewModel.populate();
             }
         }

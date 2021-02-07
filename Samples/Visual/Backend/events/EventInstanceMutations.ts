@@ -4,8 +4,7 @@
 import { injectable } from 'tsyringe';
 import { Resolver, Mutation, Arg, InputType, Field } from 'type-graphql';
 import { Guid } from '@dolittle/rudiments';
-import { EventInstanceForWriting } from './EventInstanceForWriting';
-import { EventInstanceModel } from './EventInstance';
+import { EventInstance, EventInstanceModel } from './EventInstance';
 import { IEventStore } from '@dolittle/vanir-backend/dist/dolittle';
 
 @injectable()
@@ -16,10 +15,10 @@ export class EventInstanceMutations {
     }
 
     @Mutation(() => Boolean)
-    async writeEventInstance(@Arg('input') input: EventInstanceForWriting): Promise<boolean> {
+    async writeEventInstance(@Arg('input') input: EventInstance): Promise<boolean> {
         console.log(input.name);
 
-        await EventInstanceModel.updateOne({ _id: input.id }, {
+        await EventInstanceModel.updateOne({ _id: input._id }, {
             name: input.name,
             eventType: input.eventType,
             propertyValues: input.propertyValues
@@ -35,7 +34,7 @@ export class EventInstanceMutations {
     }
 
     @Mutation(() => Boolean)
-    async commitEventInstance(@Arg('input') input: EventInstanceForWriting): Promise<boolean> {
+    async commitEventInstance(@Arg('input') input: EventInstance): Promise<boolean> {
         const event: any = {};
 
         for (const value of input.propertyValues) {

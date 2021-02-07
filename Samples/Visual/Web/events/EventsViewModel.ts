@@ -62,7 +62,7 @@ export class EventsViewModel {
 
     async commitEventInstance(instance: EventInstance) {
         const mutation = gql`
-            mutation CommitEventInstance($input: EventInstanceForWriting!) {
+            mutation CommitEventInstance($input: EventInstanceInput!) {
                 commitEventInstance(input: $input) 
             }`;
 
@@ -86,7 +86,7 @@ export class EventsViewModel {
 
     async writeEventInstance(instance: EventInstance) {
         const mutation = gql`
-            mutation WriteEventInstance($input: EventInstanceForWriting!) {
+            mutation WriteEventInstance($input: EventInstanceInput!) {
                 writeEventInstance(input: $input) 
             }`;
 

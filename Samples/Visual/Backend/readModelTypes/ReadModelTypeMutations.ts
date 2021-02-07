@@ -3,8 +3,7 @@
 
 import { injectable } from 'tsyringe';
 import { Resolver, Mutation, Arg } from 'type-graphql';
-import { ReadModelTypeDefinitionModel } from './ReadModelTypeDefinition';
-import { ReadModelTypeDefinitionForWriting } from './ReadModelTypeDefinitionForWriting';
+import { ReadModelTypeDefinition, ReadModelTypeDefinitionModel } from './ReadModelTypeDefinition';
 import { Guid } from '@dolittle/rudiments';
 
 @injectable()
@@ -12,8 +11,8 @@ import { Guid } from '@dolittle/rudiments';
 export class ReadModelTypeMutations {
 
     @Mutation(() => Boolean)
-    async writeReadModelDefinition(@Arg('input') input: ReadModelTypeDefinitionForWriting): Promise<boolean> {
-        await ReadModelTypeDefinitionModel.updateOne({ _id: input.id }, {
+    async saveReadModelTypeDefinition(@Arg('input') input: ReadModelTypeDefinition): Promise<boolean> {
+        await ReadModelTypeDefinitionModel.updateOne({ _id: input._id }, {
             name: input.name,
             properties: input.properties
         }, { upsert: true });
@@ -22,7 +21,7 @@ export class ReadModelTypeMutations {
     }
 
     @Mutation(() => Boolean)
-    async deleteReadModelDefinition(@Arg('id') id: string): Promise<boolean> {
+    async deleteReadModelTypeDefinition(@Arg('id') id: string): Promise<boolean> {
         await ReadModelTypeDefinitionModel.deleteOne({ _id: Guid.parse(id) });
         return true;
     }

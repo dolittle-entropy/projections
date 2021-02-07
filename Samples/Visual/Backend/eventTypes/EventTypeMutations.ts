@@ -3,8 +3,7 @@
 
 import { injectable } from 'tsyringe';
 import { Resolver, Mutation, Arg } from 'type-graphql';
-import { EventTypeDefinitionModel } from './EventTypeDefinition';
-import { EventTypeDefinitionForWriting } from './EventTypeDefinitionForWriting';
+import { EventTypeDefinition, EventTypeDefinitionModel } from './EventTypeDefinition';
 import { Guid } from '@dolittle/rudiments';
 
 @injectable()
@@ -12,8 +11,8 @@ import { Guid } from '@dolittle/rudiments';
 export class EventTypeMutations {
 
     @Mutation(() => Boolean)
-    async writeEventTypeDefinition(@Arg('input') input: EventTypeDefinitionForWriting): Promise<boolean> {
-        await EventTypeDefinitionModel.updateOne({ _id: input.id }, {
+    async saveEventTypeDefinition(@Arg('input') input: EventTypeDefinition): Promise<boolean> {
+        await EventTypeDefinitionModel.updateOne({ _id: input._id }, {
             name: input.name,
             properties: input.properties
         }, { upsert: true });

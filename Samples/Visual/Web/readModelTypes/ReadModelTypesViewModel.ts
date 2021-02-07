@@ -37,10 +37,10 @@ export class ReadModelTypesViewModel {
         this.readModels = result.data.allReadModels;
     }
 
-    async writeReadModelTypeDefinition(definition: ReadModelTypeDefinition) {
+    async saveReadModelTypeDefinition(definition: ReadModelTypeDefinition) {
         const mutation = gql`
-            mutation WriteReadModelTypeDefinition($input: ReadModelTypeDefinitionForWriting!) {
-                writeReadModelDefinition(input: $input) 
+            mutation SaveReadModelTypeDefinition($input: ReadModelTypeDefinitionInput!) {
+                saveReadModelTypeDefinition(input: $input) 
             }`;
 
         const data = {

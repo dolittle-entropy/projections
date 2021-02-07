@@ -2,13 +2,14 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import { prop, getModelForClass, modelOptions, Severity } from '@typegoose/typegoose';
-import { ObjectType, Field } from 'type-graphql';
+import { ObjectType, Field, InputType } from 'type-graphql';
 import { Guid } from '@dolittle/rudiments';
 import { guid } from '@dolittle/vanir-backend/dist/data';
 import { PropertyDefinition } from '../common/PropertyDefinition';
 
 
 @ObjectType()
+@InputType('ReadModelTypeDefinitionInput', { description: 'Manipulates an Read Model Type definition to the system' })
 @modelOptions({ options: { allowMixed: Severity.ALLOW } })
 export class ReadModelTypeDefinition {
     @Field({ name: 'id' })

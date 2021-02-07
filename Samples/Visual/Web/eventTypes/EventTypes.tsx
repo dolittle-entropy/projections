@@ -16,7 +16,7 @@ export const EventTypes = withViewModel(EventTypesViewModel, ({ viewModel }) => 
     const [showEventEditor, eventEditorDialogProps] = useDialog<EventEditorDialogInput, EventEditorDialogOutput>(async (result, output?) => {
         if (result === DialogResult.Success) {
             if (output) {
-                await viewModel.writeEventTypeDefinition(output.definition);
+                await viewModel.saveEventTypeDefinition(output.definition);
                 await viewModel.populate();
             }
         }

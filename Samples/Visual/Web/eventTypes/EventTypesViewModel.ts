@@ -37,10 +37,10 @@ export class EventTypesViewModel {
         this.eventTypes = result.data.allEventTypes;
     }
 
-    async writeEventTypeDefinition(definition: EventTypeDefinition) {
+    async saveEventTypeDefinition(definition: EventTypeDefinition) {
         const mutation = gql`
-            mutation WriteEventTypeDefinition($input: EventTypeDefinitionForWriting!) {
-                writeEventTypeDefinition(input: $input) 
+            mutation SaveEventTypeDefinition($input: EventTypeDefinitionInput!) {
+                saveEventTypeDefinition(input: $input) 
             }`;
 
         const data = {

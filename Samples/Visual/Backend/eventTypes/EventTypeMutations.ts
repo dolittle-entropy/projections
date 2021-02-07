@@ -5,24 +5,21 @@ import { injectable } from 'tsyringe';
 import { Resolver, Mutation, Arg } from 'type-graphql';
 import { EventTypeDefinition, EventTypeDefinitionModel } from './EventTypeDefinition';
 import { Guid } from '@dolittle/rudiments';
+import { GuidScalar } from '@dolittle/vanir-backend/dist/data';
 
 @injectable()
 @Resolver()
 export class EventTypeMutations {
 
     @Mutation(() => Boolean)
-    async saveEventTypeDefinition(@Arg('input') input: EventTypeDefinition): Promise<boolean> {
-        await EventTypeDefinitionModel.updateOne({ _id: input._id }, {
-            name: input.name,
-            properties: input.properties
-        }, { upsert: true });
-
+    async saveEventTypeDefinition(@Arg('id') id: Guid, @Arg('input') input: EventTypeDefinition): Promise<boolean> {
+        await EventTypeDefinitionModel.updateOne({ _id: id }, input, { upsert: true });
         return true;
     }
 
     @Mutation(() => Boolean)
-    async deleteEventTypeDefinition(@Arg('id') id: string): Promise<boolean> {
-        await EventTypeDefinitionModel.deleteOne({ _id: Guid.parse(id) });
+    async deleteEventTypeDefinition(@Arg('id') id: Guid): Promise<boolean> {
+        await EventTypeDefinitionModel.deleteOne({ _id: id });
         return true;
     }
 }

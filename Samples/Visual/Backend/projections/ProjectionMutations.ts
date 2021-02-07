@@ -11,8 +11,8 @@ import { Guid } from '@dolittle/rudiments';
 export class ProjectionMutations {
 
     @Mutation(() => Boolean)
-    async saveProjectionDefinition(@Arg('input') input: ProjectionDefinition): Promise<boolean> {
-        await ProjectionDefinitionModel.updateOne({ _id: input._id }, {
+    async saveProjectionDefinition(@Arg('id') id: Guid, @Arg('input') input: ProjectionDefinition): Promise<boolean> {
+        await ProjectionDefinitionModel.updateOne({ _id: id }, {
             name: input.name,
         }, { upsert: true });
 
@@ -20,8 +20,8 @@ export class ProjectionMutations {
     }
 
     @Mutation(() => Boolean)
-    async deleteProjectionDefinition(@Arg('id') id: string): Promise<boolean> {
-        await ProjectionDefinitionModel.deleteOne({ _id: Guid.parse(id) });
+    async deleteProjectionDefinition(@Arg('id') id: Guid): Promise<boolean> {
+        await ProjectionDefinitionModel.deleteOne({ _id: id });
         return true;
     }
 }

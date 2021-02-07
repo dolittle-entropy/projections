@@ -1,17 +1,17 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"type": "typescript",
-			"tsconfig": "Samples/Basic/tsconfig.json",
-			"problemMatcher": [
-				"$tsc"
-			],
-			"group": {
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "typescript",
+            "tsconfig": "Samples/Basic/tsconfig.json",
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "group": {
                 "isDefault": true,
                 "kind": "build"
             },
-            "label": "tsc: build - Sample",          
+            "label": "tsc: build - Basic",
             "presentation": {
                 "echo": true,
                 "reveal": "silent",
@@ -20,6 +20,26 @@
                 "showReuseMessage": true,
                 "clear": false
             }
-		}
-	]
+        },
+        {
+            "type": "typescript",
+            "tsconfig": "Samples/Visual/Backend/tsconfig.json",
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "group": {
+                "isDefault": true,
+                "kind": "build"
+            },
+            "label": "tsc: build - Visual",
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            }
+        }
+    ]
 }

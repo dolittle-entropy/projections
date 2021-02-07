@@ -6,6 +6,7 @@ import gql from 'graphql-tag';
 import { AllEventTypeDefinitionsQuery } from './AllEventTypeDefinitionsQuery';
 import { EventTypeDefinition } from './EventTypeDefinition';
 import { injectable } from 'tsyringe';
+import { PropertyType } from '../common/PropertyType';
 
 @injectable()
 export class EventTypesViewModel {
@@ -39,11 +40,12 @@ export class EventTypesViewModel {
 
     async saveEventTypeDefinition(definition: EventTypeDefinition) {
         const mutation = gql`
-            mutation SaveEventTypeDefinition($input: EventTypeDefinitionInput!) {
-                saveEventTypeDefinition(input: $input) 
+            mutation ($id: GuidScalar!, $input: EventTypeDefinitionInput!) {
+                saveEventTypeDefinition(id: $id, input: $input) 
             }`;
 
         const data = {
+            id: definition.id.toString(),
             input: {
                 id: definition.id.toString(),
                 name: definition.name,
@@ -55,18 +57,19 @@ export class EventTypesViewModel {
                 })
             }
         };
-        await this.dataSource.mutate({mutation, variables: data});
+        await this.dataSource.mutate({ mutation, variables: data });
     }
+
 
     async deleteEventTypeDefinition(definition: EventTypeDefinition) {
         const mutation = gql`
-            mutation DeleteEventTypeDefinition($id: String!) {
+            mutation ($id: GuidScalar!) {
                 deleteEventTypeDefinition(id: $id) 
             }`;
 
         const data = {
             id: definition.id.toString()
         };
-        await this.dataSource.mutate({mutation, variables: data});
+        await this.dataSource.mutate({ mutation, variables: data });
     }
 }

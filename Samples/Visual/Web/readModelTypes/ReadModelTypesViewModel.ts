@@ -6,6 +6,7 @@ import gql from 'graphql-tag';
 import { AllReadModelTypeDefinitionsQuery } from './AllReadModelTypeDefinitionsQuery';
 import { ReadModelTypeDefinition } from './ReadModelTypeDefinition';
 import { injectable } from 'tsyringe';
+import { PropertyType } from '../common/PropertyType';
 
 @injectable()
 export class ReadModelTypesViewModel {
@@ -39,11 +40,12 @@ export class ReadModelTypesViewModel {
 
     async saveReadModelTypeDefinition(definition: ReadModelTypeDefinition) {
         const mutation = gql`
-            mutation SaveReadModelTypeDefinition($input: ReadModelTypeDefinitionInput!) {
-                saveReadModelTypeDefinition(input: $input) 
+            mutation ($id: GuidScalar!, $input: ReadModelTypeDefinitionInput!) {
+                saveReadModelTypeDefinition(id: $id, input: $input) 
             }`;
 
         const data = {
+            id: definition.id.toString(),
             input: {
                 id: definition.id.toString(),
                 name: definition.name,
@@ -60,8 +62,8 @@ export class ReadModelTypesViewModel {
 
     async deleteReadModelTypeDefinition(definition: ReadModelTypeDefinition) {
         const mutation = gql`
-            mutation DeleteReadModelTypeDefinition($id: String!) {
-                deleteReadModelDefinition(id: $id) 
+            mutation ($id: GuidScalar!) {
+                deleteReadModelTypeDefinition(id: $id) 
             }`;
 
         const data = {

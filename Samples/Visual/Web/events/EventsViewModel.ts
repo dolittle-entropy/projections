@@ -62,7 +62,7 @@ export class EventsViewModel {
 
     async commitEventInstance(instance: EventInstance) {
         const mutation = gql`
-            mutation CommitEventInstance($input: EventInstanceInput!) {
+            mutation ($input: EventInstanceInput!) {
                 commitEventInstance(input: $input) 
             }`;
 
@@ -86,11 +86,12 @@ export class EventsViewModel {
 
     async writeEventInstance(instance: EventInstance) {
         const mutation = gql`
-            mutation WriteEventInstance($input: EventInstanceInput!) {
-                writeEventInstance(input: $input) 
+            mutation ($id: GuidScalar!, $input: EventInstanceInput!) {
+                writeEventInstance(id: $id, input: $input) 
             }`;
 
         const data = {
+            id: instance.id.toString(),
             input: {
                 id: instance.id.toString(),
                 name: instance.name,
@@ -108,7 +109,7 @@ export class EventsViewModel {
 
     async deleteEventInstance(instance: EventInstance) {
         const mutation = gql`
-            mutation DeleteEventInstance($id: String!) {
+            mutation DeleteEventInstance($id: GuidScalar!) {
                 deleteEventInstance(id: $id) 
             }`;
 

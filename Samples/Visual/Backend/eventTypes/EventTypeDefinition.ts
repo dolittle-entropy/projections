@@ -20,7 +20,7 @@ export class EventTypeDefinition {
     @prop()
     name!: string;
 
-    @Field(type => [PropertyDefinition])
+    @Field(() => [PropertyDefinition])
     @prop({ _id: false, type: PropertyDefinition })
     properties!: PropertyDefinition[];
 }

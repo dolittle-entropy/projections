@@ -13,7 +13,7 @@ export class PropertyDefinition {
     @prop()
     name!: string;
 
-    @Field()
+    @Field(() => PropertyType)
     @prop()
     type!: PropertyType;
 }

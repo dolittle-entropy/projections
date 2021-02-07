@@ -11,18 +11,14 @@ import { Guid } from '@dolittle/rudiments';
 export class ReadModelTypeMutations {
 
     @Mutation(() => Boolean)
-    async saveReadModelTypeDefinition(@Arg('input') input: ReadModelTypeDefinition): Promise<boolean> {
-        await ReadModelTypeDefinitionModel.updateOne({ _id: input._id }, {
-            name: input.name,
-            properties: input.properties
-        }, { upsert: true });
-
+    async saveReadModelTypeDefinition(@Arg('id') id: Guid, @Arg('input') input: ReadModelTypeDefinition): Promise<boolean> {
+        await ReadModelTypeDefinitionModel.updateOne({ _id: id }, input, { upsert: true });
         return true;
     }
 
     @Mutation(() => Boolean)
-    async deleteReadModelTypeDefinition(@Arg('id') id: string): Promise<boolean> {
-        await ReadModelTypeDefinitionModel.deleteOne({ _id: Guid.parse(id) });
+    async deleteReadModelTypeDefinition(@Arg('id') id: Guid): Promise<boolean> {
+        await ReadModelTypeDefinitionModel.deleteOne({ _id: id });
         return true;
     }
 }

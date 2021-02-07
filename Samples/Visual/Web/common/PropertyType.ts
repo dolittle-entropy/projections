@@ -2,8 +2,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 export enum PropertyType {
-    number = 1,
-    boolean,
-    string,
-    date
+    number = 'number',
+    boolean = 'boolean',
+    string = 'string',
+    date = 'data'
 };

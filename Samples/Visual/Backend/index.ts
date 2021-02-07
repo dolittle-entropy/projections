@@ -15,7 +15,11 @@ import { ProjectionQueries } from './projections/ProjectionQueries';
 import { ProjectionMutations } from './projections/ProjectionMutations';
 const swaggerDoc = require('./swagger.json');
 
+import { registerEnumType } from 'type-graphql';
+import { PropertyType } from './common/PropertyType';
+
 (async () => {
+    registerEnumType(PropertyType, { name: 'PropertyType' });
     await Host.start({
         swaggerDoc,
         graphQLResolvers: [

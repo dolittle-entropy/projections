@@ -15,21 +15,17 @@ export class EventInstanceMutations {
     }
 
     @Mutation(() => Boolean)
-    async writeEventInstance(@Arg('input') input: EventInstance): Promise<boolean> {
+    async writeEventInstance(@Arg('id') id: Guid, @Arg('input') input: EventInstance): Promise<boolean> {
         console.log(input.name);
 
-        await EventInstanceModel.updateOne({ _id: input._id }, {
-            name: input.name,
-            eventType: input.eventType,
-            propertyValues: input.propertyValues
-        }, { upsert: true });
+        await EventInstanceModel.updateOne({ _id: id }, input, { upsert: true });
 
         return true;
     }
 
     @Mutation(() => Boolean)
-    async deleteEventInstance(@Arg('id') id: string): Promise<boolean> {
-        await EventInstanceModel.deleteOne({ _id: Guid.parse(id) });
+    async deleteEventInstance(@Arg('id') id: Guid): Promise<boolean> {
+        await EventInstanceModel.deleteOne({ _id: id });
         return true;
     }
 

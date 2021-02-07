@@ -5,14 +5,29 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Program",
+            "name": "Launch Basic Sample",
             "type": "node",
             "request": "launch",
             "runtimeExecutable": "node",
             "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
             "args": ["${workspaceFolder}/Samples/Basic/index.ts"],
             "cwd": "${workspaceFolder}/Samples/Basic",
-            "preLaunchTask": "tsc: build - Sample",
+            "preLaunchTask": "tsc: build - Basic",
+            "skipFiles": [
+                "<node_internals>/**",
+                "node_modules/**"
+            ]
+        },
+
+        {
+            "name": "Launch Visual Sample - backend",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "node",
+            "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
+            "args": ["${workspaceFolder}/Samples/Visual/Backend/index.ts"],
+            "cwd": "${workspaceFolder}/Samples/Visual/Backend",
+            "preLaunchTask": "tsc: build - Visual",
             "skipFiles": [
                 "<node_internals>/**",
                 "node_modules/**"

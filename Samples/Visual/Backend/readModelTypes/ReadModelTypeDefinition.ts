@@ -7,7 +7,6 @@ import { Guid } from '@dolittle/rudiments';
 import { guid } from '@dolittle/vanir-backend/dist/data';
 import { PropertyDefinition } from '../common/PropertyDefinition';
 
-
 @ObjectType()
 @InputType('ReadModelTypeDefinitionInput', { description: 'Manipulates an Read Model Type definition to the system' })
 @modelOptions({ options: { allowMixed: Severity.ALLOW } })
@@ -20,7 +19,7 @@ export class ReadModelTypeDefinition {
     @prop()
     name!: string;
 
-    @Field(type => [PropertyDefinition])
+    @Field(() => [PropertyDefinition])
     @prop({ _id: false, type: PropertyDefinition })
     properties!: PropertyDefinition[];
 }

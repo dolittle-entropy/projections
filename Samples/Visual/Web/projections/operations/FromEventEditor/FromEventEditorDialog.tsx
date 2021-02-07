@@ -147,6 +147,8 @@ export const FromEventEditorDialog = withViewModel<FromEventEditorDialogViewMode
         }
     ];
 
+    console.log(viewModel.eventType);
+
     return (
         <Dialog
             minWidth={600}
@@ -157,7 +159,7 @@ export const FromEventEditorDialog = withViewModel<FromEventEditorDialogViewMode
             <Stack>
                 <Dropdown
                     label="Type"
-                    defaultSelectedKey={viewModel.eventType?.toString()}
+                    defaultSelectedKey={viewModel.eventType?.id.toString()}
                     options={eventTypeOptions}
                     onChange={(e, nv) => viewModel.selectEventType(nv!.data)} />
 

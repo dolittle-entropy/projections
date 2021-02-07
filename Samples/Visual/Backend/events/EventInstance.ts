@@ -15,6 +15,10 @@ export class EventInstance {
     _id!: Guid;
 
     @Field()
+    @prop()
+    name!: string;
+
+    @Field()
     @guid()
     eventType!: Guid;
 

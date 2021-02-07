@@ -6,6 +6,7 @@ import { PropertyValue } from './PropertyValue';
 
 export type EventInstance = {
     id: Guid;
+    name: string;
     eventType: Guid;
     propertyValues: PropertyValue[]
 };

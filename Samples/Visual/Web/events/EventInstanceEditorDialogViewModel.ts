@@ -8,13 +8,12 @@ import { Guid } from '@dolittle/rudiments';
 import { PropertyValue } from './PropertyValue';
 import { EventTypeDefinition } from '../eventTypes/EventTypeDefinition';
 import { DataSource } from '@dolittle/vanir-web';
-import gql from 'graphql-tag';
-import { AllEventTypeDefinitionsQuery } from '../eventTypes/AllEventTypeDefinitionsQuery';
 import { injectable } from 'tsyringe';
 
 @injectable()
 export class EventInstanceEditorDialogViewModel {
     id: Guid = Guid.empty;
+    name: string = '';
     eventType: Guid = Guid.empty;
     propertyValues: PropertyValue[] = [];
 
@@ -37,6 +36,7 @@ export class EventInstanceEditorDialogViewModel {
 
     propsChanged(props: IDialogProps<EventInstanceEditorDialogInput, EventInstanceEditorDialogOutput>) {
         this.id = props.input?.definition?.id;
+        this.name = props.input?.definition?.name;
         this.eventType = props.input?.definition?.eventType;
         this.propertyValues = props.input?.definition?.propertyValues || [];
         this.eventTypes = props.input?.eventTypes || [];
@@ -44,7 +44,7 @@ export class EventInstanceEditorDialogViewModel {
 
     addProperty() {
         this.propertyValues = [...this.propertyValues, ...[{
-            name: 'New Property',
+            name: '',
             value: ''
         }]];
     }

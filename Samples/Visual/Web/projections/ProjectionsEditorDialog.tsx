@@ -6,14 +6,13 @@ import { withViewModel, IDialogProps, DialogResult } from '@dolittle/vanir-react
 import { ProjectionsEditorDialogViewModel } from './ProjectionsEditorDialogViewModel';
 import { ProjectionsEditorDialogInput } from './ProjectionsEditorDialogInput';
 import { ProjectionsEditorDialogOutput } from './ProjectionsEditorDialogOutput';
-import { DefaultButton, Dialog, DialogFooter, DialogType, IDialogContentProps, PrimaryButton } from '@fluentui/react';
+import { DefaultButton, Dialog, DialogFooter, DialogType, IDialogContentProps, PrimaryButton, Stack, TextField } from '@fluentui/react';
 
 const dialogContentProps: IDialogContentProps = {
     type: DialogType.normal,
     title: 'Projection',
     closeButtonAriaLabel: 'Close'
 };
-
 
 export const ProjectionsEditorDialog = withViewModel<ProjectionsEditorDialogViewModel, IDialogProps<ProjectionsEditorDialogInput, ProjectionsEditorDialogOutput>>(ProjectionsEditorDialogViewModel, ({ viewModel, props }) => {
 
@@ -33,11 +32,16 @@ export const ProjectionsEditorDialog = withViewModel<ProjectionsEditorDialogView
             onDismiss={done}
             dialogContentProps={dialogContentProps}>
 
+            <Stack>
+                <TextField label="Model name" />
+
+
+            </Stack>
+
             <DialogFooter>
                 <PrimaryButton onClick={done} text="Done" />
                 <DefaultButton onClick={cancel} text="Cancel" />
             </DialogFooter>
         </Dialog>
-
     );
 });

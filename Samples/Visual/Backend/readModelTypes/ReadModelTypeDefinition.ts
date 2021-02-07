@@ -10,7 +10,7 @@ import { PropertyDefinition } from '../common/PropertyDefinition';
 
 @ObjectType()
 @modelOptions({ options: { allowMixed: Severity.ALLOW } })
-export class EventTypeDefinition {
+export class ReadModelTypeDefinition {
     @Field({ name: 'id' })
     @guid()
     _id!: Guid;
@@ -24,4 +24,4 @@ export class EventTypeDefinition {
     properties!: PropertyDefinition[];
 }
 
-export const EventTypeDefinitionModel = getModelForClass(EventTypeDefinition);
+export const ReadModelTypeDefinitionModel = getModelForClass(ReadModelTypeDefinition);

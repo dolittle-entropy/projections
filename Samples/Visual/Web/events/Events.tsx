@@ -26,6 +26,7 @@ export const Events = withViewModel(EventsViewModel, ({ viewModel }) => {
         const input: EventInstanceEditorDialogInput = {
             definition: {
                 id: Guid.create(),
+                name: '',
                 eventType: Guid.empty,
                 propertyValues: []
             },
@@ -53,7 +54,11 @@ export const Events = withViewModel(EventsViewModel, ({ viewModel }) => {
         key: 'Name',
         name: 'Name',
         fieldName: 'name',
-        minWidth: 50,
+        minWidth: 50
+    }, {
+        key: 'Type',
+        name: 'Type',
+        minWidth: 250,
         onRender: (item) => <div>{viewModel.eventTypes.find(_ => _.id === item.eventType)?.name || 'Unknown'}</div>
     }, {
         key: 'Actions',
@@ -61,7 +66,7 @@ export const Events = withViewModel(EventsViewModel, ({ viewModel }) => {
         minWidth: 100,
         onRender: (item) => (
             <Stack horizontal>
-                <IconButton iconProps={{ iconName: 'MSNVideosSolid' }} onClick={() => { }} />
+                <IconButton iconProps={{ iconName: 'MSNVideosSolid' }} onClick={() => viewModel.commitEventInstance(item)} />
                 <IconButton iconProps={{ iconName: 'Delete' }} onClick={() => deleteItem(item)} />
             </Stack>
         )

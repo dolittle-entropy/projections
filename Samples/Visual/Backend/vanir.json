@@ -10,9 +10,9 @@
         }
     },
     "database": {
-        "name": "read_models_visual"
+        "name": "read_models_sample"
     },
     "eventstore": {
-        "name": "event_store_visual"
+        "name": "event_store_sample"
     }
 }

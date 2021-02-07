@@ -6,7 +6,7 @@ import { Guid } from '@dolittle/rudiments';
 import { PropertyDefinitionInput } from '../common/PropertyDefinitionInput';
 
 @InputType({ description: 'Manipulates an Event Type definition to the system' })
-export class EventTypeDefinitionForWriting {
+export class ReadModelTypeDefinitionForWriting {
     @Field()
     id!: Guid;
 

@@ -4,15 +4,15 @@
 import React from 'react';
 
 import { DialogResult, IDialogProps, withViewModel } from '@dolittle/vanir-react';
-import { EventEditorDialogViewModel } from './EventEditorDialogViewModel';
+import { ReadModelTypeDialogViewModel } from './ReadModelTypeDialogViewModel';
 import { DefaultButton, DetailsList, Dialog, DialogFooter, DialogType, Dropdown, IColumn, IconButton, IDialogContentProps, IDropdownOption, PrimaryButton, SelectionMode, Stack, TextField } from '@fluentui/react';
-import { EventEditorDialogInput } from './EventEditorDialogInput';
-import { EventEditorDialogOutput } from './EventEditorDialogOutput';
+import { ReadModelTypeDialogInput } from './ReadModelTypeDialogInput';
+import { ReadModelTypeDialogOutput } from './ReadModelTypeDialogOutput';
 import { PropertyType } from '../common/PropertyType';
 
 const dialogContentProps: IDialogContentProps = {
     type: DialogType.normal,
-    title: 'Event Type',
+    title: 'Read Model',
     closeButtonAriaLabel: 'Close'
 };
 
@@ -24,7 +24,7 @@ const propertyTypeOptions: IDropdownOption[] = [
 ];
 
 
-export const EventEditorDialog = withViewModel<EventEditorDialogViewModel, IDialogProps<EventEditorDialogInput, EventEditorDialogOutput>>(EventEditorDialogViewModel, ({ viewModel, props }) => {
+export const ReadModelTypeDialog = withViewModel<ReadModelTypeDialogViewModel, IDialogProps<ReadModelTypeDialogInput, ReadModelTypeDialogOutput>>(ReadModelTypeDialogViewModel, ({ viewModel, props }) => {
     const columns: IColumn[] = [
         {
             key: 'Name',
@@ -64,7 +64,7 @@ export const EventEditorDialog = withViewModel<EventEditorDialogViewModel, IDial
             dialogContentProps={dialogContentProps}>
 
             <Stack>
-                <TextField label="Name" placeholder="Name of the event" defaultValue={viewModel.name} onChange={(e, nv) => viewModel.name = nv!} />
+                <TextField label="Name" placeholder="Name of the read model" defaultValue={viewModel.name} onChange={(e, nv) => viewModel.name = nv!} />
                 <DetailsList columns={columns} items={viewModel.properties} selectionMode={SelectionMode.none} />
                 <IconButton iconProps={{
                     iconName: 'CirclePlus'

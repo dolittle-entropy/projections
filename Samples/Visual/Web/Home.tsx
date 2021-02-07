@@ -8,6 +8,7 @@ import { Events } from './events/Events';
 import { EventTypes } from './eventTypes/EventTypes';
 import { HomeViewModel } from './HomeViewModel';
 import { Projections } from './projections/Projections';
+import { ReadModelTypes } from './readModelTypes/ReadModelTypes';
 
 export const Home = withViewModel(HomeViewModel, ({ viewModel }) => {
 
@@ -17,6 +18,9 @@ export const Home = withViewModel(HomeViewModel, ({ viewModel }) => {
                 <PivotItem headerText="Event Types" itemIcon="Storyboard">
                     <EventTypes />
                 </PivotItem>
+                <PivotItem headerText="Read Model Types" itemIcon="ModelingView">
+                    <ReadModelTypes/>
+                </PivotItem>
                 <PivotItem headerText="Events" itemIcon="Picture">
                     <Events />
                 </PivotItem>
@@ -24,8 +28,6 @@ export const Home = withViewModel(HomeViewModel, ({ viewModel }) => {
                     <Projections/>
                 </PivotItem>
                 <PivotItem headerText="Changes" itemIcon="ChangeEntitlements">
-                </PivotItem>
-                <PivotItem headerText="Read Models" itemIcon="ModelingView">
                 </PivotItem>
             </Pivot>
         </>

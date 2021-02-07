@@ -11,6 +11,9 @@ export class EventInstanceForWriting {
     id!: Guid;
 
     @Field()
+    name!: string;
+
+    @Field()
     eventType!: Guid;
 
     @Field(() => [PropertyValueInput])

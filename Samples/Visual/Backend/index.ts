@@ -9,12 +9,21 @@ import { EventTypeQueries } from './eventTypes/EventTypeQueries';
 import { EventTypeMutations } from './eventTypes/EventTypeMutations';
 import { EventInstanceQueries } from './events/EventInstanceQueries';
 import { EventInstanceMutations } from './events/EventInstanceMutations';
+import { ReadModelTypeMutations } from './readModelTypes/ReadModelTypeMutations';
+import { ReadModelTypeQueries } from './readModelTypes/ReadModelTypeQueries';
 const swaggerDoc = require('./swagger.json');
 
 (async () => {
     await Host.start({
         swaggerDoc,
-        graphQLResolvers: [EventTypeQueries, EventTypeMutations, EventInstanceQueries, EventInstanceMutations],
+        graphQLResolvers: [
+            EventTypeQueries,
+            EventTypeMutations,
+            EventInstanceQueries,
+            EventInstanceMutations,
+            ReadModelTypeQueries,
+            ReadModelTypeMutations
+        ],
         expressCallback: (app) => {
             RegisterRoutes(app);
         }

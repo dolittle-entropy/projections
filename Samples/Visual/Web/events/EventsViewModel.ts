@@ -28,6 +28,7 @@ export class EventsViewModel {
             query {
                 allEventInstances {
                     id
+                    name
                     eventType
                     propertyValues {
                         name
@@ -59,8 +60,31 @@ export class EventsViewModel {
         this.eventTypes = result.data.allEventTypes;
     }
 
+    async commitEventInstance(instance: EventInstance) {
+        const mutation = gql`
+            mutation CommitEventInstance($input: EventInstanceForWriting!) {
+                commitEventInstance(input: $input) 
+            }`;
 
-    async writeEventInstance(definition: EventInstance) {
+        const data = {
+            input: {
+                id: instance.id.toString(),
+                name: instance.name,
+                eventType: instance.eventType,
+                propertyValues: instance.propertyValues.map(_ => {
+                    return {
+                        name: _.name,
+                        value: _.value
+                    };
+                })
+            }
+        };
+        await this.dataSource.mutate({mutation, variables: data});
+
+    }
+
+
+    async writeEventInstance(instance: EventInstance) {
         const mutation = gql`
             mutation WriteEventInstance($input: EventInstanceForWriting!) {
                 writeEventInstance(input: $input) 
@@ -68,9 +92,10 @@ export class EventsViewModel {
 
         const data = {
             input: {
-                id: definition.id.toString(),
-                eventType: definition.eventType,
-                propertyValues: definition.propertyValues.map(_ => {
+                id: instance.id.toString(),
+                name: instance.name,
+                eventType: instance.eventType,
+                propertyValues: instance.propertyValues.map(_ => {
                     return {
                         name: _.name,
                         value: _.value
@@ -81,14 +106,14 @@ export class EventsViewModel {
         await this.dataSource.mutate({mutation, variables: data});
     }
 
-    async deleteEventInstance(definition: EventInstance) {
+    async deleteEventInstance(instance: EventInstance) {
         const mutation = gql`
             mutation DeleteEventInstance($id: String!) {
                 deleteEventInstance(id: $id) 
             }`;
 
         const data = {
-            id: definition.id.toString()
+            id: instance.id.toString()
         };
         await this.dataSource.mutate({mutation, variables: data});
     }

@@ -4,7 +4,7 @@
 import { Guid } from '@dolittle/rudiments';
 import { PropertyDefinition } from '../common/PropertyDefinition';
 
-export type EventTypeDefinition = {
+export type ReadModelTypeDefinition = {
     id: Guid;
     name: string;
     properties: PropertyDefinition[]

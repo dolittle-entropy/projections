@@ -3,27 +3,27 @@
 
 import React from 'react';
 import { DialogResult, useDialog, withViewModel } from '@dolittle/vanir-react';
-import { EventTypesViewModel } from './EventTypesViewModel';
+import { ReadModelTypesViewModel } from './ReadModelTypesViewModel';
 import { DetailsList, IColumn, IconButton, SelectionMode } from '@fluentui/react';
-import { EventEditorDialog } from './EventEditorDialog';
-import { EventEditorDialogOutput } from './EventEditorDialogOutput';
-import { EventEditorDialogInput } from './EventEditorDialogInput';
+import { ReadModelTypeDialog } from './ReadModelTypeEditorDialog';
+import { ReadModelTypeDialogOutput } from './ReadModelTypeDialogOutput';
+import { ReadModelTypeDialogInput } from './ReadModelTypeDialogInput';
 import { Guid } from '@dolittle/rudiments';
-import { EventTypeDefinition } from './EventTypeDefinition';
+import { ReadModelTypeDefinition } from './ReadModelTypeDefinition';
 
-export const EventTypes = withViewModel(EventTypesViewModel, ({ viewModel }) => {
+export const ReadModelTypes = withViewModel(ReadModelTypesViewModel, ({ viewModel }) => {
 
-    const [showEventEditor, eventEditorDialogProps] = useDialog<EventEditorDialogInput, EventEditorDialogOutput>(async (result, output?) => {
+    const [showReadModelEditor, readModelEditorDialogProps] = useDialog<ReadModelTypeDialogInput, ReadModelTypeDialogOutput>(async (result, output?) => {
         if (result === DialogResult.Success) {
             if (output) {
-                await viewModel.writeEventTypeDefinition(output.definition);
+                await viewModel.writeReadModelTypeDefinition(output.definition);
                 await viewModel.populate();
             }
         }
     });
 
-    const addEventType = () => {
-        const input: EventEditorDialogInput = {
+    const addReadModel = () => {
+        const input: ReadModelTypeDialogInput = {
             definition: {
                 id: Guid.create(),
                 name: '',
@@ -31,19 +31,19 @@ export const EventTypes = withViewModel(EventTypesViewModel, ({ viewModel }) => 
             }
         };
 
-        showEventEditor(input);
+        showReadModelEditor(input);
     };
 
-    const showItem = (item: EventTypeDefinition) => {
-        const input: EventEditorDialogInput = {
+    const showItem = (item: ReadModelTypeDefinition) => {
+        const input: ReadModelTypeDialogInput = {
             definition: item
         };
 
-        showEventEditor(input);
+        showReadModelEditor(input);
     };
 
-    const deleteItem = async (item: EventTypeDefinition) => {
-        await viewModel.deleteEventTypeDefinition(item);
+    const deleteItem = async (item: ReadModelTypeDefinition) => {
+        await viewModel.deleteReadModelTypeDefinition(item);
         await viewModel.populate();
     };
 
@@ -63,15 +63,15 @@ export const EventTypes = withViewModel(EventTypesViewModel, ({ viewModel }) => 
         <>
             <DetailsList
                 columns={columns}
-                items={viewModel.eventTypes}
+                items={viewModel.readModels}
                 selectionMode={SelectionMode.none}
                 onItemInvoked={showItem}
             />
-            <EventEditorDialog {...eventEditorDialogProps} />
+            <ReadModelTypeDialog {...readModelEditorDialogProps} />
 
             <IconButton iconProps={{
                 iconName: 'CirclePlus'
-            }} onClick={addEventType} />
+            }} onClick={addReadModel} />
 
         </>
     );

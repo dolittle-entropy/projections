@@ -8,7 +8,7 @@ import { EventInstanceEditorDialogViewModel } from './EventInstanceEditorDialogV
 import { DefaultButton, DetailsList, Dialog, DialogFooter, DialogType, Dropdown, IColumn, IconButton, IDialogContentProps, IDropdownOption, PrimaryButton, SelectionMode, Stack, TextField } from '@fluentui/react';
 import { EventInstanceEditorDialogInput } from './EventInstanceEditorDialogInput';
 import { EventInstanceEditorDialogOutput } from './EventInstanceEditorDialogOutput';
-import { PropertyType } from '../eventTypes/PropertyType';
+import { PropertyType } from '../common/PropertyType';
 
 const dialogContentProps: IDialogContentProps = {
     type: DialogType.normal,
@@ -38,7 +38,7 @@ export const EventInstanceEditorDialog = withViewModel<EventInstanceEditorDialog
             name: 'Value',
             fieldName: 'value',
             minWidth: 200,
-            onRender: (item, index, column) => <TextField defaultValue={item.value} onChange={(e, nv) => item.value = nv} />
+            onRender: (item, index, column) => <TextField placeholder="Property value" defaultValue={item.value} onChange={(e, nv) => item.value = nv} />
         }
     ];
 
@@ -46,6 +46,7 @@ export const EventInstanceEditorDialog = withViewModel<EventInstanceEditorDialog
         props.onClose(DialogResult.Success, {
             definition: {
                 id: viewModel.id,
+                name: viewModel.name,
                 eventType: viewModel.eventType,
                 propertyValues: viewModel.propertyValues
             }
@@ -73,7 +74,8 @@ export const EventInstanceEditorDialog = withViewModel<EventInstanceEditorDialog
             dialogContentProps={dialogContentProps}>
 
             <Stack>
-                <Dropdown defaultSelectedKey={viewModel.eventType?.toString()} options={eventTypeOptions} onChange={(e, nv) => viewModel.selectEventType(nv!.data)}/>
+                <TextField label="Name" placeholder="Event instance name" defaultValue={viewModel.name} onChange={(e, nv) => viewModel.name = nv!}/>
+                <Dropdown label="Type" defaultSelectedKey={viewModel.eventType?.toString()} options={eventTypeOptions} onChange={(e, nv) => viewModel.selectEventType(nv!.data)}/>
                 <DetailsList columns={columns} items={viewModel.propertyValues} selectionMode={SelectionMode.none} />
             </Stack>
 

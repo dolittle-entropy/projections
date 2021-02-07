@@ -11,6 +11,8 @@ import { EventInstanceQueries } from './events/EventInstanceQueries';
 import { EventInstanceMutations } from './events/EventInstanceMutations';
 import { ReadModelTypeMutations } from './readModelTypes/ReadModelTypeMutations';
 import { ReadModelTypeQueries } from './readModelTypes/ReadModelTypeQueries';
+import { ProjectionQueries } from './projections/ProjectionQueries';
+import { ProjectionMutations } from './projections/ProjectionMutations';
 const swaggerDoc = require('./swagger.json');
 
 (async () => {
@@ -22,7 +24,9 @@ const swaggerDoc = require('./swagger.json');
             EventInstanceQueries,
             EventInstanceMutations,
             ReadModelTypeQueries,
-            ReadModelTypeMutations
+            ReadModelTypeMutations,
+            ProjectionQueries,
+            ProjectionMutations
         ],
         expressCallback: (app) => {
             RegisterRoutes(app);

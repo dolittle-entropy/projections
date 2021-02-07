@@ -1,22 +1,26 @@
 // Copyright (c) Dolittle. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import React from 'react';
+import React, { useState } from 'react';
 import { withViewModel, IDialogProps, DialogResult } from '@dolittle/vanir-react';
 import { ProjectionsEditorDialogViewModel } from './ProjectionsEditorDialogViewModel';
 import { ProjectionsEditorDialogInput } from './ProjectionsEditorDialogInput';
 import { ProjectionsEditorDialogOutput } from './ProjectionsEditorDialogOutput';
+import { IColumn, SelectionMode } from '@fluentui/react';
 import {
     DefaultButton,
+    DetailsList,
     Dialog,
     DialogFooter,
     DialogType,
     IDialogContentProps,
     PrimaryButton,
     Stack,
-    TextField,
     IDropdownOption,
-    Dropdown
+    Dropdown,
+    CommandBar,
+    ICommandBarItemProps,
+    IGroup
 } from '@fluentui/react';
 
 const dialogContentProps: IDialogContentProps = {
@@ -45,6 +49,34 @@ export const ProjectionsEditorDialog = withViewModel<ProjectionsEditorDialogView
         return option;
     });
 
+    const commandBarItems: ICommandBarItemProps[] = [
+        {
+            key: 'from',
+            iconProps: { iconName: 'RawSource' },
+            text: 'From Event'
+        },
+        {
+            key: 'join',
+            iconProps: { iconName: 'BranchMerge' },
+            text: 'Join Event'
+        }
+    ];
+
+    const columns: IColumn[] = [
+        {
+            key: 'target',
+            name: 'Target',
+            fieldName: 'target',
+            minWidth: 150
+        },
+        {
+            key: 'source',
+            name: 'Source',
+            fieldName: 'source',
+            minWidth: 150
+        }
+    ];
+    const [operationGroups, setOperationGroups] = useState<IGroup[]>([]);
 
     return (
         <Dialog
@@ -55,6 +87,15 @@ export const ProjectionsEditorDialog = withViewModel<ProjectionsEditorDialogView
 
             <Stack>
                 <Dropdown label="Read Model Type" defaultSelectedKey={viewModel.readModelType?.id.toString()} options={eventTypeOptions} onChange={(e, nv) => viewModel.selectReadModelType(nv!.data)} />
+
+                <CommandBar items={commandBarItems} />
+
+                <DetailsList
+                    columns={columns}
+                    selectionMode={SelectionMode.none}
+                    groups={operationGroups}
+                    items={[]}
+                />
             </Stack>
 
             <DialogFooter>

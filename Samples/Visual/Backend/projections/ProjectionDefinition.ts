@@ -7,6 +7,8 @@ import { Guid } from '@dolittle/rudiments';
 import { guid } from '@dolittle/vanir-backend/dist/data';
 import { Operation } from './Operation';
 import { OperationDiscriminators } from './OperationDiscriminators';
+import { KeyStrategy } from './KeyStrategy';
+import { OperationUnion } from './OperationUnion';
 
 @ObjectType()
 @InputType('ProjectionDefinitionInput')
@@ -17,14 +19,14 @@ export class ProjectionDefinition {
     _id!: Guid;
 
     @Field()
-    @prop()
-    name!: string;
-
-    @Field()
     @guid()
     readModelType!: Guid;
 
-    @Field(() => [Operation])
+    @Field(() => [KeyStrategy])
+    @prop({ _id: false, type: KeyStrategy })
+    keyStrategies: KeyStrategy[] = [];
+
+    @Field(() => [OperationUnion])
     @prop({ type: Operation, discriminators: OperationDiscriminators })
     operations: Operation[] = [];
 }

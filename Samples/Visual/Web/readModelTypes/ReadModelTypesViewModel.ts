@@ -6,7 +6,6 @@ import gql from 'graphql-tag';
 import { AllReadModelTypeDefinitionsQuery } from './AllReadModelTypeDefinitionsQuery';
 import { ReadModelTypeDefinition } from './ReadModelTypeDefinition';
 import { injectable } from 'tsyringe';
-import { PropertyType } from '../common/PropertyType';
 
 @injectable()
 export class ReadModelTypesViewModel {

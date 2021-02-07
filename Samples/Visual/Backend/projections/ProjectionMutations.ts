@@ -10,12 +10,10 @@ import { Guid } from '@dolittle/rudiments';
 @Resolver()
 export class ProjectionMutations {
 
+    /*
     @Mutation(() => Boolean)
     async saveProjectionDefinition(@Arg('id') id: Guid, @Arg('input') input: ProjectionDefinition): Promise<boolean> {
-        await ProjectionDefinitionModel.updateOne({ _id: id }, {
-            name: input.name,
-        }, { upsert: true });
-
+        await ProjectionDefinitionModel.updateOne({ _id: id }, input, { upsert: true });
         return true;
     }
 
@@ -24,4 +22,5 @@ export class ProjectionMutations {
         await ProjectionDefinitionModel.deleteOne({ _id: id });
         return true;
     }
+    */
 }

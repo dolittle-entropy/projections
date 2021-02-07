@@ -147,8 +147,6 @@ export const FromEventEditorDialog = withViewModel<FromEventEditorDialogViewMode
         }
     ];
 
-    console.log(viewModel.eventType);
-
     return (
         <Dialog
             minWidth={600}

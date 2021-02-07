@@ -8,12 +8,13 @@ import { PropertyValue } from '../events/PropertyValue';
 import { AllReadModelTypeDefinitionsQuery } from '../readModelTypes/AllReadModelTypeDefinitionsQuery';
 import { ReadModelTypeDefinition } from '../readModelTypes/ReadModelTypeDefinition';
 import { Operation } from './operations/Operation';
+import { Guid } from '@dolittle/rudiments';
 
 @injectable()
 export class ProjectionsEditorDialogViewModel {
 
     readModelTypes: ReadModelTypeDefinition[] = [];
-    readModelType?: ReadModelTypeDefinition;
+    readModelType: ReadModelTypeDefinition = { id: Guid.empty, name: '', properties: [] };
     readModelPropertyValues: PropertyValue[] = [];
 
     operations: Operation[] = [];

@@ -27,6 +27,7 @@ import {
 } from '@fluentui/react';
 import { FromEventEditorDialog } from './operations/FromEventEditor/FromEventEditorDialog';
 import { FromEvent } from './operations/FromEvent';
+import { KeyStrategyEditor } from './KeyStrategyEditor';
 
 const dialogContentProps: IDialogContentProps = {
     type: DialogType.normal,
@@ -34,10 +35,11 @@ const dialogContentProps: IDialogContentProps = {
     closeButtonAriaLabel: 'Close'
 };
 
+
+
 export const ProjectionsEditorDialog = withViewModel<ProjectionsEditorDialogViewModel, IDialogProps<ProjectionsEditorDialogInput, ProjectionsEditorDialogOutput>>(ProjectionsEditorDialogViewModel, ({ viewModel, props }) => {
     const [operationGroups, setOperationGroups] = useState<IGroup[]>([]);
     const [showFromEventEditor, fromEventEditorProps] = useDialog<FromEventEditorDialogInput, FromEventEditorDialogOutput>((result, output?) => {
-        debugger;
 
     });
 
@@ -98,6 +100,7 @@ export const ProjectionsEditorDialog = withViewModel<ProjectionsEditorDialogView
 
                 <Stack>
                     <Dropdown label="Read Model Type" defaultSelectedKey={viewModel.readModelType?.id.toString()} options={eventTypeOptions} onChange={(e, nv) => viewModel.selectReadModelType(nv!.data)} />
+                    <KeyStrategyEditor readModelType={viewModel.readModelType}/>
 
                     <CommandBar items={commandBarItems} />
 

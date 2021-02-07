@@ -23,8 +23,4 @@ export class Operation {
     @Field()
     @guid()
     operationType!: Guid;
-
-    @Field(type => [Expression])
-    @prop({ _id: false, type: Expression, discriminators: ExpressionDiscriminators })
-    expressions: Expression[] = [];
 }

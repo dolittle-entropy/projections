@@ -2,12 +2,15 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import React, { useState } from 'react';
-import { withViewModel, IDialogProps, DialogResult } from '@dolittle/vanir-react';
+import { withViewModel, IDialogProps, DialogResult, useDialog } from '@dolittle/vanir-react';
 import { ProjectionsEditorDialogViewModel } from './ProjectionsEditorDialogViewModel';
 import { ProjectionsEditorDialogInput } from './ProjectionsEditorDialogInput';
 import { ProjectionsEditorDialogOutput } from './ProjectionsEditorDialogOutput';
-import { IColumn, SelectionMode } from '@fluentui/react';
+import { FromEventEditorDialogInput } from './operations/FromEventEditor/FromEventEditorDialogInput';
+import { FromEventEditorDialogOutput } from './operations/FromEventEditor/FromEventEditorDialogOutput';
 import {
+    IColumn,
+    SelectionMode,
     DefaultButton,
     DetailsList,
     Dialog,
@@ -22,6 +25,8 @@ import {
     ICommandBarItemProps,
     IGroup
 } from '@fluentui/react';
+import { FromEventEditorDialog } from './operations/FromEventEditor/FromEventEditorDialog';
+import { FromEvent } from './operations/FromEvent';
 
 const dialogContentProps: IDialogContentProps = {
     type: DialogType.normal,
@@ -30,6 +35,11 @@ const dialogContentProps: IDialogContentProps = {
 };
 
 export const ProjectionsEditorDialog = withViewModel<ProjectionsEditorDialogViewModel, IDialogProps<ProjectionsEditorDialogInput, ProjectionsEditorDialogOutput>>(ProjectionsEditorDialogViewModel, ({ viewModel, props }) => {
+    const [operationGroups, setOperationGroups] = useState<IGroup[]>([]);
+    const [showFromEventEditor, fromEventEditorProps] = useDialog<FromEventEditorDialogInput, FromEventEditorDialogOutput>((result, output?) => {
+        debugger;
+
+    });
 
     const done = () => {
         props.onClose(DialogResult.Success, {
@@ -53,7 +63,8 @@ export const ProjectionsEditorDialog = withViewModel<ProjectionsEditorDialogView
         {
             key: 'from',
             iconProps: { iconName: 'RawSource' },
-            text: 'From Event'
+            text: 'From Event',
+            onClick: () => showFromEventEditor({ readModelType: viewModel.readModelType!, operation: new FromEvent() })
         },
         {
             key: 'join',
@@ -76,32 +87,34 @@ export const ProjectionsEditorDialog = withViewModel<ProjectionsEditorDialogView
             minWidth: 150
         }
     ];
-    const [operationGroups, setOperationGroups] = useState<IGroup[]>([]);
 
     return (
-        <Dialog
-            minWidth={600}
-            hidden={!props.visible}
-            onDismiss={done}
-            dialogContentProps={dialogContentProps}>
+        <>
+            <Dialog
+                minWidth={600}
+                hidden={!props.visible}
+                onDismiss={done}
+                dialogContentProps={dialogContentProps}>
 
-            <Stack>
-                <Dropdown label="Read Model Type" defaultSelectedKey={viewModel.readModelType?.id.toString()} options={eventTypeOptions} onChange={(e, nv) => viewModel.selectReadModelType(nv!.data)} />
+                <Stack>
+                    <Dropdown label="Read Model Type" defaultSelectedKey={viewModel.readModelType?.id.toString()} options={eventTypeOptions} onChange={(e, nv) => viewModel.selectReadModelType(nv!.data)} />
 
-                <CommandBar items={commandBarItems} />
+                    <CommandBar items={commandBarItems} />
 
-                <DetailsList
-                    columns={columns}
-                    selectionMode={SelectionMode.none}
-                    groups={operationGroups}
-                    items={[]}
-                />
-            </Stack>
+                    <DetailsList
+                        columns={columns}
+                        selectionMode={SelectionMode.none}
+                        groups={operationGroups}
+                        items={[]}
+                    />
+                </Stack>
 
-            <DialogFooter>
-                <PrimaryButton onClick={done} text="Done" />
-                <DefaultButton onClick={cancel} text="Cancel" />
-            </DialogFooter>
-        </Dialog>
+                <DialogFooter>
+                    <PrimaryButton onClick={done} text="Done" />
+                    <DefaultButton onClick={cancel} text="Cancel" />
+                </DialogFooter>
+            </Dialog>
+            <FromEventEditorDialog {...fromEventEditorProps} />
+        </>
     );
 });

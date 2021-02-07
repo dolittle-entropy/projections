@@ -7,6 +7,7 @@ import { injectable } from 'tsyringe';
 import { PropertyValue } from '../events/PropertyValue';
 import { AllReadModelTypeDefinitionsQuery } from '../readModelTypes/AllReadModelTypeDefinitionsQuery';
 import { ReadModelTypeDefinition } from '../readModelTypes/ReadModelTypeDefinition';
+import { Operation } from './operations/Operation';
 
 @injectable()
 export class ProjectionsEditorDialogViewModel {
@@ -14,6 +15,8 @@ export class ProjectionsEditorDialogViewModel {
     readModelTypes: ReadModelTypeDefinition[] = [];
     readModelType?: ReadModelTypeDefinition;
     readModelPropertyValues: PropertyValue[] = [];
+
+    operations: Operation[] = [];
 
     constructor(private readonly dataSource: DataSource) {
 
@@ -49,5 +52,8 @@ export class ProjectionsEditorDialogViewModel {
                 value: ''
             };
         });
+    }
+
+    addFromEventOperation() {
     }
 }

@@ -62,13 +62,11 @@ export const Projections = () => {
                 onItemInvoked={showItem}
             />
 
-            <ProjectionsEditorDialog {...projectionEditorDialogProps}/>
-
             <IconButton iconProps={{
                 iconName: 'CirclePlus'
             }} onClick={addProjection} />
 
-
+            <ProjectionsEditorDialog {...projectionEditorDialogProps}/>
         </>
     );
 };

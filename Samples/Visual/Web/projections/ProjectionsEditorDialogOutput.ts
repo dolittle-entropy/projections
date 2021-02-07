@@ -1,4 +1,8 @@
 // Copyright (c) Dolittle. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-export interface ProjectionsEditorDialogOutput { }
+import { Projection } from './Projection';
+
+export interface ProjectionsEditorDialogOutput {
+    projection: Projection;
+}

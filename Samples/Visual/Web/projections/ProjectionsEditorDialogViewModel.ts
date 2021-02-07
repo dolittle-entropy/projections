@@ -11,9 +11,17 @@ import { Operation } from './operations/Operation';
 import { Guid } from '@dolittle/rudiments';
 import { EventTypeDefinition } from '../eventTypes/EventTypeDefinition';
 import { AllEventTypeDefinitionsQuery } from '../eventTypes/AllEventTypeDefinitionsQuery';
+import { ProjectionsEditorDialogInput } from './ProjectionsEditorDialogInput';
+import { ProjectionsEditorDialogOutput } from './ProjectionsEditorDialogOutput';
+import { IDialogProps } from '@dolittle/vanir-react';
+import { KeyStrategy } from './KeyStrategy';
 
 @injectable()
 export class ProjectionsEditorDialogViewModel {
+
+    id: Guid = Guid.empty;
+
+    keyStrategies: KeyStrategy[] = [];
 
     readModelTypes: ReadModelTypeDefinition[] = [];
     readModelType: ReadModelTypeDefinition = { id: Guid.empty, name: '', properties: [] };
@@ -29,6 +37,15 @@ export class ProjectionsEditorDialogViewModel {
     async attached() {
         await this.populateReadModelTypes();
         await this.populateEventTypes();
+    }
+
+    propsChanged(props: IDialogProps<ProjectionsEditorDialogInput, ProjectionsEditorDialogOutput>) {
+        if (props.input?.projection) {
+            this.id = props.input.projection.id;
+            this.keyStrategies = props.input.projection.keyStrategies;
+            this.operations = props.input.projection.operations;
+            this.readModelType = props.input.projection.readModelType;
+        }
     }
 
     async populateReadModelTypes() {
@@ -80,5 +97,9 @@ export class ProjectionsEditorDialogViewModel {
 
     addOperation(operation: Operation) {
         this.operations = [...this.operations, operation];
+    }
+
+    setKeyStrategies(strategies: KeyStrategy[]) {
+        this.keyStrategies = strategies;
     }
 }

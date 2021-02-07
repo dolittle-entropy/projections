@@ -4,13 +4,17 @@
 import { DialogResult, useDialog } from '@dolittle/vanir-react';
 import { DetailsList, IColumn, IconButton, SelectionMode, Stack } from '@fluentui/react';
 import React from 'react';
+import { Projection } from './Projection';
 import { ProjectionsEditorDialog } from './ProjectionsEditorDialog';
 import { ProjectionsEditorDialogInput } from './ProjectionsEditorDialogInput';
 import { ProjectionsEditorDialogOutput } from './ProjectionsEditorDialogOutput';
+import { Guid } from '@dolittle/rudiments';
+import { KeyStrategy } from './KeyStrategy';
 
 export const Projections = () => {
     const [showProjectionEditor, projectionEditorDialogProps] = useDialog<ProjectionsEditorDialogInput, ProjectionsEditorDialogOutput>(async (result, output?) => {
         if (result === DialogResult.Success) {
+            debugger;
             if (output) {
                 //await viewModel.writeEventInstance(output.definition);
                 //await viewModel.populate();
@@ -20,16 +24,18 @@ export const Projections = () => {
 
     const addProjection = () => {
         const input: ProjectionsEditorDialogInput = {
+            projection: new Projection()
         };
-
+        input.projection.id = Guid.create();
+        input.projection.keyStrategies = [new KeyStrategy()];
         showProjectionEditor(input);
     };
 
     const showItem = (item: any) => {
-        const input: ProjectionsEditorDialogInput = {
+        /*const input: ProjectionsEditorDialogInput = {
         };
 
-        showProjectionEditor(input);
+        showProjectionEditor(input);*/
     };
 
     const deleteItem = async (item: any) => {

@@ -3,7 +3,9 @@
 
 import React from 'react';
 import { withViewModel } from '@dolittle/vanir-react';
-import { KeyStrategy, KeyStrategyEditorViewModel, KeyStrategyType } from './KeyStrategyEditorViewModel';
+import { KeyStrategyEditorViewModel } from './KeyStrategyEditorViewModel';
+import { KeyStrategyType } from './KeyStrategyType';
+import { KeyStrategy } from './KeyStrategy';
 import { KeyStrategyEditorProps } from './KeyStrategyEditorProps';
 import { DetailsList, IColumn, IconButton, SelectionMode, IDropdownOption, Dropdown, TextField } from '@fluentui/react';
 
@@ -37,13 +39,13 @@ export const KeyStrategyEditor = withViewModel<KeyStrategyEditorViewModel, KeySt
 
     const renderStrategyTypeSelector = (item: KeyStrategy) => {
         return (
-            <Dropdown defaultValue={item.type} options={keyStrategyTypes} onChange={(e, nv) => viewModel.handleKeyStrategyTypeFor(item, nv!.key as KeyStrategyType)}/>
+            <Dropdown defaultSelectedKey={item.type} options={keyStrategyTypes} onChange={(e, nv) => viewModel.handleKeyStrategyTypeFor(item, nv!.key as KeyStrategyType)}/>
         );
     };
 
     const renderEventContextPropertySelector = (item: KeyStrategy) => {
         return (
-            <Dropdown defaultValue={item.property} options={eventContextProperties} onChange={(e, nv) => item.property = nv!.key as string} />
+            <Dropdown defaultSelectedKey={item.property} options={eventContextProperties} onChange={(e, nv) => item.property = nv!.key as string} />
         );
     };
 

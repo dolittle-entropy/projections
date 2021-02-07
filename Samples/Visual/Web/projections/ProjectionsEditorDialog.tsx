@@ -60,6 +60,12 @@ export const ProjectionsEditorDialog = withViewModel<ProjectionsEditorDialogView
 
     const done = () => {
         props.onClose(DialogResult.Success, {
+            projection: {
+                id: viewModel.id,
+                readModelType: viewModel.readModelType,
+                keyStrategies: viewModel.keyStrategies,
+                operations: viewModel.operations
+            }
         });
     };
 
@@ -138,7 +144,11 @@ export const ProjectionsEditorDialog = withViewModel<ProjectionsEditorDialogView
 
                 <Stack>
                     <Dropdown label="Read Model Type" defaultSelectedKey={viewModel.readModelType?.id.toString()} options={eventTypeOptions} onChange={(e, nv) => viewModel.selectReadModelType(nv!.data)} />
-                    <KeyStrategyEditor readModelType={viewModel.readModelType} />
+                    <KeyStrategyEditor
+                        strategies={viewModel.keyStrategies}
+                        readModelType={viewModel.readModelType}
+                        onChange={viewModel.setKeyStrategies}
+                    />
 
                     <CommandBar items={commandBarItems} />
 

@@ -30,7 +30,6 @@ export class FromEventEditorDialogViewModel {
     }
 
     async attached() {
-        await this.populateEventTypes();
     }
 
     propsChanged(props: IDialogProps<FromEventEditorDialogInput, FromEventEditorDialogOutput>) {
@@ -38,29 +37,13 @@ export class FromEventEditorDialogViewModel {
             this.operationKey = props.input.operation.key;
             this.operationType = props.input.operation.operationType;
             this.expressions = props.input.operation.expressions as BinaryExpression[] || [];
+            this.eventTypes = props.input.eventTypes;
             if (props.input.operation.eventType) {
                 this.eventType = this.eventTypes.find(_ => _.id === (props.input.operation.eventType.toString() as any));
             }
         }
     }
 
-    async populateEventTypes() {
-        const query = gql`
-            query {
-                allEventTypes {
-                    id
-                    name
-                    properties {
-                        name
-                        type
-                    }
-                }
-            }        
-        `;
-
-        const result = await this.dataSource.query<AllEventTypeDefinitionsQuery>({ query, fetchPolicy: 'no-cache' });
-        this.eventTypes = result.data.allEventTypes;
-    }
 
     selectEventType(eventType: EventTypeDefinition) {
         this.eventType = eventType;

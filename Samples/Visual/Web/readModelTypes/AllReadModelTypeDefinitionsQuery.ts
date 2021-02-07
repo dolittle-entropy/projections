@@ -5,5 +5,5 @@ import { ReadModelTypeDefinition } from './ReadModelTypeDefinition';
 
 
 export type AllReadModelTypeDefinitionsQuery = {
-    allReadModels: ReadModelTypeDefinition[];
+    allReadModelTypes: ReadModelTypeDefinition[];
 };

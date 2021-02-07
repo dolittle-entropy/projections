@@ -3,6 +3,6 @@
 
 import { Guid } from '@dolittle/rudiments';
 
-export class Operation {
+export abstract class Operation {
     operationType!: Guid;
 }

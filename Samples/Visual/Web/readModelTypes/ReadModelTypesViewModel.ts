@@ -23,7 +23,7 @@ export class ReadModelTypesViewModel {
     async populate() {
         const query = gql`
             query {
-                allReadModels {
+                allReadModelTypes {
                     id
                     name
                     properties {
@@ -35,7 +35,7 @@ export class ReadModelTypesViewModel {
         `;
 
         const result = await this.dataSource.query<AllReadModelTypeDefinitionsQuery>({ query, fetchPolicy: 'no-cache' });
-        this.readModels = result.data.allReadModels;
+        this.readModels = result.data.allReadModelTypes;
     }
 
     async saveReadModelTypeDefinition(definition: ReadModelTypeDefinition) {

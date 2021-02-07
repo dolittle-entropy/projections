@@ -3,6 +3,6 @@
 
 import { Guid } from '@dolittle/rudiments';
 
-export class Expression {
+export abstract class Expression {
     expressionType!: Guid;
 }

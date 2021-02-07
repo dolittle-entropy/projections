@@ -5,7 +5,7 @@ import React from 'react';
 import { withViewModel } from '@dolittle/vanir-react';
 import { KeyStrategy, KeyStrategyEditorViewModel, KeyStrategyType } from './KeyStrategyEditorViewModel';
 import { KeyStrategyEditorProps } from './KeyStrategyEditorProps';
-import { DetailsList, IColumn, IconButton, SelectionMode, IDropdownOption, Dropdown } from '@fluentui/react';
+import { DetailsList, IColumn, IconButton, SelectionMode, IDropdownOption, Dropdown, TextField } from '@fluentui/react';
 
 const keyStrategyTypes: IDropdownOption[] = [
     {
@@ -35,9 +35,21 @@ const eventContextProperties: IDropdownOption[] = [
 
 export const KeyStrategyEditor = withViewModel<KeyStrategyEditorViewModel, KeyStrategyEditorProps>(KeyStrategyEditorViewModel, ({ viewModel, props }) => {
 
+    const renderStrategyTypeSelector = (item: KeyStrategy) => {
+        return (
+            <Dropdown defaultValue={item.type} options={keyStrategyTypes} onChange={(e, nv) => viewModel.handleKeyStrategyTypeFor(item, nv!.key as KeyStrategyType)}/>
+        );
+    };
+
     const renderEventContextPropertySelector = (item: KeyStrategy) => {
         return (
             <Dropdown defaultValue={item.property} options={eventContextProperties} onChange={(e, nv) => item.property = nv!.key as string} />
+        );
+    };
+
+    const renderEventPropertyInput = (item: KeyStrategy) => {
+        return (
+            <TextField defaultValue={item.property} onChange={(e, nv) => item.property = nv!} />
         );
     };
 
@@ -47,14 +59,19 @@ export const KeyStrategyEditor = withViewModel<KeyStrategyEditorViewModel, KeySt
             name: 'Type',
             fieldName: 'type',
             minWidth: 150,
-            onRender: (item: KeyStrategy) => <Dropdown defaultValue={item.type} options={keyStrategyTypes} onChange={(e, nv) => item.type = nv!.key as KeyStrategyType} />
+            onRender: renderStrategyTypeSelector
         },
         {
             key: 'property',
             name: 'Property',
             fieldName: 'property',
             minWidth: 200,
-            onRender: renderEventContextPropertySelector
+            onRender: (item: KeyStrategy) => {
+                if (item.type === KeyStrategyType.eventContext) {
+                    return renderEventContextPropertySelector(item);
+                }
+                return renderEventPropertyInput(item);
+            }
         }
     ];
 

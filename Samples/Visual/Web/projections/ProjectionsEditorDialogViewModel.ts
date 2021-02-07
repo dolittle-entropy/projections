@@ -9,6 +9,8 @@ import { AllReadModelTypeDefinitionsQuery } from '../readModelTypes/AllReadModel
 import { ReadModelTypeDefinition } from '../readModelTypes/ReadModelTypeDefinition';
 import { Operation } from './operations/Operation';
 import { Guid } from '@dolittle/rudiments';
+import { EventTypeDefinition } from '../eventTypes/EventTypeDefinition';
+import { AllEventTypeDefinitionsQuery } from '../eventTypes/AllEventTypeDefinitionsQuery';
 
 @injectable()
 export class ProjectionsEditorDialogViewModel {
@@ -16,6 +18,7 @@ export class ProjectionsEditorDialogViewModel {
     readModelTypes: ReadModelTypeDefinition[] = [];
     readModelType: ReadModelTypeDefinition = { id: Guid.empty, name: '', properties: [] };
     readModelPropertyValues: PropertyValue[] = [];
+    eventTypes: EventTypeDefinition[] = [];
 
     operations: Operation[] = [];
 
@@ -24,13 +27,14 @@ export class ProjectionsEditorDialogViewModel {
     }
 
     async attached() {
-        await this.populate();
+        await this.populateReadModelTypes();
+        await this.populateEventTypes();
     }
 
-    async populate() {
+    async populateReadModelTypes() {
         const query = gql`
             query {
-                allReadModels {
+                allReadModelTypes {
                     id
                     name
                     properties {
@@ -42,8 +46,27 @@ export class ProjectionsEditorDialogViewModel {
         `;
 
         const result = await this.dataSource.query<AllReadModelTypeDefinitionsQuery>({ query, fetchPolicy: 'no-cache' });
-        this.readModelTypes = result.data.allReadModels;
+        this.readModelTypes = result.data.allReadModelTypes;
     }
+
+    async populateEventTypes() {
+        const query = gql`
+            query {
+                allEventTypes {
+                    id
+                    name
+                    properties {
+                        name
+                        type
+                    }
+                }
+            }        
+        `;
+
+        const result = await this.dataSource.query<AllEventTypeDefinitionsQuery>({ query, fetchPolicy: 'no-cache' });
+        this.eventTypes = result.data.allEventTypes;
+    }
+
 
     selectReadModelType(readModelType: ReadModelTypeDefinition) {
         this.readModelType = readModelType;
@@ -55,6 +78,7 @@ export class ProjectionsEditorDialogViewModel {
         });
     }
 
-    addFromEventOperation() {
+    addOperation(operation: Operation) {
+        this.operations = [...this.operations, operation];
     }
 }

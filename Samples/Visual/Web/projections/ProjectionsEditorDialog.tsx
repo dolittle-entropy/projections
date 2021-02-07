@@ -28,6 +28,9 @@ import {
 import { FromEventEditorDialog } from './operations/FromEventEditor/FromEventEditorDialog';
 import { FromEvent } from './operations/FromEvent';
 import { KeyStrategyEditor } from './KeyStrategyEditor';
+import OperationTypes from './operations/OperationTypes';
+import { Guid } from '@dolittle/rudiments';
+import { Operation } from './operations/Operation';
 
 const dialogContentProps: IDialogContentProps = {
     type: DialogType.normal,
@@ -36,11 +39,24 @@ const dialogContentProps: IDialogContentProps = {
 };
 
 
+const operationTypeNames: { [key: string]: string } = {};
+
+operationTypeNames[OperationTypes.FromEvent.toString()] = 'From Event';
+operationTypeNames[OperationTypes.JoinEvent.toString()] = 'Join Event';
+operationTypeNames[OperationTypes.Child.toString()] = 'Child';
+
+type OperationForListing = {
+    type: string;
+    information: string;
+    actual: Operation;
+};
+
 
 export const ProjectionsEditorDialog = withViewModel<ProjectionsEditorDialogViewModel, IDialogProps<ProjectionsEditorDialogInput, ProjectionsEditorDialogOutput>>(ProjectionsEditorDialogViewModel, ({ viewModel, props }) => {
-    const [operationGroups, setOperationGroups] = useState<IGroup[]>([]);
     const [showFromEventEditor, fromEventEditorProps] = useDialog<FromEventEditorDialogInput, FromEventEditorDialogOutput>((result, output?) => {
-
+        if (result === DialogResult.Success && output && fromEventEditorProps.input.isAdd) {
+            viewModel.addOperation(output.operation);
+        }
     });
 
     const done = () => {
@@ -66,7 +82,7 @@ export const ProjectionsEditorDialog = withViewModel<ProjectionsEditorDialogView
             key: 'from',
             iconProps: { iconName: 'RawSource' },
             text: 'From Event',
-            onClick: () => showFromEventEditor({ readModelType: viewModel.readModelType!, operation: new FromEvent() })
+            onClick: () => showFromEventEditor({ readModelType: viewModel.readModelType!, operation: new FromEvent(), eventTypes: viewModel.eventTypes, isAdd: true })
         },
         {
             key: 'join',
@@ -77,18 +93,41 @@ export const ProjectionsEditorDialog = withViewModel<ProjectionsEditorDialogView
 
     const columns: IColumn[] = [
         {
-            key: 'target',
-            name: 'Target',
-            fieldName: 'target',
+            key: 'type',
+            name: 'Type',
+            fieldName: 'type',
             minWidth: 150
         },
         {
-            key: 'source',
-            name: 'Source',
-            fieldName: 'source',
-            minWidth: 150
+            key: 'information',
+            name: 'Information',
+            fieldName: 'information',
+            minWidth: 250
         }
     ];
+
+    const operations = viewModel.operations.map(_ => {
+        const item: OperationForListing = {
+            type: operationTypeNames[_.operationType.toString()],
+            information: '',
+            actual: _
+        };
+
+        if (_.operationType.toString() === OperationTypes.FromEvent.toString()) {
+            const eventType = viewModel.eventTypes.find(et => et.id.toString() === (_ as FromEvent).eventType.toString());
+            if (eventType) {
+                item.information = `Event type : ${eventType.name}`;
+            }
+        }
+
+        return item;
+    });
+
+    const showOperationsEditor = (operation: OperationForListing) => {
+        if (operation.actual.operationType.toString() === OperationTypes.FromEvent.toString()) {
+            showFromEventEditor({ readModelType: viewModel.readModelType!, operation: operation.actual as FromEvent, eventTypes: viewModel.eventTypes, isAdd: false });
+        }
+    };
 
     return (
         <>
@@ -100,15 +139,15 @@ export const ProjectionsEditorDialog = withViewModel<ProjectionsEditorDialogView
 
                 <Stack>
                     <Dropdown label="Read Model Type" defaultSelectedKey={viewModel.readModelType?.id.toString()} options={eventTypeOptions} onChange={(e, nv) => viewModel.selectReadModelType(nv!.data)} />
-                    <KeyStrategyEditor readModelType={viewModel.readModelType}/>
+                    <KeyStrategyEditor readModelType={viewModel.readModelType} />
 
                     <CommandBar items={commandBarItems} />
 
                     <DetailsList
                         columns={columns}
                         selectionMode={SelectionMode.none}
-                        groups={operationGroups}
-                        items={[]}
+                        items={operations}
+                        onItemInvoked={showOperationsEditor}
                     />
                 </Stack>
 

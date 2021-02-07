@@ -20,4 +20,9 @@ export class KeyStrategyEditorViewModel {
 
     }
 
+    handleKeyStrategyTypeFor(strategy: KeyStrategy, type: KeyStrategyType) {
+        strategy.type = type;
+        this.strategies = [...this.strategies, ...[]];
+    }
+
 }

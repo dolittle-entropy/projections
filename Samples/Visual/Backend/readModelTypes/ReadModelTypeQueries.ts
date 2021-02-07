@@ -10,7 +10,7 @@ import { ReadModelTypeDefinition, ReadModelTypeDefinitionModel } from './ReadMod
 export class ReadModelTypeQueries {
 
     @Query(() => [ReadModelTypeDefinition])
-    async allReadModels() {
+    async allReadModelTypes() {
         return ReadModelTypeDefinitionModel.find().exec();
     }
 }

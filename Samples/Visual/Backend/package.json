@@ -31,7 +31,8 @@
         "ext": "ts"
     },
     "dependencies": {
+        "@dolittle/vanir-backend": "^8.0.0",
         "@shared/common": "1.0.0",
-        "@dolittle/vanir-backend": "^8.0.0"
+        "graphql-scalars": "^1.7.0"
     }
 }

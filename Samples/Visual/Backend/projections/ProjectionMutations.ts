@@ -5,14 +5,14 @@ import { injectable } from 'tsyringe';
 import { Resolver, Mutation, Arg } from 'type-graphql';
 import { ProjectionDefinition, ProjectionDefinitionModel } from './ProjectionDefinition';
 import { Guid } from '@dolittle/rudiments';
+import { GraphQLJSON } from 'graphql-scalars';
 
 @injectable()
 @Resolver()
 export class ProjectionMutations {
 
-    /*
     @Mutation(() => Boolean)
-    async saveProjectionDefinition(@Arg('id') id: Guid, @Arg('input') input: ProjectionDefinition): Promise<boolean> {
+    async saveProjectionDefinition(@Arg('id') id: Guid, @Arg('input', () => GraphQLJSON) input: any): Promise<boolean> {
         await ProjectionDefinitionModel.updateOne({ _id: id }, input, { upsert: true });
         return true;
     }
@@ -22,5 +22,4 @@ export class ProjectionMutations {
         await ProjectionDefinitionModel.deleteOne({ _id: id });
         return true;
     }
-    */
 }

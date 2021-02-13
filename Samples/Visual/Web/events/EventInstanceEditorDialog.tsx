@@ -8,7 +8,7 @@ import { EventInstanceEditorDialogViewModel } from './EventInstanceEditorDialogV
 import { DefaultButton, DetailsList, Dialog, DialogFooter, DialogType, Dropdown, IColumn, IconButton, IDialogContentProps, IDropdownOption, PrimaryButton, SelectionMode, Stack, TextField } from '@fluentui/react';
 import { EventInstanceEditorDialogInput } from './EventInstanceEditorDialogInput';
 import { EventInstanceEditorDialogOutput } from './EventInstanceEditorDialogOutput';
-import { PropertyType } from '../common/PropertyType';
+import { FieldType } from '../common/FieldType';
 
 const dialogContentProps: IDialogContentProps = {
     type: DialogType.normal,
@@ -16,11 +16,11 @@ const dialogContentProps: IDialogContentProps = {
     closeButtonAriaLabel: 'Close'
 };
 
-const propertyTypeOptions: IDropdownOption[] = [
-    { key: PropertyType.number, text: 'Number' },
-    { key: PropertyType.boolean, text: 'Boolean' },
-    { key: PropertyType.string, text: 'String' },
-    { key: PropertyType.date, text: 'Date' }
+const fieldTypeOptions: IDropdownOption[] = [
+    { key: FieldType.number, text: 'Number' },
+    { key: FieldType.boolean, text: 'Boolean' },
+    { key: FieldType.string, text: 'String' },
+    { key: FieldType.date, text: 'Date' }
 ];
 
 
@@ -38,7 +38,7 @@ export const EventInstanceEditorDialog = withViewModel<EventInstanceEditorDialog
             name: 'Value',
             fieldName: 'value',
             minWidth: 200,
-            onRender: (item, index, column) => <TextField placeholder="Property value" defaultValue={item.value} onChange={(e, nv) => item.value = nv} />
+            onRender: (item, index, column) => <TextField placeholder="Field value" defaultValue={item.value} onChange={(e, nv) => item.value = nv} />
         }
     ];
 
@@ -48,7 +48,7 @@ export const EventInstanceEditorDialog = withViewModel<EventInstanceEditorDialog
                 id: viewModel.id,
                 name: viewModel.name,
                 eventType: viewModel.eventType,
-                propertyValues: viewModel.propertyValues
+                propertyValues: viewModel.fieldValues
             }
         });
     };
@@ -76,7 +76,7 @@ export const EventInstanceEditorDialog = withViewModel<EventInstanceEditorDialog
             <Stack>
                 <TextField label="Name" placeholder="Event instance name" defaultValue={viewModel.name} onChange={(e, nv) => viewModel.name = nv!}/>
                 <Dropdown label="Type" defaultSelectedKey={viewModel.eventType?.toString()} options={eventTypeOptions} onChange={(e, nv) => viewModel.selectEventType(nv!.data)}/>
-                <DetailsList columns={columns} items={viewModel.propertyValues} selectionMode={SelectionMode.none} />
+                <DetailsList columns={columns} items={viewModel.fieldValues} selectionMode={SelectionMode.none} />
             </Stack>
 
             <DialogFooter>

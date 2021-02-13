@@ -3,22 +3,16 @@
 
 import { KeyStrategy } from './KeyStrategy';
 import { KeyStrategyType } from './KeyStrategyType';
-import { KeyStrategyEditorProps, KeyStrategiesChanged } from './KeyStrategyEditorProps';
+import { KeyStrategyEditorInput } from './KeyStrategyEditorInput';
+import { IDialogProps } from '@dolittle/vanir-react';
+import { KeyStrategyEditorOutput } from './KeyStrategyEditorOutput';
 
 export class KeyStrategyEditorViewModel {
-    private _onChange?: KeyStrategiesChanged;
     strategies: KeyStrategy[] = [];
 
-    propsChanged(props: KeyStrategyEditorProps) {
-        this._onChange = props.onChange;
-        if (props.strategies) {
-            this.strategies = props.strategies;
-        }
-    }
-
-    handleOnChange() {
-        if (this._onChange) {
-            this._onChange(this.strategies);
+    propsChanged(props: IDialogProps<KeyStrategyEditorInput, KeyStrategyEditorOutput>) {
+        if (props.input.strategies) {
+            this.strategies = props.input.strategies;
         }
     }
 

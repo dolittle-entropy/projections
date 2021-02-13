@@ -2,12 +2,34 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import React from 'react';
-import { withViewModel } from '@dolittle/vanir-react';
+import { DialogResult, IDialogProps, withViewModel } from '@dolittle/vanir-react';
 import { KeyStrategyEditorViewModel } from './KeyStrategyEditorViewModel';
 import { KeyStrategyType } from './KeyStrategyType';
 import { KeyStrategy } from './KeyStrategy';
-import { KeyStrategyEditorProps } from './KeyStrategyEditorProps';
-import { DetailsList, IColumn, IconButton, SelectionMode, IDropdownOption, Dropdown, TextField } from '@fluentui/react';
+import { KeyStrategyEditorInput } from './KeyStrategyEditorInput';
+import { KeyStrategyEditorOutput } from './KeyStrategyEditorOutput';
+import {
+    DetailsList,
+    IColumn,
+    IconButton,
+    SelectionMode,
+    IDropdownOption,
+    Dropdown,
+    TextField,
+    IDialogContentProps,
+    DialogType,
+    Dialog,
+    DialogFooter,
+    PrimaryButton,
+    DefaultButton
+} from '@fluentui/react';
+
+const dialogContentProps: IDialogContentProps = {
+    type: DialogType.normal,
+    title: 'Projection',
+    closeButtonAriaLabel: 'Close'
+};
+
 
 const keyStrategyTypes: IDropdownOption[] = [
     {
@@ -35,11 +57,11 @@ const eventContextProperties: IDropdownOption[] = [
     }
 ];
 
-export const KeyStrategyEditor = withViewModel<KeyStrategyEditorViewModel, KeyStrategyEditorProps>(KeyStrategyEditorViewModel, ({ viewModel, props }) => {
+export const KeyStrategyEditor = withViewModel<KeyStrategyEditorViewModel, IDialogProps<KeyStrategyEditorInput, KeyStrategyEditorOutput>>(KeyStrategyEditorViewModel, ({ viewModel, props }) => {
 
     const renderStrategyTypeSelector = (item: KeyStrategy) => {
         return (
-            <Dropdown defaultSelectedKey={item.type} options={keyStrategyTypes} onChange={(e, nv) => viewModel.handleKeyStrategyTypeFor(item, nv!.key as KeyStrategyType)}/>
+            <Dropdown defaultSelectedKey={item.type} options={keyStrategyTypes} onChange={(e, nv) => viewModel.handleKeyStrategyTypeFor(item, nv!.key as KeyStrategyType)} />
         );
     };
 
@@ -77,8 +99,22 @@ export const KeyStrategyEditor = withViewModel<KeyStrategyEditorViewModel, KeySt
         }
     ];
 
+
+    const done = () => {
+        props.onClose(DialogResult.Success);
+    };
+
+    const cancel = () => {
+        props.onClose(DialogResult.Cancelled);
+    };
+
+
     return (
-        <>
+        <Dialog
+            minWidth={600}
+            hidden={!props.visible}
+            onDismiss={done}
+            dialogContentProps={dialogContentProps}>
             Key strategies
             <DetailsList
                 selectionMode={SelectionMode.none}
@@ -89,6 +125,11 @@ export const KeyStrategyEditor = withViewModel<KeyStrategyEditorViewModel, KeySt
                 iconName: 'CirclePlus'
             }} onClick={viewModel.addStrategy} />
 
-        </>
+            <DialogFooter>
+                <PrimaryButton onClick={done} text="Done" type="submit" />
+                <DefaultButton onClick={cancel} text="Cancel" />
+            </DialogFooter>
+        </Dialog>
+
     );
 });

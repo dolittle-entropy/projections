@@ -8,21 +8,13 @@ import { EventEditorDialogViewModel } from './EventEditorDialogViewModel';
 import { DefaultButton, DetailsList, Dialog, DialogFooter, DialogType, Dropdown, IColumn, IconButton, IDialogContentProps, IDropdownOption, PrimaryButton, SelectionMode, Stack, TextField } from '@fluentui/react';
 import { EventEditorDialogInput } from './EventEditorDialogInput';
 import { EventEditorDialogOutput } from './EventEditorDialogOutput';
-import { PropertyType } from '../common/PropertyType';
+import { FieldTypeDropdown } from '../components';
 
 const dialogContentProps: IDialogContentProps = {
     type: DialogType.normal,
     title: 'Event Type',
     closeButtonAriaLabel: 'Close'
 };
-
-const propertyTypeOptions: IDropdownOption[] = [
-    { key: PropertyType.number, text: 'Number' },
-    { key: PropertyType.boolean, text: 'Boolean' },
-    { key: PropertyType.string, text: 'String' },
-    { key: PropertyType.date, text: 'Date' }
-];
-
 
 export const EventEditorDialog = withViewModel<EventEditorDialogViewModel, IDialogProps<EventEditorDialogInput, EventEditorDialogOutput>>(EventEditorDialogViewModel, ({ viewModel, props }) => {
     const columns: IColumn[] = [
@@ -31,14 +23,14 @@ export const EventEditorDialog = withViewModel<EventEditorDialogViewModel, IDial
             name: 'Name',
             fieldName: 'name',
             minWidth: 100,
-            onRender: (item, index, column) => <TextField placeholder="Property name" defaultValue={item.name} onChange={(e, nv) => item.name = nv} />
+            onRender: (item, index, column) => <TextField placeholder="Field name" defaultValue={item.name} onChange={(e, nv) => item.name = nv} />
         },
         {
             key: 'Type',
             name: 'Type',
             fieldName: 'type',
             minWidth: 100,
-            onRender: (item, index, column) => <Dropdown defaultSelectedKey={item.type} options={propertyTypeOptions} onChange={(e, nv) => item.type = nv?.key} />
+            onRender: (item, index, column) => <FieldTypeDropdown type={item.type} onChange={(type) => item.type = type}/>
         }
     ];
 
@@ -47,7 +39,7 @@ export const EventEditorDialog = withViewModel<EventEditorDialogViewModel, IDial
             definition: {
                 id: viewModel.id,
                 name: viewModel.name,
-                properties: viewModel.properties
+                properties: viewModel.fields
             }
         });
     };
@@ -65,10 +57,10 @@ export const EventEditorDialog = withViewModel<EventEditorDialogViewModel, IDial
 
             <Stack>
                 <TextField label="Name" placeholder="Name of the event" defaultValue={viewModel.name} onChange={(e, nv) => viewModel.name = nv!} />
-                <DetailsList columns={columns} items={viewModel.properties} selectionMode={SelectionMode.none} />
+                <DetailsList columns={columns} items={viewModel.fields} selectionMode={SelectionMode.none} />
                 <IconButton iconProps={{
                     iconName: 'CirclePlus'
-                }} onClick={viewModel.addProperty} />
+                }} onClick={viewModel.addField} />
             </Stack>
 
             <DialogFooter>

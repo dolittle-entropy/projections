@@ -5,7 +5,7 @@ import { IDialogProps } from '@dolittle/vanir-react';
 import { EventInstanceEditorDialogInput } from './EventInstanceEditorDialogInput';
 import { EventInstanceEditorDialogOutput } from './EventInstanceEditorDialogOutput';
 import { Guid } from '@dolittle/rudiments';
-import { PropertyValue } from './PropertyValue';
+import { FieldValue } from './FieldValue';
 import { EventTypeDefinition } from '../eventTypes/EventTypeDefinition';
 import { DataSource } from '@dolittle/vanir-web';
 import { injectable } from 'tsyringe';
@@ -15,7 +15,7 @@ export class EventInstanceEditorDialogViewModel {
     id: Guid = Guid.empty;
     name: string = '';
     eventType: Guid = Guid.empty;
-    propertyValues: PropertyValue[] = [];
+    fieldValues: FieldValue[] = [];
 
     eventTypes: EventTypeDefinition[] = [];
 
@@ -26,7 +26,7 @@ export class EventInstanceEditorDialogViewModel {
     selectEventType(eventType: EventTypeDefinition) {
         this.eventType = eventType.id;
 
-        this.propertyValues = eventType.properties.map(_ => {
+        this.fieldValues = eventType.properties.map(_ => {
             return {
                 name: _.name,
                 value: ''
@@ -38,12 +38,12 @@ export class EventInstanceEditorDialogViewModel {
         this.id = props.input?.definition?.id;
         this.name = props.input?.definition?.name;
         this.eventType = props.input?.definition?.eventType;
-        this.propertyValues = props.input?.definition?.propertyValues || [];
+        this.fieldValues = props.input?.definition?.propertyValues || [];
         this.eventTypes = props.input?.eventTypes || [];
     }
 
     addProperty() {
-        this.propertyValues = [...this.propertyValues, ...[{
+        this.fieldValues = [...this.fieldValues, ...[{
             name: '',
             value: ''
         }]];

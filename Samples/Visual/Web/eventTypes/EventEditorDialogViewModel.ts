@@ -5,24 +5,24 @@ import { IDialogProps } from '@dolittle/vanir-react';
 import { EventEditorDialogInput } from './EventEditorDialogInput';
 import { EventEditorDialogOutput } from './EventEditorDialogOutput';
 import { Guid } from '@dolittle/rudiments';
-import { PropertyDefinition } from '../common/PropertyDefinition';
-import { PropertyType } from '../common/PropertyType';
+import { FieldDefinition } from '../common/FieldDefinition';
+import { FieldType } from '../common/FieldType';
 
 export class EventEditorDialogViewModel {
     id: Guid = Guid.empty;
     name: string = '';
-    properties: PropertyDefinition[] = [];
+    fields: FieldDefinition[] = [];
 
     propsChanged(props: IDialogProps<EventEditorDialogInput, EventEditorDialogOutput>) {
         this.id = props.input?.definition?.id;
         this.name = props.input?.definition?.name;
-        this.properties = props.input?.definition?.properties;
+        this.fields = props.input?.definition?.properties;
     }
 
-    addProperty() {
-        this.properties = [...this.properties, ...[{
+    addField() {
+        this.fields = [...this.fields, ...[{
             name: '',
-            type: PropertyType.string
+            type: FieldType.string
         }]];
     }
 }

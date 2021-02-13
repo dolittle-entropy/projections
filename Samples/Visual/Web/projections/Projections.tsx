@@ -1,41 +1,47 @@
 // Copyright (c) Dolittle. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import { DialogResult, useDialog } from '@dolittle/vanir-react';
-import { DetailsList, IColumn, IconButton, SelectionMode, Stack } from '@fluentui/react';
+import { DialogResult, useDialog, withViewModel } from '@dolittle/vanir-react';
+import { DetailsList, IColumn, IconButton, SelectionMode, Stack, TextField } from '@fluentui/react';
 import React from 'react';
+import { FieldEditor, FieldEditorInput, FieldEditorOutput } from './FieldEditor';
 import { Projection } from './Projection';
-import { ProjectionsEditorDialog } from './ProjectionsEditorDialog';
-import { ProjectionsEditorDialogInput } from './ProjectionsEditorDialogInput';
-import { ProjectionsEditorDialogOutput } from './ProjectionsEditorDialogOutput';
-import { Guid } from '@dolittle/rudiments';
-import { KeyStrategy } from './KeyStrategy';
+import { ProjectionsEditor, ProjectionsEditorInput, ProjectionsEditorOutput } from './ProjectionsEditor';
+import { ProjectionsViewModel } from './ProjectionsViewModel';
+import { FieldType } from '../common/FieldType';
+import { FieldDefinition } from '../common/FieldDefinition';
+import { KeyStrategyEditorInput } from './KeyStrategyEditorInput';
+import { KeyStrategyEditorOutput } from './KeyStrategyEditorOutput';
+import { KeyStrategyEditor } from './KeyStrategyEditor';
 
-export const Projections = () => {
-    const [showProjectionEditor, projectionEditorDialogProps] = useDialog<ProjectionsEditorDialogInput, ProjectionsEditorDialogOutput>(async (result, output?) => {
-        if (result === DialogResult.Success) {
-            debugger;
-            if (output) {
-                //await viewModel.writeEventInstance(output.definition);
-                //await viewModel.populate();
-            }
+export const Projections = withViewModel(ProjectionsViewModel, ({ viewModel }) => {
+    const [showProjectionEditor, projectionEditorProps] = useDialog<ProjectionsEditorInput, ProjectionsEditorOutput>(async (result, output?) => {
+        if (result === DialogResult.Success && output) {
+            viewModel.addProjection(output.name, output.modelName);
         }
     });
 
     const addProjection = () => {
-        const input: ProjectionsEditorDialogInput = {
-            projection: new Projection()
-        };
-        input.projection.id = Guid.create();
-        input.projection.keyStrategies = [new KeyStrategy()];
-        showProjectionEditor(input);
+        showProjectionEditor({ name: '', modelName: '' });
     };
 
-    const showItem = (item: any) => {
-        /*const input: ProjectionsEditorDialogInput = {
-        };
+    const editProjection = (projection: Projection) => {
+        showProjectionEditor({ name: projection.name, modelName: projection.modelName });
+    };
 
-        showProjectionEditor(input);*/
+    const [showFieldEditor, fieldEditorProps] = useDialog<FieldEditorInput, FieldEditorOutput>(async (result, output?) => {
+        if (result === DialogResult.Success && output) {
+            viewModel.addField(output.projection, output.name, output.type);
+        }
+    });
+
+
+    const addField = (projection: Projection) => {
+        showFieldEditor({ projection, name: '', type: FieldType.string });
+    };
+
+    const editField = (projection: Projection, field: FieldDefinition) => {
+        showFieldEditor({ projection, name: field.name, type: field.type });
     };
 
     const deleteItem = async (item: any) => {
@@ -43,36 +49,73 @@ export const Projections = () => {
         //await viewModel.populate();
     };
 
+    const renderFields = (projection: Projection): JSX.Element[] => {
+        return projection.readModelType.fields.map(field => {
+            return (
+                <TextField key={field.name} readOnly value={field.name} iconProps={{ iconName: 'Delete' }} />
+            );
+        });
+    };
+
+    const [showKeyStrategyEditor, keyStrategyEditorProps] = useDialog<KeyStrategyEditorInput, KeyStrategyEditorOutput>(async (result, output?) => {
+        if (result === DialogResult.Success && output) {
+        }
+    });
+
+    const editKeyStrategyFor = (projection: Projection) => {
+        showKeyStrategyEditor({
+            readModelType: projection.readModelType,
+            strategies: projection.keyStrategies
+        });
+    };
+
     const columns: IColumn[] = [{
-        key: 'Name',
-        name: 'Name',
-        fieldName: 'name',
-        minWidth: 50
-    }, {
         key: 'Actions',
         name: 'Actions',
         minWidth: 100,
-        onRender: (item) => (
+        maxWidth: 100,
+        onRender: (projection: Projection) => (
             <Stack horizontal>
-                <IconButton iconProps={{ iconName: 'Delete' }} onClick={() => deleteItem(item)} />
+                <IconButton iconProps={{ iconName: 'Delete' }} onClick={() => deleteItem(projection)} />
+                <IconButton iconProps={{ iconName: 'Permissions' }} onClick={() => editKeyStrategyFor(projection)} />
             </Stack>
         )
+    }, {
+        key: 'Name',
+        name: 'Name',
+        fieldName: 'name',
+        minWidth: 50,
+        maxWidth: 150
+    }, {
+        key: 'Columns',
+        name: '',
+        minWidth: 50,
+        onRender: (projection: Projection) => <>
+            <Stack horizontal>
+                <IconButton iconProps={{
+                    iconName: 'CirclePlus'
+                }} onClick={() => addField(projection)} />
+                {renderFields(projection)}
+            </Stack>
+        </>
     }];
 
     return (
         <>
             <DetailsList
                 columns={columns}
-                items={[]}
+                items={viewModel.projections}
                 selectionMode={SelectionMode.none}
-                onItemInvoked={showItem}
+                onItemInvoked={editProjection}
             />
 
             <IconButton iconProps={{
                 iconName: 'CirclePlus'
             }} onClick={addProjection} />
 
-            <ProjectionsEditorDialog {...projectionEditorDialogProps}/>
+            <ProjectionsEditor {...projectionEditorProps} />
+            <FieldEditor {...fieldEditorProps} />
+            <KeyStrategyEditor {...keyStrategyEditorProps} />
         </>
     );
-};
+});

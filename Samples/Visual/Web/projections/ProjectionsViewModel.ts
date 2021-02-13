@@ -5,6 +5,10 @@ import { DataSource } from '@dolittle/vanir-web';
 import { injectable } from 'tsyringe';
 import gql from 'graphql-tag';
 import { Projection } from './Projection';
+import { Guid } from '@dolittle/rudiments';
+import { KeyStrategy } from './KeyStrategy';
+import { FieldType } from '../common/FieldType';
+import { FieldDefinition } from '../common/FieldDefinition';
 
 export type AllProjectionsQuery = {
     allProjections: Projection[];
@@ -36,5 +40,24 @@ export class ProjectionsViewModel {
         this.projections = result.data.allProjections;
     }
 
+    async addProjection(name: string, modelName: string) {
+        const projection = new Projection();
+        projection.id = Guid.create();
+        projection.keyStrategies = [new KeyStrategy()];
+        projection.name = name;
+        projection.modelName = modelName;
+        projection.readModelType = {
+            id: Guid.create(),
+            name: '',
+            fields: []
+        };
 
+        this.projections = [...this.projections, projection];
+    }
+
+    async addField(projection: Projection, name: string, type: FieldType) {
+        const field: FieldDefinition = { name, type };
+        projection.readModelType.fields = [...projection.readModelType.fields, field];
+        this.projections = [...this.projections];
+    }
 }

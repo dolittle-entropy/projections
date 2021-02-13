@@ -6,7 +6,7 @@ import gql from 'graphql-tag';
 import { AllEventTypeDefinitionsQuery } from './AllEventTypeDefinitionsQuery';
 import { EventTypeDefinition } from './EventTypeDefinition';
 import { injectable } from 'tsyringe';
-import { PropertyType } from '../common/PropertyType';
+import { FieldType } from '../common/FieldType';
 
 @injectable()
 export class EventTypesViewModel {

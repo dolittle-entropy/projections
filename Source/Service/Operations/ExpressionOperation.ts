@@ -17,7 +17,7 @@ export class ExpressionOperation implements IOperation {
     async perform(context: IOperationContext): Promise<any> {
         const initial = {...context.dataContext.model};
         this.expression.invoke(context.dataContext);
-        const changes =  new Changeset(context.comparer.compare(initial, context.dataContext.model));
+        const changes =  new Changeset(context.comparer.compare(initial, context.dataContext.model), context.dataContext.eventContext);
         return changes;
     }
 

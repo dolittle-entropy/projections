@@ -39,7 +39,7 @@ export class OperationGroup implements IOperationGroup {
             for (const operation of operations) {
                 const key = this.getKey(operation, keyContext);
 
-                const initial = await this.state.get(key) || {};
+                const initial = await this.state.get(key, context) || {};
                 const dataContext = new OperationDataContext(initial, eventType, event, context);
                 const operationContext = new OperationContext(this._objectComparer, key, dataContext, this, parentGroup);
                 const changes = await this.performOperationAndChildren(operation, dataContext, operationContext, initial);

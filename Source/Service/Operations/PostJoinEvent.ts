@@ -27,11 +27,11 @@ export class PostJoinEvent implements IOperation {
                 if (this.onProperty.path.path.indexOf('model.') === 0) {
                     actualOnProperty = new PropertyAccessor(new PropertyPath(this.onProperty.path.path.substr('model.'.length)));
                 }
-                return new Changeset([new UpdatePropertiesOnMany(actualOnProperty, key, propertiesChanged, context.parentGroup?.state || context.group.state)]);
+                return new Changeset([new UpdatePropertiesOnMany(actualOnProperty, key, propertiesChanged, context.parentGroup?.state || context.group.state)], context.dataContext.eventContext);
             }
         }
 
-        return Changeset.noChanges;
+        return Changeset.noChanges(context.dataContext.eventContext);
     }
 }
 

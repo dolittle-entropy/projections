@@ -3,11 +3,16 @@
 
 import { IState } from '../IState';
 import { Change } from './Change';
+import { EventContext } from '@dolittle/sdk.events';
+
+
 
 export class Changeset {
-    static readonly noChanges: Changeset = new Changeset([]);
+    static noChanges(context: EventContext): Changeset {
+        return new Changeset([], context);
+    }
 
-    constructor(readonly changes: Change[]) {
+    constructor(readonly changes: Change[], readonly context: EventContext) {
     }
 
     get hasChanges() {
@@ -15,13 +20,13 @@ export class Changeset {
     }
 
     mergeWith(changeset: Changeset) {
-        return new Changeset([...this.changes, ...changeset.changes]);
+        return new Changeset([...this.changes, ...changeset.changes], this.context);
     }
 
     async apply(key: any, model: any, state: IState): Promise<void> {
         for (const change of this.changes) {
-            await change.apply(model, state);
+            await change.apply(model, state, this.context);
         }
-        await state.set(key, model);
+        await state.set(key, model, this.context);
     }
 }

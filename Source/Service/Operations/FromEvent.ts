@@ -12,6 +12,6 @@ export class FromEvent implements IOperation {
     }
 
     async perform(context: IOperationContext) {
-        return Changeset.noChanges;
+        return Changeset.noChanges(context.dataContext.eventContext);
     }
 }

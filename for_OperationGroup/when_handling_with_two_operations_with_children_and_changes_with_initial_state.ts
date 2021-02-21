@@ -38,5 +38,5 @@ describe('when handling with two operations with children and changes with initi
         await context.operationGroup.handle(context.eventType, context.event, context.eventContext);
     })();
 
-    it('should set state with all the changes', () => context.state.set.should.be.calledWith(key, combinedChanges));
+    it('should set state with all the changes', () => context.state.set.should.be.calledWith(key, combinedChanges, context.eventContext));
 });

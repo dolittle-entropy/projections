@@ -18,6 +18,7 @@ import {
 import { IState } from '@dolittle/projections/Service/IState';
 import { Logger } from 'winston';
 import { LoggerInstance } from '@dolittle/projections/Service/SpecMocks/Logger';
+import { ObjectComparer } from '../../Source/Service/Changes/ObjectComparer';
 
 export class all_dependencies {
     state: IState;
@@ -27,6 +28,7 @@ export class all_dependencies {
     event: any = {};
     eventSourceId: EventSourceId = EventSourceId.from('e5392d64-1987-4193-8d3a-57aea4759cef');
     eventContext: EventContext;
+    objectComparer: ObjectComparer;
 
     constructor() {
 
@@ -49,5 +51,6 @@ export class all_dependencies {
             set: sinon.stub(),
             setMany: sinon.stub()
         };
+        this.objectComparer = new ObjectComparer();
     }
 }

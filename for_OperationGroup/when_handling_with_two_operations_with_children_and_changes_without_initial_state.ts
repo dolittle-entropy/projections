@@ -36,5 +36,5 @@ describe('when handling with two operations with children and changes without in
     })();
 
     it('should get state', () => context.state.get.should.be.calledWith(key));
-    it('should set state with all the changes', () => context.state.set.should.be.calledWith(key, combinedChanges));
+    it('should set state with all the changes', () => context.state.set.should.be.calledWith(key, combinedChanges, context.eventContext));
 });

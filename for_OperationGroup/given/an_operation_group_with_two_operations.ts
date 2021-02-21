@@ -11,6 +11,7 @@ import { OperationContext } from '@dolittle/projections/Service/Operations/Opera
 
 import { all_dependencies } from './all_dependencies';
 import { NullKeyStrategy } from '@dolittle/projections/Service/Keys/NullKeyStrategy';
+import { Expression } from '@dolittle/projections/Service/Expressions/Expression';
 
 export class an_operation_group_with_two_operations extends all_dependencies {
     operationGroup: OperationGroup;
@@ -24,6 +25,8 @@ export class an_operation_group_with_two_operations extends all_dependencies {
     constructor() {
         super();
 
+        const filter = Expression.equal(Expression.property('eventType'), Expression.constant(this.eventType));
+
         this.keyStrategy = {
             has: sinon.stub().returns(true),
             get: sinon.stub()
@@ -31,7 +34,7 @@ export class an_operation_group_with_two_operations extends all_dependencies {
 
         this.firstOperation = {
             keyStrategy: new NullKeyStrategy(),
-            eventTypes: [this.eventType],
+            filter,
             children: [],
 
             perform: this.firstOperationPerformStub
@@ -39,7 +42,7 @@ export class an_operation_group_with_two_operations extends all_dependencies {
 
         this.secondOperation = {
             keyStrategy: new NullKeyStrategy(),
-            eventTypes: [this.eventType],
+            filter,
             children: [],
 
             perform: this.secondOperationPerformStub
@@ -52,6 +55,7 @@ export class an_operation_group_with_two_operations extends all_dependencies {
             [this.firstOperation, this.secondOperation],
             [],
             this.state,
+            this.objectComparer,
             this.logger
         );
     }

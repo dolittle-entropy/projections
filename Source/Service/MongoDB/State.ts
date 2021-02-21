@@ -10,20 +10,22 @@ import { EventSourceId, EventContext } from '@dolittle/sdk.events';
 import { MongoDBConfigurationProvider } from '../../MongoDBConfigurationProvider';
 
 export class State implements IState {
-    private _collectionsPerConnectionString: Map<string, Collection> = new Map();
+    private _collectionsPerConnectionStringAndDatabase: Map<string, Collection> = new Map();
 
     constructor(private readonly _provider: MongoDBConfigurationProvider, private _collectionName: string, private readonly _logger: Logger) {
     }
 
     private async getCollection(context: EventContext): Promise<Collection> {
         const configuration = this._provider(context);
-        if (this._collectionsPerConnectionString.has(configuration.connectionString)) {
-            return this._collectionsPerConnectionString.get(configuration.connectionString)!;
+        const key = `${configuration.connectionString}/${configuration.databaseName}`;
+
+        if (this._collectionsPerConnectionStringAndDatabase.has(key)) {
+            return this._collectionsPerConnectionStringAndDatabase.get(key)!;
         }
 
         const mongoClient = await MongoClient.connect(configuration.connectionString, { useNewUrlParser: true });
         const collection = mongoClient.db(configuration.databaseName).collection(this._collectionName);
-        this._collectionsPerConnectionString.set(configuration.connectionString, collection);
+        this._collectionsPerConnectionStringAndDatabase.set(configuration.connectionString, collection);
 
         return collection;
     }

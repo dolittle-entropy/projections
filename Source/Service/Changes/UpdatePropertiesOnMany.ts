@@ -5,16 +5,17 @@ import { IState } from '../IState';
 import { PropertyAccessor } from '../Properties';
 import { Change } from './Change';
 import { PropertySet } from './PropertySet';
+import { EventContext } from '@dolittle/sdk.events';
 
 export class UpdatePropertiesOnMany extends Change {
     constructor(readonly property: PropertyAccessor, readonly key: any, readonly properties: PropertySet[], readonly targetState: IState) {
         super();
     }
 
-    async apply(model: any, state: IState): Promise<void> {
+    async apply(model: any, state: IState, context: EventContext): Promise<void> {
         const propertyValues = {};
         this.properties.forEach(_ => _.apply(propertyValues, state));
-        await this.targetState.setMany(this.property, this.key, propertyValues);
+        await this.targetState.setMany(this.property, this.key, propertyValues, context);
     }
 
     toString() {

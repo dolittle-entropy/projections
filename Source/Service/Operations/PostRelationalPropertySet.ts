@@ -18,10 +18,10 @@ export class PostRelationalPropertySet implements IOperation {
     async perform(context: IOperationContext) {
         const id = this.targetProperty.get(context.dataContext.model);
 
-        const state = await this._intermediateState.get(id);
+        const state = await this._intermediateState.get(id, context.dataContext.eventContext);
         if (state) {
-            return new Changeset(context.comparer.compare({}, state));
+            return new Changeset(context.comparer.compare({}, state), context.dataContext.eventContext);
         }
-        return Changeset.noChanges;
+        return Changeset.noChanges(context.dataContext.eventContext);
     }
 }

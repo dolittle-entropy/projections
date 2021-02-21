@@ -62,6 +62,7 @@ export const Projections = withViewModel(ProjectionsViewModel, ({ viewModel }) =
 
     const [showKeyStrategyEditor, keyStrategyEditorProps] = useDialog<KeyStrategyEditorInput, KeyStrategyEditorOutput>(async (result, output?) => {
         if (result === DialogResult.Success && output) {
+            console.log('hello world');
         }
     });
 

@@ -14,13 +14,13 @@ export const Home = withViewModel(HomeViewModel, ({ viewModel }) => {
     return (
         <>
             <Pivot style={{ backgroundColor: 'black' }}>
-                <PivotItem headerText="Event Types" itemIcon="Storyboard">
+                <PivotItem headerText="Business Moments" itemIcon="Storyboard">
                     <EventTypes />
                 </PivotItem>
                 <PivotItem headerText="Projections" itemIcon="MergeDuplicate">
                     <Projections/>
                 </PivotItem>
-                <PivotItem headerText="Events" itemIcon="Picture">
+                <PivotItem headerText="Business Moment Workbench" itemIcon="Picture">
                     <Events />
                 </PivotItem>
                 <PivotItem headerText="Query Editor" itemIcon="StackIndicator">

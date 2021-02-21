@@ -12,7 +12,7 @@ import { FieldTypeDropdown } from '../components';
 
 const dialogContentProps: IDialogContentProps = {
     type: DialogType.normal,
-    title: 'Event Type',
+    title: 'Business Moment Type',
     closeButtonAriaLabel: 'Close'
 };
 

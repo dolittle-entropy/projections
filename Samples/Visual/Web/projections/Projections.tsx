@@ -22,11 +22,13 @@ export const Projections = withViewModel(ProjectionsViewModel, ({ viewModel }) =
     });
 
     const addProjection = () => {
-        showProjectionEditor({ name: '', modelName: '' });
+        const input: ProjectionsEditorInput = { name: '', modelName: '' };
+        showProjectionEditor(input);
     };
 
     const editProjection = (projection: Projection) => {
-        showProjectionEditor({ name: projection.name, modelName: projection.modelName });
+        const input: ProjectionsEditorInput = { name: projection.name, modelName: projection.modelName };
+        showProjectionEditor(input);
     };
 
     const [showFieldEditor, fieldEditorProps] = useDialog<FieldEditorInput, FieldEditorOutput>(async (result, output?) => {
@@ -37,7 +39,8 @@ export const Projections = withViewModel(ProjectionsViewModel, ({ viewModel }) =
 
 
     const addField = (projection: Projection) => {
-        showFieldEditor({ projection, name: '', type: FieldType.string });
+        const input: FieldEditorInput = { projection, name: '', type: FieldType.string };
+        showFieldEditor(input);
     };
 
     const editField = (projection: Projection, field: FieldDefinition) => {

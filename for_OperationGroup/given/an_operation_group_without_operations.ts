@@ -26,6 +26,7 @@ export class an_operation_group_without_operations extends all_dependencies {
             [],
             [],
             this.state,
+            this.objectComparer,
             this.logger
         );
     }

@@ -20,5 +20,5 @@ describe('when handling with two operations with changes without initial state',
     })();
 
     it('should get state', () => context.state.get.should.be.calledWith(key));
-    it('should set state with the changes', () => context.state.set.should.be.calledWith(key, combinedChanges));
+    it('should set state with the changes', () => context.state.set.should.be.calledWith(key, combinedChanges, context.eventContext));
 });

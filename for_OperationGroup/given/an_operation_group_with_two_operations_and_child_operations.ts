@@ -4,25 +4,28 @@
 import sinon from 'sinon';
 import { NullKeyStrategy } from '@dolittle/projections/Service/Keys/NullKeyStrategy';
 import { IOperation } from '@dolittle/projections/Service/Operations/IOperation';
-import { OperationContext } from '@dolittle/projections/Service/Operations/OperationContext';
+import { IOperationContext } from '@dolittle/projections/Service/Operations/IOperationContext';
 import { an_operation_group_with_two_operations } from './an_operation_group_with_two_operations';
+import { Expression } from '@dolittle/projections/Service/Expressions/Expression';
 
 export class an_operation_group_with_two_operations_and_child_operations extends an_operation_group_with_two_operations {
     firstOperationFirstChild: IOperation;
-    firstOperationFirstChildPerformStub: (operationContext: OperationContext) => any = sinon.stub().returns({});
+    firstOperationFirstChildPerformStub: (operationContext: IOperationContext) => any = sinon.stub().returns({});
     firstOperationSecondChild: IOperation;
-    firstOperationSecondChildPerformStub: (operationContext: OperationContext) => any = sinon.stub().returns({});
+    firstOperationSecondChildPerformStub: (operationContext: IOperationContext) => any = sinon.stub().returns({});
     secondOperationFirstChild: IOperation;
-    secondOperationFirstChildPerformStub: (operationContext: OperationContext) => any = sinon.stub().returns({});
+    secondOperationFirstChildPerformStub: (operationContext: IOperationContext) => any = sinon.stub().returns({});
     secondOperationSecondChild: IOperation;
-    secondOperationSecondChildPerformStub: (operationContext: OperationContext) => any = sinon.stub().returns({});
+    secondOperationSecondChildPerformStub: (operationContext: IOperationContext) => any = sinon.stub().returns({});
 
     constructor() {
         super();
 
+        const filter = Expression.equal(Expression.property('eventType'), Expression.constant(this.eventType));
+
         this.firstOperationFirstChild = {
             keyStrategy: new NullKeyStrategy(),
-            eventTypes: [this.eventType],
+            filter,
             children: [],
 
             perform: this.firstOperationFirstChildPerformStub
@@ -30,7 +33,7 @@ export class an_operation_group_with_two_operations_and_child_operations extends
 
         this.firstOperationSecondChild = {
             keyStrategy: new NullKeyStrategy(),
-            eventTypes: [this.eventType],
+            filter,
             children: [],
 
             perform: this.firstOperationSecondChildPerformStub
@@ -40,7 +43,7 @@ export class an_operation_group_with_two_operations_and_child_operations extends
 
         this.secondOperationFirstChild = {
             keyStrategy: new NullKeyStrategy(),
-            eventTypes: [this.eventType],
+            filter,
             children: [],
 
             perform: this.secondOperationFirstChildPerformStub
@@ -48,7 +51,7 @@ export class an_operation_group_with_two_operations_and_child_operations extends
 
         this.secondOperationSecondChild = {
             keyStrategy: new NullKeyStrategy(),
-            eventTypes: [this.eventType],
+            filter,
             children: [],
 
             perform: this.secondOperationSecondChildPerformStub

@@ -21,5 +21,5 @@ describe('when handling with two operations with changes with initial state', as
         await context.operationGroup.handle(context.eventType, context.event, context.eventContext);
     })();
 
-    it('should set state with the changes', () => context.state.set.should.be.calledWith(key, combinedChanges));
+    it('should set state with the changes', () => context.state.set.should.be.calledWith(key, combinedChanges, context.eventContext));
 });

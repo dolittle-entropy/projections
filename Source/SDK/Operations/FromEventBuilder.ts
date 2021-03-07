@@ -10,6 +10,8 @@ import { PropertyUtilities } from '../../PropertyUtilities';
 import { KeyStrategyDescriptor } from '../KeyStrategyDescriptor';
 import OperationTypes from '../../OperationTypes';
 import { Expression } from '../Expressions';
+import { AddBuilder } from './AddBuilder';
+import { SubtractBuilder } from './SubtractBuilder';
 
 export type FromEventBuilderCallback<TDocument extends object, TEvent extends object> = (builder: FromEventBuilder<TDocument, TEvent>) => void;
 
@@ -36,6 +38,25 @@ export class FromEventBuilder<TDocument extends object, TEvent extends object> i
     set(targetProperty: PropertyAccessor<TDocument>): SetBuilder<FromEventBuilder<TDocument, TEvent>, TDocument, TEvent> {
         const propertyDescriptor = PropertyUtilities.getPropertyDescriptorFor(targetProperty);
         const builder = new SetBuilder<FromEventBuilder<TDocument, TEvent>, TDocument, TEvent>(propertyDescriptor.path, this);
+        this._builders.push(builder);
+        return builder;
+    }
+
+    add(targetProperty: PropertyAccessor<TDocument>): AddBuilder<FromEventBuilder<TDocument, TEvent>, TDocument, TEvent> {
+        const propertyDescriptor = PropertyUtilities.getPropertyDescriptorFor(targetProperty);
+        const builder = new AddBuilder<FromEventBuilder<TDocument, TEvent>, TDocument, TEvent>(propertyDescriptor.path, this);
+        this._builders.push(builder);
+        return builder;
+    }
+
+    count(targetProperty: PropertyAccessor<TDocument>): FromEventBuilder<TDocument, TEvent> {
+        this.add(targetProperty).withValue(1);
+        return this;
+    }
+
+    subtract(targetProperty: PropertyAccessor<TDocument>): SubtractBuilder<FromEventBuilder<TDocument, TEvent>, TDocument, TEvent> {
+        const propertyDescriptor = PropertyUtilities.getPropertyDescriptorFor(targetProperty);
+        const builder = new SubtractBuilder<FromEventBuilder<TDocument, TEvent>, TDocument, TEvent>(propertyDescriptor.path, this);
         this._builders.push(builder);
         return builder;
     }

@@ -19,6 +19,7 @@ export class Rule {
     componentName!: string;
     lastUpdated!: Date;
     children!: SomeChild[];
+    count!: number;
 }
 
 export class SomeChild {
@@ -62,7 +63,8 @@ export class SomeChild {
                 .set(r => r.priority).to(ev => ev.priority)
                 .set(r => r.featureId).to(ev => ev.featureId)
                 .set(r => r.componentId).to(ev => ev.componentId)
-                .set(r => r.lastUpdated).toContext(ec => ec.occurred))
+                .set(r => r.lastUpdated).toContext(ec => ec.occurred)
+                .count(r => r.count))
             .join(FeatureAdded, e => e
                 .on(r => r.featureId)
                 .usingKeyFrom(ev => ev.id)

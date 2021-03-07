@@ -10,7 +10,13 @@ export class NotEqualExpression extends BinaryExpression {
     }
 
     invoke(context: IOperationDataContext) {
-        throw new Error('Not implemented');
+        const leftValue = this.left.invoke(context);
+        const rightValue = this.right.invoke(context);
+        if (leftValue.equals) {
+            return !leftValue.equals(rightValue);
+        }
+
+        return leftValue !== rightValue;
     }
 
     readonly operationString: string = '!=';

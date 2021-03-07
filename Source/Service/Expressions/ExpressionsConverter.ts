@@ -82,6 +82,10 @@ export class ExpressionsConverter {
                 ExpressionsConverter.toExpression((expression as Sdk.BinaryExpression).right));
         }
 
+        if (expression instanceof Sdk.NoOpExpression) {
+            return Expression.noOp();
+        }
+
         throw new UnknownExpression(expression);
     }
 }

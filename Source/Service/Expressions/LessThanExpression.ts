@@ -10,7 +10,7 @@ export class LessThanExpression extends BinaryExpression {
     }
 
     invoke(context: IOperationDataContext) {
-        throw new Error('Not implemented');
+        return this.left.invoke(context) < this.right.invoke(context);
     }
 
     readonly operationString: string = '<';

@@ -15,6 +15,7 @@ import * as SdkExpressions from '../../SDK/Expressions';
 import { ExpressionsConverter } from '../Expressions/ExpressionsConverter';
 import { ExpressionOperation } from './ExpressionOperation';
 import { IOperation } from './IOperation';
+import { ChildFromEvent } from './ChildFromEvent';
 
 export type PropertyMapConfiguration = {
     sourceProperty: string;
@@ -41,18 +42,30 @@ export class OperationsConverter {
         switch (descriptor.id) {
             case OperationTypes.FromEvent: {
                 const configuration: FromEventConfiguration = descriptor.configuration;
-                console.log(configuration.keyStrategy);
-                return new FromEvent(ExpressionsConverter.toExpression(descriptor.filter), KeyStrategiesConverter.toKeyStrategy(configuration.keyStrategy), this.toOperations(descriptor.children));
+                return new FromEvent(
+                    ExpressionsConverter.toExpression(descriptor.filter),
+                    KeyStrategiesConverter.toKeyStrategy(configuration.keyStrategy),
+                    this.toOperations(descriptor.children));
             };
             case OperationTypes.JoinEvent: {
                 const configuration: JoinEventConfiguration = descriptor.configuration;
                 const onProperty = new PropertyAccessor(new PropertyPath(configuration.onProperty));
-                return new JoinEvent(ExpressionsConverter.toExpression(descriptor.filter), KeyStrategiesConverter.toKeyStrategy(configuration.keyStrategy), onProperty, this.toOperations(descriptor.children));
+                return new JoinEvent(
+                    ExpressionsConverter.toExpression(descriptor.filter),
+                    KeyStrategiesConverter.toKeyStrategy(configuration.keyStrategy),
+                    onProperty,
+                    this.toOperations(descriptor.children));
             };
             case OperationTypes.Child: {
                 const configuration: ChildConfiguration = descriptor.configuration;
-                throw new Error('Not implemented');
-                //return new ChildFromEvent(descriptor.eventTypes, nullKeyStrategy, this.toOperations(descriptor.children));
+                const identifiedByProperty = new PropertyAccessor(new PropertyPath(configuration.identifierProperty));
+                const storedInProperty = new PropertyAccessor(new PropertyPath(configuration.storedInProperty));
+                return new ChildFromEvent(
+                    ExpressionsConverter.toExpression(descriptor.filter),
+                    new NullKeyStrategy(),
+                    identifiedByProperty,
+                    storedInProperty,
+                    this.toOperations(descriptor.children));
             }
             case OperationTypes.Expression: {
                 const sdkExpression = descriptor.configuration as SdkExpressions.Expression;

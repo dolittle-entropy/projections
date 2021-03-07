@@ -20,7 +20,6 @@ import { ExpressionOperation } from '../Operations/ExpressionOperation';
 import { IObjectComparer } from '../Changes/IObjectComparer';
 import { IState } from '../IState';
 
-
 export class ProjectionsPlanner implements IProjectionsPlanner {
 
     constructor(
@@ -44,21 +43,32 @@ export class ProjectionsPlanner implements IProjectionsPlanner {
 
         const joinsOperationGroup = this.createOperationGroupForJoins(stream, joinOperations, intermediateState);
         const fromsOperationGroup = this.createOperationGroupForFroms(stream, descriptor, fromOperations, joinsOperationGroup, projectionState);
+        const childrenOperationGroup = this.createOperatorGroupForChildren(stream, childFromEventOperations, intermediateState);
+
+        const projection = new Projection(stream, ScopeId.from(descriptor.scope), [fromsOperationGroup, childrenOperationGroup]);
+        return projection;
+    }
+
+    private createOperatorGroupForChildren(stream: StreamId, childFromEventOperations: ChildFromEvent[], intermediateState: IState) {
+        /*
+        Comments for supporting children:
+
+        - Child operations is a parent for Froms and Joins - the planning needs to go one level down (could potentially be recursive)
+        - Filter for ChildFromEvent should be an expression consisting of a nested Expression.Or of all Froms and Joins within
+        - Needs a PostChild child operation - similar to Post join for adding the needed changes to changeset
+        */
 
         // Children group
-        /*const childrenOperationGroup = new OperationGroup(
+        return new OperationGroup(
             'Children',
             stream,
-            [new EventSourceKeyStrategy()],
+            [new ExpressionKeyStrategy(Expression.property('eventContext.eventSourceId'))],
             childFromEventOperations,
             [],
             intermediateState,
             this._objectComparer,
             this._logger
-        );*/
-
-        const projection = new Projection(stream, ScopeId.from(descriptor.scope), [fromsOperationGroup]);
-        return projection;
+        );
     }
 
     private createOperationGroupForFroms(stream: StreamId, descriptor: ProjectionDescriptor, fromOperations: IOperation[], joinsOperationGroup: OperationGroup, projectionState: IState) {
@@ -106,7 +116,22 @@ export class ProjectionsPlanner implements IProjectionsPlanner {
     private getChildFromEventOperationsFrom(descriptor: ProjectionDescriptor) {
         return descriptor.operations
             .filter(_ => _.id.toString() === OperationTypes.Child.toString())
-            .map(_ => OperationsConverter.toOperation(_) as ChildFromEvent);
+            .map(_ => {
+                const operation = OperationsConverter.toOperation(_) as ChildFromEvent;
+                let currentExpression: Expression | undefined;
+
+                for (const childOperation of operation.children) {
+                    if (!currentExpression) {
+                        currentExpression = childOperation.filter;
+                    } else {
+                        currentExpression = Expression.or(currentExpression, childOperation.filter);
+                    }
+                }
+
+                operation.filter = currentExpression || Expression.noOp();
+
+                return operation;
+            });
     }
 
     private getJoinOperationsFrom(descriptor: ProjectionDescriptor) {

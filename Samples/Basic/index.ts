@@ -22,6 +22,7 @@ export class Rule {
 }
 
 export class SomeChild {
+    ruleId!: string;
     id!: any;
     name!: string;
 }
@@ -69,11 +70,12 @@ export class SomeChild {
             .join(ComponentAdded, e => e
                 .on(r => r.componentId)
                 .set(r => r.componentName).to(ev => ev.name))
-            /*.children(SomeChild, c => c
+            .children(SomeChild, c => c
                 .identifiedBy(cc => cc.id)
                 .storedIn(cc => cc.children)
                 .from(ChildAdded, cb => cb
-                    .set(cc => cc.name).to(ev => ev.name)))*/
+                    .usingKeyFrom(cc => cc.ruleId)
+                    .set(cc => cc.name).to(ev => ev.name)))
         )
         .build();
 
@@ -92,11 +94,13 @@ export class SomeChild {
         const featureId = 'c2d3b8ec-505d-4905-8441-8ac6ad2bfd2f';
         const componentId = '7c5b0da1-cfdf-48c0-a8c7-e3ad7b751b21';
         const ruleId = 'afe8b77f-5430-4a98-8fa5-a7c6f63c2e1f';
+        const childId = 'eb461aa0-0d69-4e84-a402-5fd12e866b74';
 
-        await eventStore.commit(new FeatureAdded(featureId, 'My Feature'), featureId);
+        //await eventStore.commit(new FeatureAdded(featureId, 'My Feature'), featureId);
         await eventStore.commit(new RuleDefined(ruleId, 1, 2, featureId, componentId), ruleId);
-        await eventStore.commit(new ComponentAdded('My Component'), componentId);
-        await eventStore.commit(new RuleDefined(ruleId, 1, 3, featureId, componentId), ruleId);
+        //await eventStore.commit(new ComponentAdded('My Component'), componentId);
+        //await eventStore.commit(new RuleDefined(ruleId, 1, 3, featureId, componentId), ruleId);
+        await eventStore.commit(new ChildAdded(ruleId, 'Something'), childId);
 
         await res.send('Ok');
     });

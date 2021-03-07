@@ -4,12 +4,22 @@
 import { Changeset } from '../Changes';
 import { Expression } from '../Expressions';
 import { IKeyStrategy } from '../Keys';
+import { PropertyAccessor } from '../Properties';
 import { IOperation } from './IOperation';
 import { IOperationContext } from './IOperationContext';
 
 export class ChildFromEvent implements IOperation {
-    constructor(readonly filter: Expression, readonly keyStrategy: IKeyStrategy, readonly children: IOperation[]) {
+    constructor(
+        _filter: Expression,
+        readonly keyStrategy: IKeyStrategy,
+        readonly identifiedByProperty: PropertyAccessor,
+        readonly storedInProperty: PropertyAccessor,
+        readonly children: IOperation[]) {
+        this.filter = _filter;
     }
+
+    filter: Expression;
+
 
     async perform(context: IOperationContext) {
         return Changeset.noChanges(context.dataContext.eventContext);

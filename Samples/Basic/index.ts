@@ -10,6 +10,7 @@ import { createLogger, format, transports } from 'winston';
 import { ChildAdded } from './events/ChildAdded';
 
 import './RuleProjection';
+import './RuleStatisticsProjection';
 
 (async () => {
     const loggerOptions = {

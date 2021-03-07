@@ -16,6 +16,7 @@ import { ExpressionsConverter } from '../Expressions/ExpressionsConverter';
 import { ExpressionOperation } from './ExpressionOperation';
 import { IOperation } from './IOperation';
 import { ChildFromEvent } from './ChildFromEvent';
+import { GroupBy } from './GroupBy';
 
 export type PropertyMapConfiguration = {
     sourceProperty: string;
@@ -34,6 +35,10 @@ export type JoinEventConfiguration = {
 export type ChildConfiguration = {
     storedInProperty: string;
     identifierProperty: string;
+};
+
+export type GroupByConfiguration = {
+    property: string;
 };
 
 export class OperationsConverter {
@@ -71,6 +76,13 @@ export class OperationsConverter {
                 const sdkExpression = descriptor.configuration as SdkExpressions.Expression;
                 const expression = ExpressionsConverter.toExpression(sdkExpression);
                 return new ExpressionOperation(expression, new NullKeyStrategy(), this.toOperations(descriptor.children));
+            };
+            case OperationTypes.GroupBy: {
+                const configuration = descriptor.configuration as GroupByConfiguration;
+                return new GroupBy(
+                    ExpressionsConverter.toExpression(descriptor.filter),
+                    new NullKeyStrategy(),
+                    this.toOperations(descriptor.children));
             };
         }
 

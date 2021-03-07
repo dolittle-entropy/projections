@@ -9,7 +9,7 @@ import { SomeChild } from './SomeChild';
 
 @projectionFor(Rule, '0f5ee25a-bcd6-4f14-9c53-7cb3540ab842')
 export class RuleProjection implements IProjectionFor<Rule> {
-    define(projectionBuilder: ProjectionBuilder<Rule>): void {
+    define(projectionBuilder: ProjectionBuilder<Rule>) {
         projectionBuilder
             .useModelName('TheRules')
             .withKeys(_ => _.usingProperty('ruleId').usingEventSourceId())

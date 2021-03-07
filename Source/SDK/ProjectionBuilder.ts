@@ -7,7 +7,7 @@ import { Constructor } from '@dolittle/types';
 import { IEventTypes } from '@dolittle/sdk.artifacts';
 import { ScopeId } from '@dolittle/sdk.events';
 
-import { ModelDescriptor } from './ModelDescriptor';
+import { ModelDescriptor } from './Models/ModelDescriptor';
 import { ProjectionDescriptor } from './ProjectionDescriptor';
 
 import { ProjectionMustHaveAUniqueIdentifier } from './ProjectionMustHaveAUniqueIdentifier';
@@ -15,6 +15,7 @@ import { OperationBuilderContext } from './OperationBuilderContext';
 import { KeyStrategiesBuilder, KeyStrategiesBuilderCallback } from './KeyStrategiesBuilder';
 import { ProjectionOperationBuilder } from './ProjectionOperationBuilder';
 import { ProjectionId } from '../ProjectionId';
+import { ModelBuilder, ModelBuilderCallback } from './Models/ModelBuilder';
 
 export type ProjectionBuilderCallback<TDocument extends object> = (builder: ProjectionBuilder<TDocument>) => void;
 
@@ -24,7 +25,7 @@ export type ProjectionBuilderCallback<TDocument extends object> = (builder: Proj
 export class ProjectionBuilder<TDocument extends object> extends ProjectionOperationBuilder<TDocument, ProjectionBuilder<TDocument>> {
     private _id?: ProjectionId;
     private _inScope: ScopeId = ScopeId.default;
-    private _model: ModelDescriptor;
+    private _modelBuilder: ModelBuilder<TDocument>;
 
     private _keyStrategiesBuilder: KeyStrategiesBuilder;
 
@@ -35,7 +36,8 @@ export class ProjectionBuilder<TDocument extends object> extends ProjectionOpera
      */
     constructor(targetType: Constructor<TDocument>, private readonly _clientBuilder: ClientBuilder) {
         super(targetType);
-        this._model = new ModelDescriptor(targetType.name);
+        this._modelBuilder = new ModelBuilder();
+        this._modelBuilder.withName(targetType.name);
         this._keyStrategiesBuilder = new KeyStrategiesBuilder();
     }
 
@@ -71,11 +73,11 @@ export class ProjectionBuilder<TDocument extends object> extends ProjectionOpera
     }
 
     /**
-     * Use specific model name. This is typically used as the table / collection name in the persisted state.
-     * @param {string} name Name of the model
+     * Configure details for the model
+     * @param callback Callback for building model specifics.
      */
-    useModelName(name: string): ProjectionBuilder<TDocument> {
-        this._model = new ModelDescriptor(name);
+    configureModel(callback: ModelBuilderCallback<TDocument>): ProjectionBuilder<TDocument> {
+        callback(this._modelBuilder);
         return this;
     }
 
@@ -87,7 +89,7 @@ export class ProjectionBuilder<TDocument extends object> extends ProjectionOpera
         const operations = this._operationBuilders.map(_ => _.build(operationBuilderContext));
         const projection = new ProjectionDescriptor(
             this._id!,
-            this._model,
+            this._modelBuilder.build(),
             this._keyStrategiesBuilder.build(),
             operations,
             this._inScope);

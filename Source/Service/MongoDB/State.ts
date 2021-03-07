@@ -12,7 +12,11 @@ import { MongoDBConfigurationProvider } from '../../MongoDBConfigurationProvider
 export class State implements IState {
     private _collectionsPerConnectionStringAndDatabase: Map<string, Collection> = new Map();
 
-    constructor(private readonly _provider: MongoDBConfigurationProvider, private _collectionName: string, private readonly _logger: Logger) {
+    constructor(
+        private readonly _provider: MongoDBConfigurationProvider,
+        private readonly _collectionName: string,
+        private readonly _initialState: any,
+        private readonly _logger: Logger) {
     }
 
     private async getCollection(context: EventContext): Promise<Collection> {
@@ -33,9 +37,11 @@ export class State implements IState {
 
     async get(id: any, context: EventContext): Promise<any> {
         const collection = await this.getCollection(context);
-        const result = await collection.findOne({ _id: id });
+        let result = await collection.findOne({ _id: id });
         if (result) {
             delete result._id;
+        } else {
+            result = this._initialState;
         }
         return result;
     }

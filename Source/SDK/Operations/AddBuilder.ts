@@ -20,18 +20,22 @@ export class AddBuilder<TParent, TDocument, TEvent extends object> implements IO
 
     with(sourceProperty: PropertyAccessor<TEvent>): TParent {
         const propertyDescriptor = PropertyUtilities.getPropertyDescriptorFor(sourceProperty);
-        const expression = Expression.add(
-            Expression.property(`model.${this._targetPropertyPath}`),
-            Expression.property(`event.${propertyDescriptor.path}`)
+        const target = Expression.property(`model.${this._targetPropertyPath}`);
+        const expression = Expression.assign(
+            target, Expression.add(
+                target, Expression.property(`event.${propertyDescriptor.path}`)
+            )
         );
         this._operationDescriptor = new OperationDescriptor(OperationTypes.Expression, Expression.noOp(), expression);
         return this._parent;
     }
 
     withValue(value: any): TParent {
-        const expression = Expression.add(
-            Expression.property(`model.${this._targetPropertyPath}`),
-            Expression.constant(value)
+        const target = Expression.property(`model.${this._targetPropertyPath}`);
+        const expression = Expression.assign(
+            target, Expression.add(
+                target, Expression.constant(value)
+            )
         );
         this._operationDescriptor = new OperationDescriptor(OperationTypes.Expression, Expression.noOp(), expression);
         return this._parent;

@@ -4,5 +4,5 @@
 import { IState } from './IState';
 
 export abstract class IStateManager {
-    abstract getFor(name: string): Promise<IState>;
+    abstract getFor(name: string, initialState: any): Promise<IState>;
 }

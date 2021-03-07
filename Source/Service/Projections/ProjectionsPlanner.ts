@@ -32,8 +32,8 @@ export class ProjectionsPlanner implements IProjectionsPlanner {
     async planFrom(descriptor: ProjectionDescriptor): Promise<Projection> {
         const stream = StreamId.from(descriptor.projectionId.value);
         const intermediateStateName = `intermediates-${stream.toString()}`;
-        const intermediateState = await this._intermediatesManager.getFor(intermediateStateName);
-        const projectionState = await this._projectionsManager.getFor(descriptor.targetModel.name);
+        const intermediateState = await this._intermediatesManager.getFor(intermediateStateName, {});
+        const projectionState = await this._projectionsManager.getFor(descriptor.targetModel.name, descriptor.targetModel.initialState);
 
         const fromOperations = this.getFromOperationsFrom(descriptor);
         const joinOperations = this.getJoinOperationsFrom(descriptor);

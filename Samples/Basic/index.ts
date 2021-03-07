@@ -9,7 +9,7 @@ import { ComponentAdded, FeatureAdded, RuleDefined } from './events';
 import { createLogger, format, transports } from 'winston';
 import { ChildAdded } from './events/ChildAdded';
 
-import './RuleProjection';
+//import './RuleProjection';
 import './RuleStatisticsProjection';
 
 (async () => {

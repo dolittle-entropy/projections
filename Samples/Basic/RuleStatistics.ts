@@ -4,4 +4,5 @@
 export class RuleStatistics {
     groupId!: string;
     count!: number;
+    typeSummed!: number;
 }

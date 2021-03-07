@@ -11,7 +11,7 @@ export class StateManager implements IStateManager {
     constructor(private readonly _configuration: StateConfiguration, private readonly _logger: Logger) {
     }
 
-    async getFor(name: string): Promise<IState> {
-        return new State(this._configuration.provider, name, this._logger);
+    async getFor(name: string, initialState: any): Promise<IState> {
+        return new State(this._configuration.provider, name, initialState, this._logger);
     }
 }

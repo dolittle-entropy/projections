@@ -3,7 +3,7 @@
 
 import { ScopeId } from '@dolittle/sdk.events';
 import { KeyStrategyDescriptor } from './KeyStrategyDescriptor';
-import { ModelDescriptor } from './ModelDescriptor';
+import { ModelDescriptor } from './Models/ModelDescriptor';
 import { OperationDescriptor } from './OperationDescriptor';
 import { ProjectionId } from '../ProjectionId';
 

@@ -11,7 +11,7 @@ import { SomeChild } from './SomeChild';
 export class RuleProjection implements IProjectionFor<Rule> {
     define(projectionBuilder: ProjectionBuilder<Rule>) {
         projectionBuilder
-            .useModelName('TheRules')
+            .configureModel(_ => _.withName('TheRules'))
             .withKeys(_ => _.usingProperty('ruleId').usingEventSourceId())
             .from(RuleDefined, e => e
                 .usingKeyFrom(r => r.ruleId)

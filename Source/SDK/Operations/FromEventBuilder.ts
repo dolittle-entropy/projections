@@ -29,6 +29,11 @@ export class FromEventBuilder<TDocument extends object, TEvent extends object> i
 
     constructor(private readonly _eventType: Constructor<TEvent>) { }
 
+    usingConstantKey(key: string): FromEventBuilder<TDocument, TEvent> {
+        this._keyStrategy = KeyStrategyDescriptor.fromConstant(key);
+        return this;
+    }
+
     usingKeyFrom(property: PropertyAccessor<TEvent>): FromEventBuilder<TDocument, TEvent> {
         const propertyDescriptor = PropertyUtilities.getPropertyDescriptorFor(property);
         this._keyStrategy = KeyStrategyDescriptor.fromProperty(`event.${propertyDescriptor.path}`);

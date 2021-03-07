@@ -7,6 +7,10 @@ export class KeyStrategyDescriptor {
     constructor(readonly expression: Expression) {
     }
 
+    static fromConstant(key: string): KeyStrategyDescriptor {
+        return new KeyStrategyDescriptor(Expression.constant(key));
+    }
+
     static fromProperty(path: string): KeyStrategyDescriptor {
         return new KeyStrategyDescriptor(Expression.property(path));
     }

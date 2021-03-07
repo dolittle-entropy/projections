@@ -11,9 +11,15 @@ import { StateConfigurationBuilder, StateConfigurationBuilderCallback } from './
 import { StateManager } from './Service/MongoDB';
 import { ProjectionsPlanner, ProjectionsManager } from './Service/Projections';
 
+export * from './SDK/IProjectionFor';
+export * from './ProjectionId';
+export * from './SDK/projectionForDecorator';
+export * from './SDK/ProjectionBuilder';
 export * from './SDK/Expressions';
 import './SDK/Expressions';
 import { ObjectComparer } from './Service/Changes';
+import { ProjectionForDecoratedTypes } from './SDK/ProjectionForDecoratedTypes';
+import { IProjectionFor } from './SDK/IProjectionFor';
 
 let _host = 'localhost';
 let _port = 50053;
@@ -90,6 +96,14 @@ ClientBuilder.prototype.withContainer = function (container: IContainer): Client
 const originalBuild = ClientBuilder.prototype.build;
 ClientBuilder.prototype.build = function (): Client {
     const client = originalBuild.call(this);
+
+    for (const type of ProjectionForDecoratedTypes.types) {
+        this.withProjectionFor(type.documentType, builder => {
+            builder.withId(type.projectionId);
+            const instance = new type.target() as IProjectionFor<any>;
+            instance.define(builder);
+        });
+    }
 
     const connectionString = `${_host}:${_port}`;
     client.projections = [];

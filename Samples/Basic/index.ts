@@ -8,25 +8,8 @@ import { TenantId } from '@dolittle/sdk.execution';
 import { ComponentAdded, FeatureAdded, RuleDefined } from './events';
 import { createLogger, format, transports } from 'winston';
 import { ChildAdded } from './events/ChildAdded';
-import '@dolittle/projections';
 
-export class Rule {
-    type!: number;
-    priority!: number;
-    featureId!: string;
-    featureName!: string;
-    componentId!: string;
-    componentName!: string;
-    lastUpdated!: Date;
-    children!: SomeChild[];
-    count!: number;
-}
-
-export class SomeChild {
-    ruleId!: string;
-    id!: any;
-    name!: string;
-}
+import './RuleProjection';
 
 (async () => {
     const loggerOptions = {
@@ -53,34 +36,7 @@ export class SomeChild {
             .register(ChildAdded))
         .withProjections(_ => _.storeInMongo('mongodb://localhost:27017', 'Basic'))
         .withProjectionIntermediates(_ => _.storeInMongo('mongodb://localhost:27017', 'event_store_basic'))
-        .withProjectionFor(Rule, p => p
-            .withId('0ded8a37-5a69-41f3-b31e-c1f20867e1de')
-            .useModelName('TheRules')
-            .withKeys(_ => _.usingProperty('ruleId').usingEventSourceId())
-            .from(RuleDefined, e => e
-                .usingKeyFrom(r => r.ruleId)
-                .set(r => r.type).to(ev => ev.type)
-                .set(r => r.priority).to(ev => ev.priority)
-                .set(r => r.featureId).to(ev => ev.featureId)
-                .set(r => r.componentId).to(ev => ev.componentId)
-                .set(r => r.lastUpdated).toContext(ec => ec.occurred)
-                .count(r => r.count))
-            .join(FeatureAdded, e => e
-                .on(r => r.featureId)
-                .usingKeyFrom(ev => ev.id)
-                .set(r => r.featureName).to(ev => ev.name))
-            .join(ComponentAdded, e => e
-                .on(r => r.componentId)
-                .set(r => r.componentName).to(ev => ev.name))
-            .children(SomeChild, c => c
-                .identifiedBy(cc => cc.id)
-                .storedIn(cc => cc.children)
-                .from(ChildAdded, cb => cb
-                    .usingKeyFrom(cc => cc.ruleId)
-                    .set(cc => cc.name).to(ev => ev.name)))
-        )
         .build();
-
 
     const app = express();
     app.use(
@@ -98,10 +54,10 @@ export class SomeChild {
         const ruleId = 'afe8b77f-5430-4a98-8fa5-a7c6f63c2e1f';
         const childId = 'eb461aa0-0d69-4e84-a402-5fd12e866b74';
 
-        //await eventStore.commit(new FeatureAdded(featureId, 'My Feature'), featureId);
+        await eventStore.commit(new FeatureAdded(featureId, 'My Feature'), featureId);
         await eventStore.commit(new RuleDefined(ruleId, 1, 2, featureId, componentId), ruleId);
-        //await eventStore.commit(new ComponentAdded('My Component'), componentId);
-        //await eventStore.commit(new RuleDefined(ruleId, 1, 3, featureId, componentId), ruleId);
+        await eventStore.commit(new ComponentAdded('My Component'), componentId);
+        await eventStore.commit(new RuleDefined(ruleId, 1, 3, featureId, componentId), ruleId);
         await eventStore.commit(new ChildAdded(ruleId, 'Something'), childId);
 
         await res.send('Ok');

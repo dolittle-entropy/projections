@@ -15,7 +15,7 @@ import { KeyStrategiesConverter } from '../Keys';
 import { IOperation, JoinEvent, OperationGroup, OperationsConverter, PostJoinEvent, PostRelationalPropertySet } from '../Operations';
 import { ChildFromEvent } from '../Operations/ChildFromEvent';
 import { ExpressionKeyStrategy } from '../Keys/ExpressionKeyStrategy';
-import { Expression, ExpressionsConverter } from '../Expressions';
+import { Expression } from '../Expressions';
 import { ExpressionOperation } from '../Operations/ExpressionOperation';
 import { IObjectComparer } from '../Changes/IObjectComparer';
 import { IState } from '../IState';
@@ -30,7 +30,7 @@ export class ProjectionsPlanner implements IProjectionsPlanner {
     }
 
     async planFrom(descriptor: ProjectionDescriptor): Promise<Projection> {
-        const stream = StreamId.from(descriptor.stream);
+        const stream = StreamId.from(descriptor.projectionId.value);
         const intermediateStateName = `intermediates-${stream.toString()}`;
         const intermediateState = await this._intermediatesManager.getFor(intermediateStateName);
         const projectionState = await this._projectionsManager.getFor(descriptor.targetModel.name);

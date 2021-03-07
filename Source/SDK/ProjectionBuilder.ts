@@ -14,6 +14,7 @@ import { ProjectionMustHaveAUniqueIdentifier } from './ProjectionMustHaveAUnique
 import { OperationBuilderContext } from './OperationBuilderContext';
 import { KeyStrategiesBuilder, KeyStrategiesBuilderCallback } from './KeyStrategiesBuilder';
 import { ProjectionOperationBuilder } from './ProjectionOperationBuilder';
+import { ProjectionId } from '../ProjectionId';
 
 export type ProjectionBuilderCallback<TDocument extends object> = (builder: ProjectionBuilder<TDocument>) => void;
 
@@ -21,7 +22,7 @@ export type ProjectionBuilderCallback<TDocument extends object> = (builder: Proj
  * Represents the builder of a projection for a specific type.
  */
 export class ProjectionBuilder<TDocument extends object> extends ProjectionOperationBuilder<TDocument, ProjectionBuilder<TDocument>> {
-    private _id?: Guid;
+    private _id?: ProjectionId;
     private _inScope: ScopeId = ScopeId.default;
     private _model: ModelDescriptor;
 
@@ -43,9 +44,8 @@ export class ProjectionBuilder<TDocument extends object> extends ProjectionOpera
      * @param id Unique identifier that identifies the projection stream.
      * @returns {ProjectionBuilder{TDocument}} Continuation for building.
      */
-    withId(id: Guid | string): ProjectionBuilder<TDocument> {
-        this._id = Guid.as(id);
-
+    withId(id: ProjectionId | Guid | string): ProjectionBuilder<TDocument> {
+        this._id = ProjectionId.from(id);
         return this;
     }
 

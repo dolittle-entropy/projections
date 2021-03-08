@@ -18,6 +18,8 @@ import { AndExpression } from './AndExpression';
 import { OrExpression } from './OrExpression';
 import { NoOpExpression } from './NoOpExpression';
 import { ConcatExpression } from './ConcatExpression';
+import { DivideExpression } from './DivideExpression';
+import { MultiplyExpression } from './MultiplyExpression';
 
 declare module '@dolittle/projections/Service/Expressions/Expression' {
     namespace Expression {
@@ -26,6 +28,8 @@ declare module '@dolittle/projections/Service/Expressions/Expression' {
         export function assign(left: PropertyExpression, right: Expression): AssignExpression;
         export function add(left: Expression, right: Expression): AddExpression;
         export function subtract(left: Expression, right: Expression): SubtractExpression;
+        export function multiply(left: Expression, right: Expression): MultiplyExpression;
+        export function divide(left: Expression, right: Expression): DivideExpression;
         export function equal(left: Expression, right: Expression): EqualExpression;
         export function notEqual(left: Expression, right: Expression): NotEqualExpression;
         export function greaterThan(left: Expression, right: Expression): GreaterThanExpression;
@@ -57,6 +61,14 @@ Expression.add = function (left: Expression, right: Expression): AddExpression {
 
 Expression.subtract = function (left: Expression, right: Expression): SubtractExpression {
     return new SubtractExpression(left, right);
+};
+
+Expression.multiply = function (left: Expression, right: Expression): MultiplyExpression {
+    return new MultiplyExpression(left, right);
+};
+
+Expression.divide = function (left: Expression, right: Expression): DivideExpression {
+    return new DivideExpression(left, right);
 };
 
 Expression.equal = function (left: Expression, right: Expression): EqualExpression {

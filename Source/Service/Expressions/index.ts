@@ -16,5 +16,8 @@ export * from './NotEqualExpression';
 export * from './NoOpExpression';
 export * from './PropertyExpression';
 export * from './SubtractExpression';
+export * from './ConcatExpression';
+export * from './MultiplyExpression';
+export * from './DivideExpression';
 
 import './ExpressionExtensions';

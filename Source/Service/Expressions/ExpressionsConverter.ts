@@ -24,6 +24,12 @@ export class ExpressionsConverter {
             return Expression.constant((expression as Sdk.ConstantExpression).value);
         }
 
+        if (expression instanceof Sdk.DivideExpression) {
+            return Expression.divide(
+                ExpressionsConverter.toExpression((expression as Sdk.BinaryExpression).left),
+                ExpressionsConverter.toExpression((expression as Sdk.BinaryExpression).right));
+        }
+
         if (expression instanceof Sdk.EqualExpression) {
             return Expression.equal(
                 ExpressionsConverter.toExpression((expression as Sdk.BinaryExpression).left),
@@ -53,6 +59,13 @@ export class ExpressionsConverter {
                 ExpressionsConverter.toExpression((expression as Sdk.BinaryExpression).left),
                 ExpressionsConverter.toExpression((expression as Sdk.BinaryExpression).right));
         }
+
+        if (expression instanceof Sdk.MultiplyExpression) {
+            return Expression.multiply(
+                ExpressionsConverter.toExpression((expression as Sdk.BinaryExpression).left),
+                ExpressionsConverter.toExpression((expression as Sdk.BinaryExpression).right));
+        }
+
 
         if (expression instanceof Sdk.NotEqualExpression) {
             return Expression.notEqual(

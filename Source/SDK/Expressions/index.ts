@@ -18,5 +18,7 @@ export * from './NoOpExpression';
 export * from './OrExpression';
 export * from './PropertyExpression';
 export * from './SubtractExpression';
+export * from './MultiplyExpression';
+export * from './DivideExpression';
 
 import './ExpressionExtensions';

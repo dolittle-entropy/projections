@@ -9,6 +9,8 @@ export default {
     Assign: ExpressionTypeId.from('37a4dc59-50de-458c-bc64-09c5e084e8e3'),
     Add: ExpressionTypeId.from('2bbe70af-5859-40ed-9837-d56cb1c4b006'),
     Subtract: ExpressionTypeId.from('5ef07764-bfef-4026-bd24-88c9bf590348'),
+    Multiply: ExpressionTypeId.from('d8f7bd43-27a8-437d-876a-5270af590e6f'),
+    Divide: ExpressionTypeId.from('4f98db9c-7757-4072-af82-0b80ee7cb320'),
     Equal: ExpressionTypeId.from('99f16e8d-bddb-4b61-ba06-17bc2b9df15f'),
     NotEqual: ExpressionTypeId.from('860e483e-f9b8-47db-b65e-ec3aa329a9d3'),
     GreaterThan: ExpressionTypeId.from('3f0ccb8f-2930-4e2d-a523-ad0f06861c5f'),

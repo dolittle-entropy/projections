@@ -13,6 +13,8 @@ import { Expression } from '../Expressions';
 import { AddBuilder } from './AddBuilder';
 import { SubtractBuilder } from './SubtractBuilder';
 import { EventContext } from '@dolittle/sdk.events';
+import { MultiplyBuilder } from './MultiplyBuilder';
+import { DivideBuilder } from './DivideBuilder';
 
 export type FromEventBuilderCallback<TDocument extends object, TEvent extends object> = (builder: FromEventBuilder<TDocument, TEvent>) => void;
 
@@ -74,17 +76,32 @@ export class FromEventBuilder<TDocument extends object, TEvent extends object> i
         return builder;
     }
 
-    count(targetProperty: PropertyAccessor<TDocument>): FromEventBuilder<TDocument, TEvent> {
-        this.add(targetProperty).withValue(1);
-        return this;
-    }
-
     subtract(targetProperty: PropertyAccessor<TDocument>): SubtractBuilder<FromEventBuilder<TDocument, TEvent>, TDocument, TEvent> {
         const propertyDescriptor = PropertyUtilities.getPropertyDescriptorFor(targetProperty);
         const builder = new SubtractBuilder<FromEventBuilder<TDocument, TEvent>, TDocument, TEvent>(propertyDescriptor.path, this);
         this._builders.push(builder);
         return builder;
     }
+
+    multiply(targetProperty: PropertyAccessor<TDocument>): MultiplyBuilder<FromEventBuilder<TDocument, TEvent>, TDocument, TEvent> {
+        const propertyDescriptor = PropertyUtilities.getPropertyDescriptorFor(targetProperty);
+        const builder = new MultiplyBuilder<FromEventBuilder<TDocument, TEvent>, TDocument, TEvent>(propertyDescriptor.path, this);
+        this._builders.push(builder);
+        return builder;
+    }
+
+    divide(targetProperty: PropertyAccessor<TDocument>): DivideBuilder<FromEventBuilder<TDocument, TEvent>, TDocument, TEvent> {
+        const propertyDescriptor = PropertyUtilities.getPropertyDescriptorFor(targetProperty);
+        const builder = new DivideBuilder<FromEventBuilder<TDocument, TEvent>, TDocument, TEvent>(propertyDescriptor.path, this);
+        this._builders.push(builder);
+        return builder;
+    }
+
+    count(targetProperty: PropertyAccessor<TDocument>): FromEventBuilder<TDocument, TEvent> {
+        this.add(targetProperty).withValue(1);
+        return this;
+    }
+
 
     build(buildContext: OperationBuilderContext): OperationDescriptor {
         const children = this._builders.map(_ => _.build(buildContext));

@@ -12,6 +12,7 @@ import OperationTypes from '../../OperationTypes';
 import { Expression } from '../Expressions';
 import { AddBuilder } from './AddBuilder';
 import { SubtractBuilder } from './SubtractBuilder';
+import { EventContext } from '@dolittle/sdk.events';
 
 export type FromEventBuilderCallback<TDocument extends object, TEvent extends object> = (builder: FromEventBuilder<TDocument, TEvent>) => void;
 
@@ -33,6 +34,25 @@ export class FromEventBuilder<TDocument extends object, TEvent extends object> i
         this._keyStrategy = KeyStrategyDescriptor.fromConstant(key);
         return this;
     }
+
+    usingCompositeKeyFromContext(...properties: PropertyAccessor<EventContext>[]): FromEventBuilder<TDocument, TEvent> {
+        return this.usingCompositeKeyFrom<EventContext>('eventContext', ...properties);
+    }
+
+    usingCompositeKey(...properties: PropertyAccessor<TEvent>[]): FromEventBuilder<TDocument, TEvent> {
+        return this.usingCompositeKeyFrom<TEvent>('event', ...properties);
+    }
+
+    usingCompositeKeyFrom<T extends object>(propertyPrefix: string, ...properties: PropertyAccessor<T>[]): FromEventBuilder<TDocument, TEvent> {
+        const propertyPaths = properties.map(_ => {
+            const propertyDescriptor = PropertyUtilities.getPropertyDescriptorFor<T>(_);
+            return `${propertyPrefix}.${propertyDescriptor.path}`;
+        });
+
+        this._keyStrategy = KeyStrategyDescriptor.fromProperties(...propertyPaths);
+        return this;
+    }
+
 
     usingKeyFrom(property: PropertyAccessor<TEvent>): FromEventBuilder<TDocument, TEvent> {
         const propertyDescriptor = PropertyUtilities.getPropertyDescriptorFor(property);

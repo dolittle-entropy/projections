@@ -10,5 +10,5 @@ export class OrExpression extends BinaryExpression {
         super(ExpressionTypes.Or, left, right);
     }
 
-    readonly operationString: string = '||';
+    readonly operationString: string = '|';
 }

@@ -5,6 +5,7 @@ export * from './AddExpression';
 export * from './AndExpression';
 export * from './AssignExpression';
 export * from './BinaryExpression';
+export * from './ConcatExpression';
 export * from './ConstantExpression';
 export * from './EqualExpression';
 export * from './Expression';

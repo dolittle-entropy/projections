@@ -17,5 +17,6 @@ export default {
     LessThanOrEqual: ExpressionTypeId.from('9f578fe3-a6e3-4165-991e-9c4c1c3067bd'),
     And: ExpressionTypeId.from('7125599e-dc57-402a-8fd2-61679082070e'),
     Or: ExpressionTypeId.from('dc5e5a49-dc5d-4b4d-aa41-fae416b29818'),
+    Concat: ExpressionTypeId.from('4e49d0cf-1c62-48b2-bade-89789f5f7f79'),
     NoOp: ExpressionTypeId.from('93d6866d-dd07-4443-9816-aa7baebec0e0')
 };

@@ -5,14 +5,14 @@ import { Expression } from './Expression';
 import { BinaryExpression } from './BinaryExpression';
 import { IOperationDataContext } from '../Operations';
 
-export class OrExpression extends BinaryExpression {
+export class ConcatExpression extends BinaryExpression {
     constructor(left: Expression, right: Expression) {
         super(left, right);
     }
 
     invoke(context: IOperationDataContext) {
-        return this.left.invoke(context) || this.right.invoke(context);
+        return this.left.invoke(context).toString() + this.right.invoke(context).toString();
     }
 
-    readonly operationString: string = '|';
+    readonly operationString: string = '||';
 }

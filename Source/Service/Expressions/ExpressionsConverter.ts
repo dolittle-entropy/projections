@@ -82,6 +82,12 @@ export class ExpressionsConverter {
                 ExpressionsConverter.toExpression((expression as Sdk.BinaryExpression).right));
         }
 
+        if (expression instanceof Sdk.ConcatExpression) {
+            return Expression.concat(
+                ExpressionsConverter.toExpression((expression as Sdk.BinaryExpression).left),
+                ExpressionsConverter.toExpression((expression as Sdk.BinaryExpression).right));
+        }
+
         if (expression instanceof Sdk.NoOpExpression) {
             return Expression.noOp();
         }

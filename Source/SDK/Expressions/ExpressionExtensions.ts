@@ -16,7 +16,7 @@ import { LessThanOrEqualExpression } from './LessThanOrEqualExpression';
 import { AndExpression } from './AndExpression';
 import { OrExpression } from './OrExpression';
 import { NoOpExpression } from './NoOpExpression';
-
+import { ConcatExpression } from './ConcatExpression';
 
 declare module '@dolittle/projections/SDK/Expressions/Expression' {
     namespace Expression {
@@ -33,6 +33,7 @@ declare module '@dolittle/projections/SDK/Expressions/Expression' {
         export function lessThanOrEqual(left: Expression, right: Expression): LessThanOrEqualExpression;
         export function and(left: Expression, right: Expression): AndExpression;
         export function or(left: Expression, right: Expression): OrExpression;
+        export function concat(left: Expression, right: Expression): ConcatExpression;
         export function noOp(): NoOpExpression;
     }
 }
@@ -87,6 +88,10 @@ Expression.and = function (left: Expression, right: Expression): AndExpression {
 
 Expression.or = function (left: Expression, right: Expression): OrExpression {
     return new OrExpression(left, right);
+};
+
+Expression.concat = function (left: Expression, right: Expression): ConcatExpression {
+    return new ConcatExpression(left, right);
 };
 
 Expression.noOp = function () {

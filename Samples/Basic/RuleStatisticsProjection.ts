@@ -15,12 +15,21 @@ export class RuleStatisticsProjection implements IProjectionFor<RuleStatistics> 
                 typeSummed: 0
             }))
             .from(RuleDefined, f => f
-                .usingKeyFrom(r => r.priority)
-                //.usingConstantKey('e7c11f9f-65ed-4034-932b-c07da60b4db7')
+                .usingCompositeKeyFromContext(
+                    _ => _.occurred.year,
+                    _ => _.occurred.month,
+                    _ => _.occurred.day,
+                    _ => _.occurred.hour
+                )
                 .add(r => r.typeSummed).with(r => r.type)
                 .count(r => r.count));
-            /*.groupBy(_ => _.groupId, g => g
-                .from(RuleDefined, f => f.count(r => r.count))
-            );*/
+
+
+
+        //.usingKeyFrom(r => r.priority)
+        //.usingConstantKey('e7c11f9f-65ed-4034-932b-c07da60b4db7')
+        /*.groupBy(_ => _.groupId, g => g
+            .from(RuleDefined, f => f.count(r => r.count))
+        );*/
     }
 }

@@ -23,11 +23,14 @@ export class RuleStatisticsProjection implements IProjectionFor<RuleStatistics> 
                 )
                 .add(r => r.typeSummed).with(r => r.type)
                 .count(r => r.count));
+    }
+}
+
+
+
 
         //.usingKeyFrom(r => r.priority)
         //.usingConstantKey('e7c11f9f-65ed-4034-932b-c07da60b4db7')
         /*.groupBy(_ => _.groupId, g => g
             .from(RuleDefined, f => f.count(r => r.count))
         );*/
-    }
-}

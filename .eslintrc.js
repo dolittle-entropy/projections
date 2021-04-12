@@ -3,14 +3,36 @@
 
 module.exports = {
     root: true,
+    ignorePatterns: [
+        '*.d.ts',
+        '*.scss.d.ts',
+        'tsconfig.*',
+        'wallaby.js',
+        'dist',
+        'node_modules',
+        'wwwroot',
+        'templates',
+        '**/for_*'
+    ],
+    extends: [
+        'plugin:react/recommended'
+    ],
     parser: '@typescript-eslint/parser',
     parserOptions: {
-        project: './**/tsconfig.json',
+        project: './Source/tsconfig.json',
         sourceType: 'module',
         tsconfigRootDir: __dirname,
         warnOnUnsupportedTypeScriptVersion: false,
         ecmaVersion: 2020,
-        sourceType: 'module'
+        sourceType: 'module',
+        ecmaFeatures: {
+            jsx: true
+        }
+    },
+    settings: {
+        react: {
+            version: 'detect',
+        },
     },
     env: {
         browser: false,

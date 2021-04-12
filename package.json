@@ -11,8 +11,9 @@
         "clean": "tsc -b --clean",
         "build": "tsc -b Source/tsconfig.json && tsc -b Samples/Basic/tsconfig.json",
         "test": "mocha",
-        "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet",
-        "ci": "yarn build && yarn test"
+        "lint": "eslint --cache 'Source/**/*.{js,ts,tsx}' --quiet --fix",
+        "lint:ci": "eslint --cache 'Source/**/*.{js,ts,tsx}' --quiet",
+        "ci": "yarn clean && yarn lint:ci && yarn build && yarn test"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "4.5.0",

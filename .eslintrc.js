@@ -11,14 +11,15 @@ module.exports = {
         'dist',
         'node_modules',
         'wwwroot',
-        'templates'
+        'templates',
+        '**/for_*'
     ],
     extends: [
         'plugin:react/recommended'
     ],
     parser: '@typescript-eslint/parser',
     parserOptions: {
-        project: './Source/**/tsconfig.json',
+        project: './Source/tsconfig.json',
         sourceType: 'module',
         tsconfigRootDir: __dirname,
         warnOnUnsupportedTypeScriptVersion: false,

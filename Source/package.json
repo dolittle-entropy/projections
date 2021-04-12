@@ -16,7 +16,7 @@
     "dependencies": {
         "@dolittle/sdk": "14.3.0",
         "deep-equal": "^2.0.4",
-        "mongodb": "3.6.2"
+        "mongodb": "3.6.4"
     },
     "devDependencies": {
         "@types/mongodb": "3.5.34"

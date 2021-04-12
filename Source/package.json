@@ -14,7 +14,7 @@
         "build": "tsc -b"
     },
     "dependencies": {
-        "@dolittle/sdk": "14.1.0",
+        "@dolittle/sdk": "14.3.0",
         "deep-equal": "^2.0.4",
         "mongodb": "3.6.2"
     },

@@ -35,8 +35,8 @@ import './RuleStatisticsProjection';
             .register(FeatureAdded)
             .register(RuleDefined)
             .register(ChildAdded))
-        .withProjections(_ => _.storeInMongo('mongodb://localhost:27017', 'Basic'))
-        .withProjectionIntermediates(_ => _.storeInMongo('mongodb://localhost:27017', 'event_store_basic'))
+        .useProjections(_ => _.storeInMongo('mongodb://localhost:27017', 'Basic'))
+        .useProjectionIntermediates(_ => _.storeInMongo('mongodb://localhost:27017', 'event_store_basic'))
         .build();
 
     const app = express();

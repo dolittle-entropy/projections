@@ -36,13 +36,13 @@ declare module '@dolittle/sdk' {
          * Configure the behavior of projections, system wide.
          * @param {ProjectionsConfigurationBuilderCallback} callback Callback for building the projections configuration.
          */
-        withProjections(callback: StateConfigurationBuilderCallback): ClientBuilder;
+        useProjections(callback: StateConfigurationBuilderCallback): ClientBuilder;
 
         /**
          * Configure the behavior of projections, system wide.
          * @param {StateConfigurationBuilderCallback callback Callback for building the intermediates configuration.
          */
-        withProjectionIntermediates(callback: StateConfigurationBuilderCallback): ClientBuilder;
+         useProjectionsIntermediates(callback: StateConfigurationBuilderCallback): ClientBuilder;
 
         /**
          * Build a projection from events to a document of a type.
@@ -53,19 +53,19 @@ declare module '@dolittle/sdk' {
     }
 
     interface Client {
-        projections: ProjectionDescriptor[];
+        projectionDescriptors: ProjectionDescriptor[];
     }
 }
 
 const _projections: ProjectionBuilder<any>[] = [];
 
 
-ClientBuilder.prototype.withProjections = function (callback: StateConfigurationBuilderCallback): ClientBuilder {
+ClientBuilder.prototype.useProjections = function (callback: StateConfigurationBuilderCallback): ClientBuilder {
     callback(projectionsConfigurationBuilder);
     return this;
 };
 
-ClientBuilder.prototype.withProjectionIntermediates = function (callback: StateConfigurationBuilderCallback): ClientBuilder {
+ClientBuilder.prototype.useProjectionsIntermediates = function (callback: StateConfigurationBuilderCallback): ClientBuilder {
     callback(intermediatesConfigurationBuilder);
     return this;
 };
@@ -106,7 +106,7 @@ ClientBuilder.prototype.build = function (): Client {
     }
 
     const connectionString = `${_host}:${_port}`;
-    client.projections = [];
+    client.projectionDescriptors = [];
 
     const projectionsConfiguration = projectionsConfigurationBuilder.build();
     const projectionsStateManager = new StateManager(projectionsConfiguration, client.logger);
@@ -119,7 +119,7 @@ ClientBuilder.prototype.build = function (): Client {
 
     for (const projectionBuilder of _projections) {
         const projectionDescriptor = projectionBuilder.build(client.eventTypes);
-        client.projections.push(projectionDescriptor);
+        client.projectionDescriptors.push(projectionDescriptor);
 
         (async () => {
             const projection = await projectionsPlanner.planFrom(projectionDescriptor);

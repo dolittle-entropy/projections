@@ -17,8 +17,8 @@ import { Client } from '@dolittle/sdk';
 
 const client = Client
     .forMicroservice('eafb2efe-3185-4142-a517-51fb5d03a5a0')
-    .withProjections(_ => _.storeInMongo('mongodb://localhost:27017', 'MyDatabase'))
-    .withProjectionIntermediates(_ => _.storeInMongo('mongodb://localhost:27017', 'MyEventStore'))
+    .useProjections(_ => _.storeInMongo('mongodb://localhost:27017', 'MyDatabase'))
+    .useProjectionIntermediates(_ => _.storeInMongo('mongodb://localhost:27017', 'MyEventStore'))
     ... more config...
     .build();
 ```

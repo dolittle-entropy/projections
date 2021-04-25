@@ -3,7 +3,7 @@
 
 import * as grpc from '@grpc/grpc-js';
 
-import { EventHandlersClient } from '@dolittle/runtime.contracts/Runtime/Events.Processing/EventHandlers_grpc_pb';
+import { EventHandlersClient } from '@dolittle/runtime.contracts/Events.Processing/EventHandlers_grpc_pb';
 import { EventFiltersBuilder } from '@dolittle/sdk.events.filtering';
 import { EventHandlersBuilder } from '@dolittle/sdk.events.handling';
 import { Cancellation } from '@dolittle/sdk.resilience';

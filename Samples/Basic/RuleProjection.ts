@@ -12,16 +12,19 @@ export class RuleProjection implements IProjectionFor<Rule> {
     define(projectionBuilder: ProjectionBuilder<Rule>) {
         projectionBuilder
             .configureModel(_ => _.withName('TheRules'))
-            .withKeys(_ => _.usingProperty('ruleId').usingEventSourceId())
+            //.withKeys(_ => _.usingProperty('ruleId').usingEventSourceId()) 
             .from(RuleDefined, e => e
-                .usingKeyFrom(r => r.ruleId)
+                //.usingKeyFrom(r => r.ruleId)
                 .set(r => r.type).to(ev => ev.type)
                 .set(r => r.priority).to(ev => ev.priority)
                 .set(r => r.featureId).to(ev => ev.featureId)
                 .set(r => r.componentId).to(ev => ev.componentId)
                 .set(r => r.lastUpdated).toContext(ec => ec.occurred)
-                .set(r => r.magicNumber).toValue(42))
-            .join(FeatureAdded, e => e
+                .set(r => r.magicNumber).toValue(42)
+                .set(r => r.theId).toContext(ec => ec.eventSourceId)
+            )
+                
+            /*.join(FeatureAdded, e => e
                 .on(r => r.featureId)
                 .usingKeyFrom(ev => ev.id)
                 .set(r => r.featureName).to(ev => ev.name))
@@ -33,6 +36,6 @@ export class RuleProjection implements IProjectionFor<Rule> {
                 .storedIn(cc => cc.children)
                 .from(ChildAdded, cb => cb
                     .usingKeyFrom(cc => cc.ruleId)
-                    .set(cc => cc.name).to(ev => ev.name)));
+                    .set(cc => cc.name).to(ev => ev.name)))*/;
     }
 }

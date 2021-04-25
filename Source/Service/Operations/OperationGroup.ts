@@ -72,10 +72,6 @@ export class OperationGroup implements IOperationGroup {
             const keyStrategy = this.getKeyStrategyFor(keyContext);
             key = keyStrategy.get(keyContext);
         }
-
-        if (key instanceof Guid || key instanceof EventSourceId) {
-            key = key.toString();
-        }
         return key;
     }
 

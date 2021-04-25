@@ -8,9 +8,11 @@ import { TenantId } from '@dolittle/sdk.execution';
 import { ComponentAdded, FeatureAdded, RuleDefined } from './events';
 import { createLogger, format, transports } from 'winston';
 import { ChildAdded } from './events/ChildAdded';
+import '@dolittle/projections';
 
-//import './RuleProjection';
-import './RuleStatisticsProjection';
+
+import './RuleProjection';
+//import './RuleStatisticsProjection';
 
 (async () => {
     const loggerOptions = {
@@ -35,8 +37,9 @@ import './RuleStatisticsProjection';
             .register(FeatureAdded)
             .register(RuleDefined)
             .register(ChildAdded))
+            
         .useProjections(_ => _.storeInMongo('mongodb://localhost:27017', 'Basic'))
-        .useProjectionIntermediates(_ => _.storeInMongo('mongodb://localhost:27017', 'event_store_basic'))
+        .useProjectionsIntermediates(_ => _.storeInMongo('mongodb://localhost:27017', 'event_store_basic'))
         .build();
 
     const app = express();

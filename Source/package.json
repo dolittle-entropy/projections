@@ -8,7 +8,7 @@
     "license": "MIT",
     "private": false,
     "scripts": {
-        "prepublishOnly": "yarn build && yarn test",ack
+        "prepublishOnly": "yarn build && yarn test",
         "prebuild": "tsc -b --clean",
         "test": "mocha",
         "build": "tsc -b"

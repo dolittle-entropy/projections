@@ -1,10 +1,9 @@
 // Copyright (c) Dolittle. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
+import { PropertyType } from './PropertyType';
 
-export class ModelDescriptor {
-    constructor(readonly name: string, readonly properties: PropertyDescriptor[], readonly initialState: any = {}) {
+
+export class PropertyDescriptor {
+    constructor(readonly name: string, type: PropertyType) {
     }
 }
-
-
-

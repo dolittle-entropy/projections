@@ -1,6 +1,6 @@
 {
     "name": "@dolittle/projections",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "description": "",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -8,7 +8,7 @@
     "license": "MIT",
     "private": false,
     "scripts": {
-        "prepublishOnly": "yarn build && yarn test",
+        "prepublishOnly": "yarn build && yarn test",ack
         "prebuild": "tsc -b --clean",
         "test": "mocha",
         "build": "tsc -b"
